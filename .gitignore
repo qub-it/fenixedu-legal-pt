@@ -3,3 +3,4 @@
 .classpath
 .settings/
 /.tern-project
+/src/main/java/test
