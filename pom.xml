@@ -26,27 +26,27 @@
 	<build>
 		<plugins>
 
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.codehaus.mojo</groupId> -->
-<!-- 				<artifactId>jaxb2-maven-plugin</artifactId> -->
-<!-- 				<version>1.6</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<goals> -->
-<!-- 							<goal>xjc</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 				<configuration> -->
-<!-- 					<forceRegenerate>true</forceRegenerate> -->
-<!-- 					<extension>true</extension> -->
-<!-- 					<packageName>org.fenixedu.ulisboa.specifications.legal.jaxb.raides</packageName> -->
-<!-- 					<outputDirectory>${basedir}/target/generated-sources/xsd/</outputDirectory> -->
-<!-- 					<schemaDirectory>${basedir}/src/main/xsd/raides/</schemaDirectory> -->
-<!-- 					<schemaFiles>DataStructureRaides.xsd</schemaFiles> -->
-<!-- 					<bindingDirectory>${basedir}/src/main/xsd/raides/</bindingDirectory> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<forceRegenerate>true</forceRegenerate>
+					<extension>true</extension>
+					<packageName>org.fenixedu.ulisboa.specifications.legal.jaxb.raides</packageName>
+					<outputDirectory>${basedir}/target/generated-sources/xsd/</outputDirectory>
+					<schemaDirectory>${basedir}/src/main/xsd/raides/</schemaDirectory>
+					<schemaFiles>DataStructureRaides.xsd</schemaFiles>
+					<bindingDirectory>${basedir}/src/main/xsd/raides/</bindingDirectory>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -126,7 +126,18 @@
 		    <artifactId>zip4j</artifactId>
 		    <version>1.3.2</version>
 		</dependency>
+		
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>fenixedu-commons</artifactId>
+            <version>1.1.1</version>
+        </dependency>
         
+        <dependency>
+        	<groupId>org.fenixedu.ulisboa</groupId>
+			<artifactId>fenixedu-ulisboa-specifications</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+        </dependency>
 		
 	</dependencies>
 
