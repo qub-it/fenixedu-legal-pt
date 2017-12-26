@@ -1,0 +1,10 @@
+{
+  "resources": {
+    "bundles": [
+      "FenixeduLegalPTResources"
+    ]
+  },
+  "modules": [
+    { "name": "fenixedu-legal-pt", "configFile": "struts-fenixedu-legal-pt.xml" }
+  ]
+}
