@@ -81,7 +81,7 @@ function createDataTables(tableid, showsearchbox, showtools, pagination, pagecon
 function createDataTablesWithSortSwitch(tableid, showsearchbox, showtools, pagination, sortable, pagecontext,i18nurl) {
 	var dom = "";
 	if (showsearchbox == true && showtools == true) {
-		dom = '<"col-sm-6"l><"col-sm-3"f><"col-sm-3"T>rtip'; //FilterBox = YES && ExportOptions = YES
+		dom = '<"col-sm-5"l><"col-sm-3"f><"col-sm-3"B>rtip'; //FilterBox = YES && ExportOptions = YES
 	} else if (showsearchbox == true && showtools == false) {
 		dom = '<"col-sm-6"l><"col-sm-6"f>rtip'; // FilterBox = YES && ExportOptions = NO
 	} else if (showsearchbox == false && showtools == true) {
@@ -97,6 +97,12 @@ function createDataTablesWithSortSwitch(tableid, showsearchbox, showtools, pagin
 			"bDeferRender" : true,
 			"bPaginate" : pagination,
 			"dom" : dom, 
+            "buttons": [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
 			"tableTools" : {
 				"sSwfPath" : pagecontext + "/webjars/datatables-tools/2.2.4/swf/copy_csv_xls_pdf.swf"
 			}

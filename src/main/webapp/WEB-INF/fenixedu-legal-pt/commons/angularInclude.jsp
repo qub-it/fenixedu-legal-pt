@@ -9,23 +9,30 @@
 ${portal.angularToolkit()}
 
 <%-- Datatables --%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/javaScript/dataTables/media/js/jquery.dataTables.latest.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/javaScript/dataTables/media/js/jquery.dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" />
 
-<%-- Datatables: Bootstrap --%>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/dataTables/dataTables.bootstrap.min.css" />
+
+<spring:url var="datatablesBootstrapJsUrl" value="/javaScript/dataTables/media/js/jquery.dataTables.bootstrap.min.js"></spring:url>
+<script type="text/javascript" src="${datatablesBootstrapJsUrl}"></script>
+<spring:url var="datatablesCssUrl" value="/CSS/dataTables/dataTables.bootstrap.min.css" />
+
+<link rel="stylesheet" href="${datatablesCssUrl}" />
+<spring:url var="datatablesI18NUrl" value="/javaScript/dataTables/media/i18n/${portal.locale.language}.json" scope="request" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/dataTables/dataTables.bootstrap.min.css" />
 
-<%-- Datatables: Responsive --%>
+
 <link href="${pageContext.request.contextPath}/static/fenixedu-legal-pt/css/dataTables.responsive.css" rel="stylesheet" />
 <script src="${pageContext.request.contextPath}/static/fenixedu-legal-pt/js/dataTables.responsive.js"></script>
-
-<%-- Datatables: Tools --%>
 <link href="${pageContext.request.contextPath}/webjars/datatables-tools/2.2.4/css/dataTables.tableTools.css" rel="stylesheet" />
 <script src="${pageContext.request.contextPath}/webjars/datatables-tools/2.2.4/js/dataTables.tableTools.js"></script>
 
-<%-- Datatables: I18n --%>
-<spring:url var="datatablesI18NUrl" value="/javaScript/dataTables/media/i18n/${portal.locale.language}.json" scope="request" />
 
 <%-- JQuery: Select2 --%>
 <link href="${pageContext.request.contextPath}/webjars/select2/4.0.0-rc.2/dist/css/select2.min.css" rel="stylesheet" />
