@@ -13,7 +13,7 @@ import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.legalPT.util.LegalPTUtil;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequestParameters;
 import org.joda.time.LocalDate;
