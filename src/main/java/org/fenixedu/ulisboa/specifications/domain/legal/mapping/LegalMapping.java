@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.legalpt.dto.mapping.LegalMappingBean;
+import org.fenixedu.legalpt.dto.mapping.LegalMappingEntryBean;
 import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
-import org.fenixedu.ulisboa.specifications.domain.legal.dto.mapping.LegalMappingBean;
-import org.fenixedu.ulisboa.specifications.domain.legal.dto.mapping.LegalMappingEntryBean;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 
 import com.google.common.base.Strings;

@@ -40,7 +40,7 @@
 				<configuration>
 					<forceRegenerate>true</forceRegenerate>
 					<extension>true</extension>
-					<packageName>org.fenixedu.ulisboa.specifications.legal.jaxb.raides</packageName>
+					<packageName>org.fenixedu.legalpt.jaxb.raides</packageName>
 					<outputDirectory>${basedir}/target/generated-sources/xsd/</outputDirectory>
 					<schemaDirectory>${basedir}/src/main/xsd/raides/</schemaDirectory>
 					<schemaFiles>DataStructureRaides.xsd</schemaFiles>

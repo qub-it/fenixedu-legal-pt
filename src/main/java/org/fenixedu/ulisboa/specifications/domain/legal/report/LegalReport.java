@@ -10,7 +10,7 @@ import org.fenixedu.academic.domain.Person;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.ulisboa.specifications.domain.legal.LegalReportContext;
+import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 
 import com.google.common.collect.Sets;

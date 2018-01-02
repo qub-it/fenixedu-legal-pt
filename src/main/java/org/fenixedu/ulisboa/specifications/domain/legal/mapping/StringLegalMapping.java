@@ -1,7 +1,7 @@
 package org.fenixedu.ulisboa.specifications.domain.legal.mapping;
 
+import org.fenixedu.legalpt.dto.mapping.LegalMappingEntryBean;
 import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
-import org.fenixedu.ulisboa.specifications.domain.legal.dto.mapping.LegalMappingEntryBean;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 
 import pt.ist.fenixframework.Atomic;
