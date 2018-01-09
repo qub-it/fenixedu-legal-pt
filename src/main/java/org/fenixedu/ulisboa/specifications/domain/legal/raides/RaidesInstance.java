@@ -6,14 +6,11 @@ import org.fenixedu.academic.domain.District;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.academic.domain.student.StatuteType;
-import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.BranchMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
 
@@ -60,24 +57,8 @@ public class RaidesInstance extends RaidesInstance_Base {
         return ULisboaSpecificationsUtil.bundleI18N("title." + RaidesInstance.class.getName());
     }
 
-    public synchronized static RaidesInstance getInstance() {
-        RaidesInstance instance = find(RaidesInstance.class);
-
-        if (instance != null) {
-            return instance;
-        }
-
-        return null;
-    }
-
-    protected static <T extends LegalReport> T find(Class<T> reportClass) {
-        for (final LegalReport report : Bennu.getInstance().getLegalReportsSet()) {
-            if (reportClass == report.getClass()) {
-                return (T) report;
-            }
-        }
-
-        return null;
+    public static RaidesInstance getInstance() {
+        return find(RaidesInstance.class);
     }
 
     @Override
@@ -151,20 +132,6 @@ public class RaidesInstance extends RaidesInstance_Base {
 
     public boolean isReportGraduatedWithoutConclusionProcess() {
         return getReportGraduatedWithoutConclusionProcess();
-    }
-
-    @Override
-    @Atomic
-    public void delete() {
-        if (this.getLegalMappingsSet().size() > 0) {
-            throw new ULisboaSpecificationsDomainException("error.report.delete.not.empty.mappings");
-        }
-        if (this.getLegalRequestsSet().size() > 0) {
-            throw new ULisboaSpecificationsDomainException("error.report.delete.not.empty.requests");
-        }
-        super.setGroup(null);
-        super.setBennu(null);
-        super.deleteDomainObject();
     }
 
 }

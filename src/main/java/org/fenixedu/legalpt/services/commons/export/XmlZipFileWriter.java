@@ -1,16 +1,11 @@
-package org.fenixedu.legalpt.services.raides.export;
+package org.fenixedu.legalpt.services.commons.export;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
-
-import com.google.common.base.Strings;
 
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.io.ZipOutputStream;
@@ -20,13 +15,8 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 public class XmlZipFileWriter {
 
-    public static LegalReportResultFile write(final LegalReportRequest reportRequest,
-            final RaidesRequestParameter raidesRequestParameter, final Raides raides, final LegalReportResultFile xmlResultFile) {
-
-        final String passwordToZip = ((RaidesInstance) reportRequest.getLegalReport()).getPasswordToZip();
-        if (Strings.isNullOrEmpty(passwordToZip)) {
-            return null;
-        }
+    public static LegalReportResultFile write(final LegalReportRequest reportRequest, final LegalReportResultFile xmlResultFile,
+            final String password) {
 
         try {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -36,7 +26,7 @@ public class XmlZipFileWriter {
             parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
             parameters.setEncryptFiles(true);
             parameters.setEncryptionMethod(Zip4jConstants.ENC_METHOD_STANDARD);
-            parameters.setPassword(passwordToZip);
+            parameters.setPassword(password);
             parameters.setFileNameInZip(xmlResultFile.getFilename());
             parameters.setSourceExternalStream(true);
 

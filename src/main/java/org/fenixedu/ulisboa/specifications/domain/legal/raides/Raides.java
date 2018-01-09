@@ -40,9 +40,9 @@ import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.services.commons.export.XmlZipFileWriter;
 import org.fenixedu.legalpt.services.raides.export.XlsxExporter;
 import org.fenixedu.legalpt.services.raides.export.XmlToBaseFileWriter;
-import org.fenixedu.legalpt.services.raides.export.XmlZipFileWriter;
 import org.fenixedu.legalpt.services.raides.process.DiplomadoService;
 import org.fenixedu.legalpt.services.raides.process.IdentificacaoService;
 import org.fenixedu.legalpt.services.raides.process.InscritoService;
@@ -230,7 +230,7 @@ public class Raides {
         XlsExporterLog.write(reportRequest, LegalReportContext.getReport());
 
         // XML password protected zip
-        XmlZipFileWriter.write(reportRequest, raidesRequestParameter, this, xml);
+        XmlZipFileWriter.write(reportRequest, xml, ((RaidesInstance) reportRequest.getLegalReport()).getPasswordToZip());
 
         reportRequest.markAsProcessed();
     }

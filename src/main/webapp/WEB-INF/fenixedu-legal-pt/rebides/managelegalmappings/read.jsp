@@ -1,4 +1,4 @@
-<%@page import="org.fenixedu.legalpt.ui.raides.ManageLegalMappingController"%>
+<%@page import="org.fenixedu.legalpt.ui.rebides.RebidesLegalMappingsController"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
@@ -12,7 +12,7 @@ function openCreateModal() {
 }
 
 function openDeleteModal(externalId) {
-    url = "${pageContext.request.contextPath}<%= ManageLegalMappingController.DELETE_ENTRY_URL %>/${ legalMapping.externalId }/" + externalId;
+    url = "${pageContext.request.contextPath}<%= RebidesLegalMappingsController.DELETE_ENTRY_URL %>/${ legalMapping.externalId }/" + externalId;
     $("#deleteForm").attr("action", url);
     $('#deleteModal').modal('toggle');
 }
@@ -28,7 +28,7 @@ function openDeleteModal(externalId) {
 <div class="modal fade" id="createModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="createLegalMappingEntryForm" action="${pageContext.request.contextPath}<%= ManageLegalMappingController.CREATE_ENTRY_URL%>/${legalMapping.externalId}" method="POST">
+            <form id="createLegalMappingEntryForm" action="${pageContext.request.contextPath}<%= RebidesLegalMappingsController.CREATE_ENTRY_URL%>/${legalMapping.externalId}" method="POST">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                     aria-label="Close">
@@ -124,7 +124,7 @@ function openDeleteModal(externalId) {
 <%-- TITLE --%>
 <div class="page-header">
 	<h1>
-		<spring:message code="label.manageRaidesLegalMapping.read" />
+		<spring:message code="label.manageRebidesLegalMapping.read" />
 	</h1>
 </div>
 
@@ -133,7 +133,7 @@ function openDeleteModal(externalId) {
 
 	<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
 	&nbsp;
-	<a class="" href="${pageContext.request.contextPath}<%= ManageLegalMappingController.SEARCH_URL %>">
+	<a class="" href="${pageContext.request.contextPath}<%= RebidesLegalMappingsController.SEARCH_URL %>">
 		<spring:message code="label.event.back" />
 	</a>
     &nbsp;|&nbsp;

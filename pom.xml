@@ -32,21 +32,40 @@
 				<version>1.6</version>
 				<executions>
 					<execution>
+						<id>process-raides-xsd</id>
 						<goals>
 							<goal>xjc</goal>
 						</goals>
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<extension>true</extension>
+							<packageName>org.fenixedu.legalpt.jaxb.raides</packageName>
+							<outputDirectory>${basedir}/target/generated-sources/xsd/raides</outputDirectory>
+							<schemaDirectory>${basedir}/src/main/xsd/raides/</schemaDirectory>
+							<schemaFiles>DataStructureRaides.xsd</schemaFiles>
+							<bindingDirectory>${basedir}/src/main/xsd/raides/</bindingDirectory>
+						</configuration>
 					</execution>
+					
+					<execution>
+						<id>process-rebides-xsd</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<extension>true</extension>
+							<packageName>org.fenixedu.legalpt.jaxb.rebides</packageName>
+							<outputDirectory>${basedir}/target/generated-sources/xsd/rebides</outputDirectory>
+							<schemaDirectory>${basedir}/src/main/xsd/rebides/</schemaDirectory>
+							<schemaFiles>DataStructureRebides.xsd</schemaFiles>
+						</configuration>
+					</execution>
+					
 				</executions>
-				<configuration>
-					<forceRegenerate>true</forceRegenerate>
-					<extension>true</extension>
-					<packageName>org.fenixedu.legalpt.jaxb.raides</packageName>
-					<outputDirectory>${basedir}/target/generated-sources/xsd/</outputDirectory>
-					<schemaDirectory>${basedir}/src/main/xsd/raides/</schemaDirectory>
-					<schemaFiles>DataStructureRaides.xsd</schemaFiles>
-					<bindingDirectory>${basedir}/src/main/xsd/raides/</bindingDirectory>
-				</configuration>
 			</plugin>
+			
+			
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>

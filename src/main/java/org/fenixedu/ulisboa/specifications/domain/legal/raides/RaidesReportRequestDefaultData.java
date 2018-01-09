@@ -2,24 +2,17 @@ package org.fenixedu.ulisboa.specifications.domain.legal.raides;
 
 import java.math.BigDecimal;
 
-import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.candidacy.IngressionType;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesPeriodInputType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
-import org.fenixedu.ulisboa.specifications.domain.legal.settings.LegalSettings;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.base.Strings;
 
 public class RaidesReportRequestDefaultData implements IRaidesReportRequestDefaultData {
-
-    public static final Boolean IsRaidesStudentEditionActive() {
-        return LegalSettings.getInstance().getRaidesFormActiveForStudent();
-    }
 
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("dd/MM/yyyy");
 

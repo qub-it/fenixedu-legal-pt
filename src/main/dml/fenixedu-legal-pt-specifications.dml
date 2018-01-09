@@ -306,7 +306,7 @@ class legal.raides.RaidesInstance extends legal.report.LegalReport {
 /* Legal Settings */
 
 class legal.settings.LegalSettings {
-	boolean raidesFormActiveForStudent;
+	
 }
 
 	relation BennuLegalSettings {

@@ -1,1 +1,17 @@
 package org.fenixedu.legalpt.domain;
+
+
+external class .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+
+
+/*
+ * REBIDES
+ */
+
+class rebides.RebidesInstance extends .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport {
+	String institutionCode;
+	String interlocutorName;
+    String interlocutorEmail;
+	String interlocutorPhone;
+	String passwordToZip;
+}

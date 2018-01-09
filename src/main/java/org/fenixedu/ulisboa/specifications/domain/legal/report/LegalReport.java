@@ -11,6 +11,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 
 import com.google.common.collect.Sets;
@@ -75,15 +76,15 @@ public abstract class LegalReport extends LegalReport_Base {
     }
 
     private boolean hasAccess(final Person person) {
-        if(person.getUser() != null) {
+        if (person.getUser() != null) {
             return getGroup().isMember(person.getUser());
         }
-        
+
         return false;
     }
-    
+
     @Atomic
-    static public <T extends LegalReport> T createReport(Class<T> type){
+    static public <T extends LegalReport> T createReport(Class<T> type) {
         try {
             return type.newInstance();
         } catch (InstantiationException e) {
@@ -92,7 +93,38 @@ public abstract class LegalReport extends LegalReport_Base {
             throw new RuntimeException(e);
         }
     }
-    
+
+    protected static <T extends LegalReport> T find(Class<T> reportClass) {
+        for (final LegalReport report : Bennu.getInstance().getLegalReportsSet()) {
+            if (reportClass == report.getClass()) {
+                return (T) report;
+            }
+        }
+
+        return null;
+    }
+
+    @Atomic
+    public void edit(LocalizedString name, PersistentGroup group, Boolean synchronous, Boolean hasMappings) {
+        setName(name);
+        setGroup(group);
+        setSynchronous(synchronous);
+        setHasMappings(hasMappings);
+    }
+
+    @Atomic
+    public void delete() {
+        if (this.getLegalMappingsSet().size() > 0) {
+            throw new ULisboaSpecificationsDomainException("error.report.delete.not.empty.mappings");
+        }
+        if (this.getLegalRequestsSet().size() > 0) {
+            throw new ULisboaSpecificationsDomainException("error.report.delete.not.empty.requests");
+        }
+        super.setGroup(null);
+        super.setBennu(null);
+        super.deleteDomainObject();
+    }
+
     public abstract void executeProcessing(final LegalReportRequest legalReportRequest);
 
     public abstract LocalizedString getNameI18N();
@@ -104,9 +136,5 @@ public abstract class LegalReport extends LegalReport_Base {
     public abstract LocalizedString getMappingTypeNameI18N(final String type);
 
     public abstract LocalizedString getLocalizedNameMappingKey(final String type, final String key);
-    
-    public abstract void edit(final LocalizedString name, final PersistentGroup group, final Boolean synchronous, final Boolean hasMappings);
-    
-    public abstract void delete();
 
 }

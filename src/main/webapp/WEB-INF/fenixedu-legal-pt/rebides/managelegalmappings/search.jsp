@@ -1,4 +1,4 @@
-<%@page import="org.fenixedu.legalpt.ui.raides.ManageLegalMappingController"%>
+<%@page import="org.fenixedu.legalpt.ui.rebides.RebidesLegalMappingsController"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
@@ -12,7 +12,7 @@ function openCreateModal() {
 }
 
 function openDeleteModal(externalId) {
-    url = "${pageContext.request.contextPath}<%= ManageLegalMappingController.DELETE_URL %>/" + externalId;
+    url = "${pageContext.request.contextPath}<%= RebidesLegalMappingsController.DELETE_URL %>/" + externalId;
     $("#deleteForm").attr("action", url);
     $('#deleteModal').modal('toggle');
 }
@@ -21,7 +21,7 @@ function openDeleteModal(externalId) {
 <div class="modal fade" id="createModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="createLegalMappingForm" action="${pageContext.request.contextPath}<%= ManageLegalMappingController.CREATE_URL%>" method="POST">
+            <form id="createLegalMappingForm" action="${pageContext.request.contextPath}<%= RebidesLegalMappingsController.CREATE_URL%>" method="POST">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                     aria-label="Close">
@@ -102,7 +102,7 @@ function openDeleteModal(externalId) {
 <%-- TITLE --%>
 <div class="page-header">
     <h1>
-    	<spring:message code="label.manageRaidesLegalMapping.search" />
+    	<spring:message code="label.manageRebidesLegalMapping.search" />
         <small></small>
     </h1>
 </div>
@@ -200,7 +200,7 @@ angular.module('angularApp', ['ngSanitize', 'ui.select']).controller('angularCon
                                 <td><c:out value="${ legalMapping.nameI18N.content }" /></td>
                                 <td>
                                     <a class="btn btn-default btn-xs"
-                                        href="${pageContext.request.contextPath}<%= ManageLegalMappingController.SEARCH_VIEW_URL %>/${ legalMapping.externalId }">
+                                        href="${pageContext.request.contextPath}<%= RebidesLegalMappingsController.SEARCH_VIEW_URL %>/${ legalMapping.externalId }">
                                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                                             &nbsp;
                                             <spring:message code='label.view' />

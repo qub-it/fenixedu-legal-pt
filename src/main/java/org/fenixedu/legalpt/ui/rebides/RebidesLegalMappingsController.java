@@ -1,4 +1,4 @@
-package org.fenixedu.legalpt.ui.raides;
+package org.fenixedu.legalpt.ui.rebides;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -8,15 +8,14 @@ import java.util.stream.Collectors;
 import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 import org.fenixedu.bennu.spring.portal.SpringFunctionality;
+import org.fenixedu.legalpt.domain.rebides.RebidesInstance;
+import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
 import org.fenixedu.legalpt.ui.FenixeduLegalPTBaseController;
 import org.fenixedu.legalpt.ui.FenixeduLegalPTController;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMappingEntry;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
-import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +25,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pt.ist.fenixframework.Atomic;
 
-@SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.title.manageRaidesLegalMapping", accessGroup = "logged")
-@RequestMapping(ManageLegalMappingController.CONTROLLER_URL)
-@Component("org.fenixedu.legalpt.ui.raides.ManageLegalMappingController")
-public class ManageLegalMappingController extends FenixeduLegalPTBaseController {
+@SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.title.manageRebidesLegalMapping", accessGroup = "logged")
+@RequestMapping(RebidesLegalMappingsController.CONTROLLER_URL)
+public class RebidesLegalMappingsController extends FenixeduLegalPTBaseController {
 
-    public static final String CONTROLLER_URL = "/fenixedu-legal-pt/raides/managelegalmappings";
+    public static final String CONTROLLER_URL = "/fenixedu-legal-pt/rebides/managelegalmappings";
     public static final String JSP_PATH = CONTROLLER_URL.substring(1);
 
     @RequestMapping
@@ -48,10 +46,9 @@ public class ManageLegalMappingController extends FenixeduLegalPTBaseController 
 
     @RequestMapping(value = _SEARCH_URI, method = GET)
     public String search(Model model) {
-        model.addAttribute("legalMappings", RaidesInstance.getInstance().getLegalMappingsSet());
-        List<ILegalMappingType> possibleTypes = RaidesInstance.getInstance().getMappingTypes().stream()
-                .filter(type -> type instanceof LegalMappingType)
-                .filter(type -> LegalMapping.find(RaidesInstance.getInstance(), type) == null)
+        model.addAttribute("legalMappings", RebidesInstance.getInstance().getLegalMappingsSet());
+        List<ILegalMappingType> possibleTypes = RebidesInstance.getInstance().getMappingTypes().stream()
+                .filter(type -> LegalMapping.find(RebidesInstance.getInstance(), type) == null)
                 .sorted((t1, t2) -> t1.getName().getContent().compareTo(t2.getName().getContent())).collect(Collectors.toList());
         model.addAttribute("possibleLegalMappingTypes", possibleTypes);
         return jspPage(_SEARCH_URI);
@@ -94,7 +91,7 @@ public class ManageLegalMappingController extends FenixeduLegalPTBaseController 
     public static final String CREATE_URL = CONTROLLER_URL + _CREATE_URI;
 
     @RequestMapping(value = _CREATE_URI, method = RequestMethod.POST)
-    public String create(@RequestParam(value = "selectedType", required = true) LegalMappingType selectedType, Model model,
+    public String create(@RequestParam(value = "selectedType", required = true) RebidesMappingType selectedType, Model model,
             RedirectAttributes redirectAttributes) {
         try {
             LegalMapping legalMapping = createLegalMapping(selectedType);
@@ -106,8 +103,8 @@ public class ManageLegalMappingController extends FenixeduLegalPTBaseController 
     }
 
     @Atomic
-    public LegalMapping createLegalMapping(LegalMappingType type) {
-        return type.createMapping(RaidesInstance.getInstance());
+    public LegalMapping createLegalMapping(RebidesMappingType type) {
+        return type.createMapping(RebidesInstance.getInstance());
     }
 
     private static final String _READ_URI = "/read";

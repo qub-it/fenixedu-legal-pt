@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:include schemaLocation="GlobalTypesRebides.xsd" />
+    <xs:element name="InformacaoDocentes">
+        <xs:complexType>
+            <xs:sequence>                
+                <xs:element name="Extracao">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="Codigo" name="CodigoEstabelecimento" />
+                            <xs:element type="Momento" name="Momento" />
+                            <xs:element type="Datas" name="DataExtracao" />
+                            <xs:element type="Nome" name="NomeInterlocutor" />
+                            <xs:element type="Email" name="EmailInterlocutor" />
+                            <xs:element type="Telefone" name="TelefoneInterlocutor" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Docentes">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:choice maxOccurs="unbounded">
+                                <xs:element name="Docente">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="Identificacao">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element type="Nome" name="Nome" />
+                                                        <xs:element type="NumeroID" name="NumeroID" /> <!-- Alteração da estrutura -->
+                                                        <xs:element type="OutroTipoID" name="OutroTipoID" nillable="true" />
+                                                        <xs:element type="Data" name="DataNascimento" />
+                                                        <xs:element type="Sexo" name="Sexo" />
+                                                        <xs:element type="Nacionalidade" name="PaisDeNacionalidade" />
+                                                        <xs:element type="Nacionalidade" name="OutroPaisDeNacionalidade" nillable="true" />
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="SituacaoCarreiraAtividades">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element type="Departamento" name="Departamento"  nillable="true"/>
+                                                        <xs:element type="OutroDepartamento" name="OutroDepartamento" nillable="true" />
+                                                        <xs:element type="Categoria" name="Categoria" />
+                                                        <xs:element type="myboolean" name="Convidado"/>
+                                                        <xs:element type="myboolean" name="Equiparado"/>
+                                                        <xs:element type="Provas" name="ProvasAptidao" nillable="true" />
+                                                        <xs:element type="Provas" name="ProvasAgregacao" nillable="true"  />
+                                                        <xs:element type="Provas" name="ProvasEspecialista" nillable="true" />
+                                                        <xs:element type="RegimePrestacaoServico" name="RegimePrestacaoServico" />
+                                                        <xs:element type="RegimeParcial" name="RegimeParcial" nillable="true" />
+                                                        <xs:element type="RegimeVinculacao" name="RegimeVinculacao" />
+                                                        <xs:element type="PercentagemInvestigacao" name="PercentagemInvestigacao" />
+                                                        <xs:element type="AreaInvestigacao" name ="AreaInvestigacao" nillable="true"/> <!--Campo adicionado: IdFOS-->
+                                                        <xs:element type="IdentificadorORCID" name="ORCID" nillable="true"/> <!--Campo adicionado-->
+                                                        <xs:element type="myboolean" name="Docencia" />
+                                                        <xs:element type="HorasLetivas" name="HorasLetivas" nillable="true" />
+                                                        <xs:element type="UnidadeHL" name="UnidadeHL" nillable="true" />
+                                                        <xs:element type="myboolean" name="ActReitor" />
+                                                        <xs:element type="myboolean" name="ActViceReitor" />
+                                                        <xs:element type="myboolean" name="ActDiretor" />
+                                                        <xs:element type="myboolean" name="ActCoordena" />
+                                                        <xs:element type="myboolean" name="ActConsGeral" />
+                                                        <xs:element type="myboolean" name="ActConsGest" />
+                                                        <xs:element type="myboolean" name="ActConsCient" />
+                                                        <xs:element type="myboolean" name="ActConsPedag" />
+                                                        <xs:element type="myboolean" name="ActFormacao" />
+                                                        <xs:element type="myboolean" name="ActOutra" />
+                                                        <xs:element type="DescricaoOutra" name="ActOutraDescr" nillable="true" />
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="Habilitacoes">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice maxOccurs="unbounded">
+                                                            <xs:element name="Habilitacao">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:element type="NivelFormacao" name="NivelFormacao" />
+                                                                        <xs:element type="TipoNivelFormacao" name="TipoNivelFormacao" />
+                                                                        <xs:element type="Codigo" name="Estabelecimento"/>
+                                                                        <xs:element type="Outro" name="OutroEstabelecimento" nillable="true" />
+                                                                        <xs:element type="Codigo" name="Curso" />
+                                                                        <xs:element type="Outro" name="OutroCurso" nillable="true" />
+                                                                        <xs:element type="Especialidade" name="Especialidade" />
+                                                                        <xs:element type="Outro" name="OutraEspecialidade" nillable="true" />
+                                                                        <xs:element type="AreaCNAEF" name="AreaCNAEF" />
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
