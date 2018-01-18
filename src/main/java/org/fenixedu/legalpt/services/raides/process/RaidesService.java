@@ -599,17 +599,12 @@ public class RaidesService {
 
             if (Raides.countryOfResidence(registration, executionYear) != null
                     && !Raides.countryOfResidence(registration, executionYear).isDefaultCountry()) {
-                bean.setAlunoDeslocado(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(false));
+                bean.setAlunoDeslocado(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(true));
             } else if (Raides.countryOfResidence(registration, executionYear) != null
                     && Raides.districtSubdivisionOfResidence(registration, executionYear) != null) {
                 bean.setAlunoDeslocado(
                         LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(Raides.districtOfResidence(registration,
                                 executionYear) != ((RaidesInstance) report).getDefaultDistrictOfResidence()));
-            }
-
-            if (!Strings.isNullOrEmpty(bean.getAlunoDeslocado())) {
-                LegalReportContext.addWarn("", i18n("warn.Raides.validation.dislocated.from.residence.missing",
-                        formatArgs(registration, executionYear)));
             }
 
         }
