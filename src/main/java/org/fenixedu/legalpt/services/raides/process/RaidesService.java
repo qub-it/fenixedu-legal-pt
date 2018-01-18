@@ -71,35 +71,37 @@ public class RaidesService {
 
         if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.DISSERTACAO_CODE);
-        } else if(isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.INTERNSHIP)) {
+        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.INTERNSHIP)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.ESTAGIO_FINAL_CODE);
-        } else if(isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.PROJECT_WORK)) {
-            return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.TRABALHO_PROJECTO_CODE);
+        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.PROJECT_WORK)) {
+            return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR)
+                    .translate(Raides.AnoCurricular.TRABALHO_PROJECTO_CODE);
         }
 
         return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR)
                 .translate(String.valueOf(RegistrationServices.getCurricularYear(registration, executionYear).getResult()));
     }
 
-    protected boolean isOnlyEnrolledOnCompetenceCourseType(final Registration registration, final ExecutionYear executionYear, 
+    protected boolean isOnlyEnrolledOnCompetenceCourseType(final Registration registration, final ExecutionYear executionYear,
             final CompetenceCourseType competenceCourseType) {
         final Collection<Enrolment> enrolments = registration.getEnrolments(executionYear);
 
         final Set<CompetenceCourseType> typesSet = Sets.newHashSet();
         for (final Enrolment enrolment : enrolments) {
             final CurricularCourse curricularCourse = enrolment.getCurricularCourse();
-            final CompetenceCourseType type = curricularCourse != null ? curricularCourse.getCompetenceCourse().getType() : CompetenceCourseType.REGULAR;
-            
+            final CompetenceCourseType type =
+                    curricularCourse != null ? curricularCourse.getCompetenceCourse().getType() : CompetenceCourseType.REGULAR;
+
             typesSet.add(type);
         }
-        
+
         if (typesSet.size() != 1) {
             return false;
         }
-        
+
         return typesSet.iterator().next() == competenceCourseType;
     }
-    
+
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
         if (!Raides.getPrecedentDegreeRegistrations(registration).isEmpty()) {
             return false;
@@ -135,14 +137,15 @@ public class RaidesService {
 
     }
 
-    protected void preencheRamo(final LegalReport report, final IMatricula bean,  final ExecutionYear executionYear, 
+    protected void preencheRamo(final LegalReport report, final IMatricula bean, final ExecutionYear executionYear,
             final Registration registration, final boolean forScholarPart) {
-        final Set<CourseGroup> branches = forScholarPart ? scholarPartBranches(registration, executionYear) : branches(registration, executionYear);
-        
-        if(!forScholarPart) {
+        final Set<CourseGroup> branches =
+                forScholarPart ? scholarPartBranches(registration, executionYear) : branches(registration, executionYear);
+
+        if (!forScholarPart) {
             bean.setRamo(null);
         }
-        
+
         if (!branches.isEmpty()) {
 
             if (branches.size() > 1) {
@@ -184,20 +187,18 @@ public class RaidesService {
     private Set<CourseGroup> scholarPartBranches(final Registration registration, final ExecutionYear executionYear) {
         final Set<CourseGroup> result = Sets.newHashSet();
 
-        
         RegistrationConclusionInformation conclusionInfoToUse = null;
         for (RegistrationConclusionInformation conclusionInfo : RegistrationConclusionServices.inferConclusion(registration)) {
-            if(!conclusionInfo.isScholarPart()) {
+            if (!conclusionInfo.isScholarPart()) {
                 continue;
             }
-            
-            if(!conclusionInfo.isConcluded()) {
+
+            if (!conclusionInfo.isConcluded()) {
                 continue;
             }
-            
+
             conclusionInfoToUse = conclusionInfo;
-            
-            
+
             break;
         }
 
@@ -205,7 +206,7 @@ public class RaidesService {
             if (curriculumGroup.getDegreeModule() == null) {
                 continue;
             }
-            
+
             final CourseGroup courseGroup = curriculumGroup.getDegreeModule();
             if (BranchMappingType.readMapping(report).isKeyDefined(courseGroup)) {
                 result.add(courseGroup);
@@ -286,10 +287,10 @@ public class RaidesService {
                     .translate(lastCompletedQualification.getSchoolLevel()));
 
             if (SchoolLevelType.OTHER.equals(lastCompletedQualification.getSchoolLevel())) {
-                
-                if(!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())){
+
+                if (!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())) {
                     bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getOtherSchoolLevel().substring(0,
-                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getOtherSchoolLevel().length())));    
+                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getOtherSchoolLevel().length())));
                 }
             }
         }
@@ -545,9 +546,9 @@ public class RaidesService {
 
         if (isPrecedentDegreePortugueseHigherEducation(lastCompletedQualification)
                 && Raides.Cursos.OUTRO.equals(bean.getCursoEscolarAnt())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
-                            formatArgs(registration, executionYear)));
+            LegalReportContext.addError("", i18n(
+                    "error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
+                    formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
     }
@@ -704,9 +705,12 @@ public class RaidesService {
     }
 
     protected String regimeFrequencia(final Registration registration, final ExecutionYear executionYear) {
-        final boolean onlyEnrolledOnDissertation = isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION);
-        final boolean onlyEnrolledOnInternship = isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.INTERNSHIP);
-        final boolean onlyEnrolledOnProjectWork = isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.PROJECT_WORK);
+        final boolean onlyEnrolledOnDissertation =
+                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION);
+        final boolean onlyEnrolledOnInternship =
+                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.INTERNSHIP);
+        final boolean onlyEnrolledOnProjectWork =
+                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.PROJECT_WORK);
 
         if (onlyEnrolledOnDissertation || onlyEnrolledOnInternship || onlyEnrolledOnProjectWork) {
             return LegalMapping.find(report, LegalMappingType.REGIME_FREQUENCIA).translate(Raides.RegimeFrequencia.ETD_CODE);
@@ -715,21 +719,23 @@ public class RaidesService {
         return LegalMapping.find(report, LegalMappingType.REGIME_FREQUENCIA).translate(registration.getDegree().getExternalId());
     }
 
-    protected DateTime findMaximumAnnulmentDate(final List<RaidesRequestPeriodParameter> periods, final ExecutionYear executionYear) {
+    protected DateTime findMaximumAnnulmentDate(final List<RaidesRequestPeriodParameter> periods,
+            final ExecutionYear executionYear) {
         return periods.stream().filter(p -> p.getAcademicPeriod() == executionYear)
-                .max(Comparator.comparing(RaidesRequestPeriodParameter::getEnd)).get().getEnd()
-                .plusDays(1).toDateTimeAtStartOfDay().minusSeconds(1);
+                .max(Comparator.comparing(RaidesRequestPeriodParameter::getEnd)).get().getEnd().plusDays(1)
+                .toDateTimeAtStartOfDay().minusSeconds(1);
     }
 
-    protected BigDecimal enrolledEcts(final ExecutionYear executionYear, final Registration registration, final DateTime maximumAnnulmentDate) {
+    protected BigDecimal enrolledEcts(final ExecutionYear executionYear, final Registration registration,
+            final DateTime maximumAnnulmentDate) {
         final StudentCurricularPlan studentCurricularPlan = registration.getStudentCurricularPlan(executionYear);
         double result = 0.0;
 
         for (final Enrolment enrolment : studentCurricularPlan.getEnrolmentsSet()) {
-            if(Raides.isEnrolmentAnnuled(enrolment, maximumAnnulmentDate)) {
+            if (Raides.isEnrolmentAnnuled(enrolment, maximumAnnulmentDate)) {
                 continue;
             }
-            
+
             if (enrolment.isValid(executionYear)) {
                 result += enrolment.getEctsCredits();
             }
@@ -737,7 +743,7 @@ public class RaidesService {
 
         return new BigDecimal(result);
     }
-    
+
     protected Set<Enrolment> scholarPartEnrolments(final ExecutionYear executionYear, final Registration registration) {
         final StudentCurricularPlan studentCurricularPlan = registration.getStudentCurricularPlan(executionYear);
 
@@ -757,7 +763,8 @@ public class RaidesService {
         return result;
     }
 
-    protected BigDecimal doctoralEnrolledEcts(final ExecutionYear executionYear, final Registration registration, final DateTime maximumAnnulmentDate) {
+    protected BigDecimal doctoralEnrolledEcts(final ExecutionYear executionYear, final Registration registration,
+            final DateTime maximumAnnulmentDate) {
         if (BigDecimal.ZERO.compareTo(enrolledEcts(executionYear, registration, maximumAnnulmentDate)) != 0) {
             final BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate);
 
