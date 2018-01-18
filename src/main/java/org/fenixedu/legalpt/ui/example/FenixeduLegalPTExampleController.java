@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.title.example", accessGroup = "#managers")
-@RequestMapping(ExampleController.CONTROLLER_URL)
-public class ExampleController extends FenixeduLegalPTBaseController {
+@RequestMapping(FenixeduLegalPTExampleController.CONTROLLER_URL)
+public class FenixeduLegalPTExampleController extends FenixeduLegalPTBaseController {
 
     public static final String CONTROLLER_URL = "/fenixedu-legal-pt/example";
     private static final String JSP_PATH = CONTROLLER_URL.substring(1);

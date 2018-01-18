@@ -358,7 +358,8 @@ public class Raides {
 
             final TblDiplomado diplomado = entry.getValue();
 
-            if (diplomado.getConclusaoMd().equals(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(false))) {
+            if (diplomado.getConclusaoMd() == null
+                    || diplomado.getConclusaoMd().equals(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(false))) {
                 continue;
             }
 
