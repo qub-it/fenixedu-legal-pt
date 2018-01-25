@@ -35,6 +35,7 @@ import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.IGrauPrecedenteCompleto;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.IMatricula;
@@ -49,7 +50,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionServices;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;
@@ -794,7 +794,7 @@ public class RaidesService {
     }
 
     public String i18n(String key, String... arguments) {
-        return ULisboaSpecificationsUtil.bundle(key, arguments);
+        return LegalPTUtil.bundle(key, arguments);
     }
 
 }

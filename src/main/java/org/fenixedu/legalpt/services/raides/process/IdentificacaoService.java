@@ -151,10 +151,7 @@ public class IdentificacaoService extends RaidesService {
             return pid.getCountryHighSchool().getCode();
         }
 
-        if (pid.getSchoolLevel() == SchoolLevelType.HIGH_SCHOOL_OR_EQUIVALENT &&
-                registration.getPerson().getCountry() != null) {
-            LegalReportContext.addWarn("",
-                    i18n("warn.Raides.countryHighSchool.retrived.from.nationality", formatArgs(registration, null)));
+        if (registration.getPerson().getCountry() != null) {
             return registration.getPerson().getCountry().getCode();
         }
 

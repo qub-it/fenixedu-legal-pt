@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 
 import pt.ist.fenixWebFramework.rendererExtensions.util.IPresentableEnum;
 
@@ -62,7 +62,7 @@ public enum LegalReportResultFileType implements IPresentableEnum {
     }
 
     public LocalizedString getLocalizedNameI18N() {
-        return ULisboaSpecificationsUtil.bundleI18N(qualifiedName());
+        return LegalPTUtil.bundleI18N(qualifiedName());
     }
 
     @Override

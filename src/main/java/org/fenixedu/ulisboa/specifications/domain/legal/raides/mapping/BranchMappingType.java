@@ -7,12 +7,12 @@ import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.mapping.LegalMappingBean;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.DomainObjectLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMappingEntry;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
 
 import com.google.common.collect.Sets;
 
@@ -35,12 +35,12 @@ public class BranchMappingType implements ILegalMappingType {
 
     @Override
     public LocalizedString getName() {
-        return ULisboaSpecificationsUtil.bundleI18N(getQualifiedNameKey());
+        return LegalPTUtil.bundleI18N(getQualifiedNameKey());
     }
 
     @Override
     public LocalizedString getDescription() {
-        return ULisboaSpecificationsUtil.bundleI18N(getQualifiedDescriptionKey());
+        return LegalPTUtil.bundleI18N(getQualifiedDescriptionKey());
     }
 
     @Override

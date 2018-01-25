@@ -1,7 +1,7 @@
 package org.fenixedu.ulisboa.specifications.domain.legal.raides;
 
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 
 public enum IntegratedMasterFirstCycleGraduatedReportOption {
     
@@ -10,6 +10,6 @@ public enum IntegratedMasterFirstCycleGraduatedReportOption {
     ALL;
     
     public LocalizedString getLocalizedName() {
-        return ULisboaSpecificationsUtil.bundleI18N(getClass().getSimpleName() + "." + name());
+        return LegalPTUtil.bundleI18N(getClass().getSimpleName() + "." + name());
     }
 }

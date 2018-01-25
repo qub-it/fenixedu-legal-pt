@@ -23,6 +23,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.DomainObjectLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.EnumerationLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
@@ -33,7 +34,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityActivityType;
 import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityProgramType;
 import org.fenixedu.ulisboa.specifications.util.ULisboaConstants;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
 
 import com.google.common.collect.Sets;
 
@@ -119,12 +119,12 @@ public enum LegalMappingType implements ILegalMappingType {
 
     @Override
     public LocalizedString getName() {
-        return ULisboaSpecificationsUtil.bundleI18N(getQualifiedNameKey());
+        return LegalPTUtil.bundleI18N(getQualifiedNameKey());
     }
 
     @Override
     public LocalizedString getDescription() {
-        return ULisboaSpecificationsUtil.bundleI18N(getQualifiedDescriptionKey());
+        return LegalPTUtil.bundleI18N(getQualifiedDescriptionKey());
     }
 
     protected String getQualifiedDescriptionKey() {
@@ -161,7 +161,7 @@ public enum LegalMappingType implements ILegalMappingType {
         LocalizedString mls = new LocalizedString();
         switch (this) {
         case BOOLEAN:
-            return ULisboaSpecificationsUtil.bundleI18N("label." + key);
+            return LegalPTUtil.bundleI18N("label." + key);
         case GENDER:
             final Gender gender = Gender.valueOf(key);
             mls = mls.with(I18N.getLocale(), gender.toLocalizedString(I18N.getLocale()));
@@ -203,7 +203,7 @@ public enum LegalMappingType implements ILegalMappingType {
             final AcademicalInstitutionType academicalInstitutionType = AcademicalInstitutionType.valueOf(key);
             return localizedName(academicalInstitutionType, I18N.getLocale());
         case SCHOOL_PERIOD_DURATION:
-            return ULisboaSpecificationsUtil.bundleI18N("label.SchoolPeriodDuration." + key);
+            return LegalPTUtil.bundleI18N("label.SchoolPeriodDuration." + key);
         case CURRICULAR_YEAR:
             return Raides.AnoCurricular.LOCALIZED_NAME(key);
         case REGIME_FREQUENCIA:

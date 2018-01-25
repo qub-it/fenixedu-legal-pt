@@ -48,6 +48,7 @@ import org.fenixedu.legalpt.services.raides.process.IdentificacaoService;
 import org.fenixedu.legalpt.services.raides.process.InscritoService;
 import org.fenixedu.legalpt.services.raides.process.MobilidadeInternacionalService;
 import org.fenixedu.legalpt.services.report.log.XlsExporterLog;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
@@ -59,7 +60,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResult
 import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionServices;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -88,7 +88,7 @@ public class Raides {
         }
 
         public static LocalizedString LOCALIZED_NAME(final String key) {
-            return ULisboaSpecificationsUtil.bundleI18N(AnoCurricular.class.getSimpleName() + "." + key);
+            return LegalPTUtil.bundleI18N(AnoCurricular.class.getSimpleName() + "." + key);
         }
     }
 
@@ -112,7 +112,7 @@ public class Raides {
 
         public static LocalizedString LOCALIZED_NAME(final String key) {
             if (ETD_CODE.equals(key)) {
-                return ULisboaSpecificationsUtil.bundleI18N(RegimeFrequencia.class.getSimpleName() + "." + key);
+                return LegalPTUtil.bundleI18N(RegimeFrequencia.class.getSimpleName() + "." + key);
             }
 
             final Degree degree = (Degree) FenixFramework.getDomainObject(key);
@@ -137,10 +137,10 @@ public class Raides {
 
         public static LocalizedString LOCALIZED_NAME(final String key) {
             if (Sets.newHashSet(NAO_BOLSEIRO, CANDIDATO_BOLSEIRO_ACCAO_SOCIAL).contains(key)) {
-                return ULisboaSpecificationsUtil.bundleI18N(Bolseiro.class.getSimpleName() + "." + key);
+                return LegalPTUtil.bundleI18N(Bolseiro.class.getSimpleName() + "." + key);
             }
 
-            return ULisboaSpecificationsUtil.bundleI18N("label.GrantOwnerType." + key);
+            return LegalPTUtil.bundleI18N("label.GrantOwnerType." + key);
         }
 
     }
@@ -963,7 +963,7 @@ public class Raides {
     }
 
     private static String i18n(String key, String... arguments) {
-        return ULisboaSpecificationsUtil.bundle(key, arguments);
+        return LegalPTUtil.bundle(key, arguments);
     }
 
     public static Set<Degree> getPrecedentDegreesUntilRoot(final Degree degree) {

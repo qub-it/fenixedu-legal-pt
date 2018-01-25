@@ -14,6 +14,7 @@ import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblDiplomado;
@@ -23,7 +24,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblMobilidadeInte
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
-import org.fenixedu.ulisboa.specifications.util.ULisboaSpecificationsUtil;
 
 import com.google.common.base.Strings;
 
@@ -316,11 +316,11 @@ public class XlsxExporter {
     }
 
     protected static String pdiLabel(final String key) {
-        return ULisboaSpecificationsUtil.bundle("org.fenixedu.academic.domain.student.PrecedentDegreeInformation." + key);
+        return LegalPTUtil.bundle("org.fenixedu.academic.domain.student.PrecedentDegreeInformation." + key);
     }
 
     protected static String pidLabel(final String key) {
-        return ULisboaSpecificationsUtil.bundle("label.org.fenixedu.academic.domain.student.PersonalIngressionData." + key);
+        return LegalPTUtil.bundle("label.org.fenixedu.academic.domain.student.PersonalIngressionData." + key);
     }
 
     protected static String schoolLevelLocalizedName(final SchoolLevelType schoolLevel) {
@@ -337,6 +337,6 @@ public class XlsxExporter {
     }
 
     protected static String schoolPeriodDurationLocalizedName(final SchoolPeriodDuration duration) {
-        return ULisboaSpecificationsUtil.bundle("label.SchoolPeriodDuration." + duration.name());
+        return LegalPTUtil.bundle("label.SchoolPeriodDuration." + duration.name());
     }
 }
