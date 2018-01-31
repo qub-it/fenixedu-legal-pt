@@ -760,17 +760,15 @@ public class RaidesService {
 
     protected BigDecimal doctoralEnrolledEcts(final ExecutionYear executionYear, final Registration registration,
             final DateTime maximumAnnulmentDate) {
+        if(isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION)) {
+            return null;
+        }
+        
         if (BigDecimal.ZERO.compareTo(enrolledEcts(executionYear, registration, maximumAnnulmentDate)) != 0) {
-            final BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate);
+            BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate);
 
-            CurricularCourse dissertation = phdDissertation(executionYear, registration);
-            if (dissertation != null && enrolledEcts.compareTo(new BigDecimal(dissertation.getEctsCredits())) >= 0) {
-                BigDecimal result = enrolledEcts.subtract(new BigDecimal(dissertation.getEctsCredits()));
-
-                if (BigDecimal.ZERO.compareTo(result) == 0) {
-                    return null;
-                }
-            }
+            enrolledEcts =
+                    enrolledEcts.subtract(phdDissertationEnrolledEctsCredits(executionYear, registration, maximumAnnulmentDate));
 
             return enrolledEcts;
         }
@@ -778,19 +776,30 @@ public class RaidesService {
         return null;
     }
 
-    private CurricularCourse phdDissertation(final ExecutionYear executionYear, final Registration registration) {
+    private BigDecimal phdDissertationEnrolledEctsCredits(final ExecutionYear executionYear, final Registration registration,
+            final DateTime maximumAnnulmentDate) {
+
+        BigDecimal result = BigDecimal.ZERO;
+
         final StudentCurricularPlan studentCurricularPlan = registration.getStudentCurricularPlan(executionYear);
 
         Collection<CurricularCourse> allDissertationCurricularCourses =
                 studentCurricularPlan.getDegreeCurricularPlan().getDissertationCurricularCourses(executionYear);
 
         for (final CurricularCourse dissertation : allDissertationCurricularCourses) {
-            if (BigDecimal.ZERO.compareTo(new BigDecimal(dissertation.getCredits())) != 0) {
-                return dissertation;
+
+            boolean isEnrollmentInDissertationCurricularCourse = studentCurricularPlan.getEnrolmentsByExecutionYear(executionYear)
+                    .stream()
+                    .filter(e -> e.getCurricularCourse() == dissertation)
+                    .filter(e -> !Raides.isEnrolmentAnnuled(e, maximumAnnulmentDate))
+                    .count() > 0;
+
+            if (isEnrollmentInDissertationCurricularCourse) {
+                result = result.add(new BigDecimal(dissertation.getEctsCredits()));
             }
         }
 
-        return null;
+        return result;
     }
 
     public String i18n(String key, String... arguments) {
