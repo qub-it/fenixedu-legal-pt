@@ -1,8 +1,5 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 public class A3esExportServiceForEvaluationOfActiveProgram extends A3esExportService {
 
     @Override

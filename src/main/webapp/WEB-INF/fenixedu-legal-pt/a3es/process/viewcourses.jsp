@@ -175,19 +175,19 @@
 			<table class="table">
 				<tbody>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.creationDate" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.creationDate" /></th>
 						<td><joda:format value="${process.versioningCreationDate}" pattern="yyyy-MM-dd HH:mm" /></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esProcess.name" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esProcess.name" /></th>
 						<td><c:out value="${process.name}"/></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.description" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esPeriod.description" /></th>
 						<td><c:out value="${process.description}"/></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
 						<td><c:out value="${process.degreeCurricularPlan.presentationName}"/></td>
 					</tr>
 				</tbody>
@@ -204,7 +204,7 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th><spring:message code="label.begin" /></th>
+						<th><spring:message code="label.currentInfo" /></th>
 						<th><spring:message code="label.code" /></th>
 						<th><spring:message code="label.name" /></th>
 						<%-- Operations Column --%>
@@ -215,7 +215,7 @@
 					<c:forEach var="iter" items="${processBean.coursesData}" varStatus="loop">
 						<tr>
 							<td></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("begin").getValue()%>"></c:out></td>
+							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("1").getValue()%>"></c:out></td>
 							<td>
@@ -239,7 +239,7 @@
 													<tbody>
 														<c:forEach var="field" items="${iter.fields}" varStatus="loop">
 															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
+																<th scope="row" class="col-xs-4">${field.label}</th>
 																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
 															</tr>
 														</c:forEach>

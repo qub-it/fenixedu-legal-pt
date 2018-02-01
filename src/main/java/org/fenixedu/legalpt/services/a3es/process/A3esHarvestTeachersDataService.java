@@ -14,6 +14,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readP
 
 import java.text.Collator;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class A3esHarvestTeachersDataService {
 
             final A3esTeacherBean data = new A3esTeacherBean();
 
+            fillBasics(data, entry.getValue());
             fillName(data, person);
             fillInstitutionName(data);
             fillSchoolName(data);
@@ -80,6 +82,13 @@ public class A3esHarvestTeachersDataService {
 
             return data;
         }).collect(Collectors.toCollection(() -> bean.getTeachersData()));
+    }
+
+    private void fillBasics(final A3esTeacherBean data, final Map<CompetenceCourse, Set<Professorship>> map) {
+        final ExecutionYear firstTeacherService = map.values().stream().flatMap(i -> i.stream())
+                .map(p -> p.getExecutionCourse().getExecutionYear()).distinct().min(Comparator.naturalOrder()).orElse(null);
+
+        data.addField("firstTeacherService", "firstTeacherService", firstTeacherService.getQualifiedName(), _UNLIMITED);
     }
 
     static private void fillName(final A3esTeacherBean data, final Person person) {

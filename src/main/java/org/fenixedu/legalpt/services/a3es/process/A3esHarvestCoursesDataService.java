@@ -66,8 +66,9 @@ public class A3esHarvestCoursesDataService {
         }).collect(Collectors.toCollection(() -> bean.getCoursesData()));
     }
 
-    static private void fillBasics(final A3esCourseBean data, final CompetenceCourse competence) {
-        data.addField("begin", "begin", competence.getBeginExecutionInterval().getQualifiedName(), _UNLIMITED);
+    private void fillBasics(final A3esCourseBean data, final CompetenceCourse competence) {
+        data.addField("currentInfo", "currentInfo", competence.findCompetenceCourseInformationForExecutionPeriod(this.semester)
+                .getExecutionInterval().getQualifiedName(), _UNLIMITED);
         data.addField("code", "code", competence.getCode(), _UNLIMITED);
     }
 

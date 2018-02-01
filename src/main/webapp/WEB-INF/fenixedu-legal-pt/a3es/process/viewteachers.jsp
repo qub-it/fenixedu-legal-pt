@@ -175,19 +175,19 @@
 			<table class="table">
 				<tbody>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.creationDate" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.creationDate" /></th>
 						<td><joda:format value="${process.versioningCreationDate}" pattern="yyyy-MM-dd HH:mm" /></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esProcess.name" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esProcess.name" /></th>
 						<td><c:out value="${process.name}"/></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.description" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esPeriod.description" /></th>
 						<td><c:out value="${process.description}"/></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
 						<td><c:out value="${process.degreeCurricularPlan.presentationName}"/></td>
 					</tr>
 				</tbody>
@@ -204,6 +204,7 @@
 				<thead>
 					<tr>
 						<th></th>
+						<th><spring:message code="label.firstTeacherService" /></th>
 						<th><spring:message code="label.name" /></th>
 						<%-- Operations Column --%>
 						<th></th>
@@ -213,6 +214,7 @@
 					<c:forEach var="iter" items="${processBean.teachersData}" varStatus="loop">
 						<tr>
 							<td></td>
+							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("firstTeacherService").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("name").getValue()%>"/></td>
 							<td>
 								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()"><spring:message code='label.view'/></a>
@@ -236,13 +238,13 @@
 													<tbody>
 														<c:forEach var="field" items="${iter.fields}" varStatus="loop">
 															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
+																<th scope="row" class="col-xs-4">${field.label}</th>
 																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
 															</tr>
 														</c:forEach>
 														<c:forEach var="field" items="${iter.attainedDegree.fields}" varStatus="loop">
 															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
+																<th scope="row" class="col-xs-4">${field.label}</th>
 																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
 															</tr>
 														</c:forEach>
@@ -252,14 +254,24 @@
 												<h4><spring:message code="label.otherAcademicDegreesOrTitle" /></h4>
 												<table class="table responsive table-bordered table-hover" width="100%">
 													<tbody>
-														<c:forEach var="attainedDegree" items="${iter.otherAttainedDegrees}" varStatus="loop">
-															<c:forEach var="field" items="${attainedDegree.fields}" varStatus="loop">
+														<c:choose>
+															<c:when test="${not empty iter.otherAttainedDegrees}">
+																<c:forEach var="attainedDegree" items="${iter.otherAttainedDegrees}" varStatus="loop">
+																	<c:forEach var="field" items="${attainedDegree.fields}" varStatus="loop">
+																		<tr>
+																			<th scope="row" class="col-xs-4">${field.label}</th>
+																			<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																		</tr>
+																	</c:forEach>
+																</c:forEach>
+															</c:when>
+															<c:otherwise>
 																<tr>
-																	<th scope="row" class="col-xs-3">${field.label}</th>
-																	<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																	<th scope="row" class="col-xs-4">&nbsp;</th>
+																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
 																</tr>
-															</c:forEach>
-														</c:forEach>
+															</c:otherwise>
+														</c:choose>
 													</tbody>
 												</table>
 
@@ -267,12 +279,22 @@
 												<small><em><p><spring:message code="label.scientificActivity.message" /></p></em></small>
 												<table class="table responsive table-bordered table-hover" width="100%">
 													<tbody>
-														<c:forEach var="field" items="${iter.primePublishedWork.fields}" varStatus="loop">
-															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
-																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
-															</tr>
-														</c:forEach>
+														<c:choose>
+															<c:when test="${not empty iter.primePublishedWork.fields}">
+																<c:forEach var="field" items="${iter.primePublishedWork.fields}" varStatus="loop">
+																	<tr>
+																		<th scope="row" class="col-xs-4">${field.label}</th>
+																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																	</tr>
+																</c:forEach>
+															</c:when>
+															<c:otherwise>
+																<tr>
+																	<th scope="row" class="col-xs-4">&nbsp;</th>
+																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																</tr>
+															</c:otherwise>
+														</c:choose>
 													</tbody>
 												</table>
 
@@ -280,12 +302,22 @@
 												<small><em><p><spring:message code="label.developmentActivity.message" /></p></em></small>
 												<table class="table responsive table-bordered table-hover" width="100%">
 													<tbody>
-														<c:forEach var="field" items="${iter.primeProfessionalActivities.fields}" varStatus="loop">
-															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
-																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
-															</tr>
-														</c:forEach>
+														<c:choose>
+															<c:when test="${not empty iter.primeProfessionalActivities.fields}">
+																<c:forEach var="field" items="${iter.primeProfessionalActivities.fields}" varStatus="loop">
+																	<tr>
+																		<th scope="row" class="col-xs-4">${field.label}</th>
+																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																	</tr>
+																</c:forEach>
+															</c:when>
+															<c:otherwise>
+																<tr>
+																	<th scope="row" class="col-xs-4">&nbsp;</th>
+																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																</tr>
+															</c:otherwise>
+														</c:choose>
 													</tbody>
 												</table>
 
@@ -293,39 +325,69 @@
 												<small><em><p><spring:message code="label.otherPublicationActivity.message" /></p></em></small>
 												<table class="table responsive table-bordered table-hover" width="100%">
 													<tbody>
-														<c:forEach var="field" items="${iter.otherPublishedWork.fields}" varStatus="loop">
-															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
-																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
-															</tr>
-														</c:forEach>
+														<c:choose>
+															<c:when test="${not empty iter.otherPublishedWork.fields}">
+																<c:forEach var="field" items="${iter.otherPublishedWork.fields}" varStatus="loop">
+																	<tr>
+																		<th scope="row" class="col-xs-4">${field.label}</th>
+																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																	</tr>
+																</c:forEach>
+															</c:when>
+															<c:otherwise>
+																<tr>
+																	<th scope="row" class="col-xs-4">&nbsp;</th>
+																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																</tr>
+															</c:otherwise>
+														</c:choose>
 													</tbody>
-												</table>											
+												</table>
 
 												<h4><spring:message code="label.otherProfessionalActivity" /></h4>
 												<small><em><p><spring:message code="label.otherProfessionalActivity.message" /></p></em></small>
 												<table class="table responsive table-bordered table-hover" width="100%">
 													<tbody>
-														<c:forEach var="field" items="${iter.otherProfessionalActivities.fields}" varStatus="loop">
-															<tr>
-																<th scope="row" class="col-xs-3">${field.label}</th>
-																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
-															</tr>
-														</c:forEach>
+														<c:choose>
+															<c:when test="${not empty iter.otherProfessionalActivities.fields}">
+																<c:forEach var="field" items="${iter.otherProfessionalActivities.fields}" varStatus="loop">
+																	<tr>
+																		<th scope="row" class="col-xs-4">${field.label}</th>
+																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																	</tr>
+																</c:forEach>
+															</c:when>
+															<c:otherwise>
+																<tr>
+																	<th scope="row" class="col-xs-4">&nbsp;</th>
+																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																</tr>
+															</c:otherwise>
+														</c:choose>
 													</tbody>
 												</table>
 
 												<h4><spring:message code="label.teachingServiceAllocation" /></h4>
 												<table class="table responsive table-bordered table-hover" width="100%">
 													<tbody>
-														<c:forEach var="teachingService" items="${iter.teachingServices}" varStatus="loop">
-															<c:forEach var="field" items="${teachingService.fields}" varStatus="loop">
+														<c:choose>
+															<c:when test="${not empty iter.teachingServices}">
+																<c:forEach var="teachingService" items="${iter.teachingServices}" varStatus="loop">
+																	<c:forEach var="field" items="${teachingService.fields}" varStatus="loop">
+																		<tr>
+																			<th scope="row" class="col-xs-4">${field.label}</th>
+																			<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																		</tr>
+																	</c:forEach>
+																</c:forEach>
+															</c:when>
+															<c:otherwise>
 																<tr>
-																	<th scope="row" class="col-xs-3">${field.label}</th>
-																	<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																	<th scope="row" class="col-xs-4">&nbsp;</th>
+																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
 																</tr>
-															</c:forEach>
-														</c:forEach>
+															</c:otherwise>
+														</c:choose>
 													</tbody>
 												</table>
 
