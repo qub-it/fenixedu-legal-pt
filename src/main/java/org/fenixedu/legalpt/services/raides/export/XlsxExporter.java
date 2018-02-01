@@ -64,9 +64,9 @@ public class XlsxExporter {
                 addCell("RegimeFrequencia", tblInscrito.getRegimeFrequencia());
                 addCell("NumInscNesteCurso",
                         tblInscrito.getNumInscNesteCurso() != null ? (int) tblInscrito.getNumInscNesteCurso() : "");
-                addCell("ECTSInscricao", tblInscrito.getEctsInscricao() != null ? tblInscrito.getEctsInscricao().intValue() : "");
+                addCell("ECTSInscricao", tblInscrito.getEctsInscricao() != null ? tblInscrito.getEctsInscricao().toString() : "");
                 addCell("ECTSAcumulados",
-                        tblInscrito.getEctsAcumulados() != null ? tblInscrito.getEctsAcumulados().intValue() : "");
+                        tblInscrito.getEctsAcumulados() != null ? tblInscrito.getEctsAcumulados().toString() : "");
                 addCell("TempoParcial", tblInscrito.getTempoParcial());
                 addCell("Bolseiro", tblInscrito.getBolseiro());
                 addCell("FormaIngresso", tblInscrito.getFormaIngresso());
