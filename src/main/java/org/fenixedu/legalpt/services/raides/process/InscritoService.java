@@ -60,7 +60,7 @@ public class InscritoService extends RaidesService {
         if (Raides.isDoctoralDegree(registration)) {
             bean.setEctsInscricao(doctoralEnrolledEcts(executionYear, registration, maximumAnnulmentDate));
         } else {
-            bean.setEctsInscricao(enrolledEcts(executionYear, registration, maximumAnnulmentDate));
+            bean.setEctsInscricao(enrolledEcts(executionYear, registration, maximumAnnulmentDate, false));
         }
 
         if (!isFirstTimeOnDegree(registration, executionYear)) {

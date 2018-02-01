@@ -303,28 +303,25 @@ public class RaidesService {
             bean.setAnoEscolaridadeAnt(lastCompletedQualification.getConclusionYear().toString());
         }
 
-        if (lastCompletedQualification.getInstitution() != null && lastCompletedQualification.getInstitution().isOfficial()) {
-            bean.setEstabEscolaridadeAnt(lastCompletedQualification.getInstitution().getCode());
-        } else if (lastCompletedQualification.getInstitution() != null) {
-            bean.setEstabEscolaridadeAnt(Raides.Estabelecimentos.OUTRO);
-            bean.setOutroEstabEscolarAnt(lastCompletedQualification.getInstitution().getNameI18n().getContent());
-        }
-
-        boolean precedentDegreeDesignationFilled = false;
-        if (isPrecedentDegreePortugueseHigherEducation(lastCompletedQualification)
+        if (isPortuguesePostHighSchool(lastCompletedQualification)
                 && !Strings.isNullOrEmpty(lastCompletedQualification.getDegreeDesignation())) {
+
+            if (lastCompletedQualification.getInstitution() != null && lastCompletedQualification.getInstitution().isOfficial()) {
+                bean.setEstabEscolaridadeAnt(lastCompletedQualification.getInstitution().getCode());
+            } else if (lastCompletedQualification.getInstitution() != null) {
+                bean.setEstabEscolaridadeAnt(Raides.Estabelecimentos.OUTRO);
+                bean.setOutroEstabEscolarAnt(lastCompletedQualification.getInstitution().getNameI18n().getContent());
+            }
+
             final DegreeDesignation degreeDesignation = DegreeDesignation.readByNameAndSchoolLevel(
                     lastCompletedQualification.getDegreeDesignation(), lastCompletedQualification.getSchoolLevel());
 
             if (degreeDesignation != null) {
                 bean.setCursoEscolarAnt(degreeDesignation.getCode());
-                precedentDegreeDesignationFilled = true;
+            } else {
+                bean.setCursoEscolarAnt(Raides.Cursos.OUTRO);
+                bean.setOutroCursoEscolarAnt(lastCompletedQualification.getDegreeDesignation());
             }
-        }
-
-        if (!precedentDegreeDesignationFilled && !Strings.isNullOrEmpty(lastCompletedQualification.getDegreeDesignation())) {
-            bean.setCursoEscolarAnt(Raides.Cursos.OUTRO);
-            bean.setOutroCursoEscolarAnt(lastCompletedQualification.getDegreeDesignation());
         }
 
         if (bean.isTipoEstabSecSpecified()) {
@@ -377,14 +374,20 @@ public class RaidesService {
         return null;
     }
 
-    protected boolean isPrecedentDegreePortugueseHigherEducation(final PrecedentDegreeInformation lastCompletedQualification) {
+    protected boolean isPortuguesePostHighSchool(final PrecedentDegreeInformation lastCompletedQualification) {
         return lastCompletedQualification.getCountry() != null && lastCompletedQualification.getCountry().isDefaultCountry()
-                && isHigherEducation(lastCompletedQualification);
+                && isPostHighEducation(lastCompletedQualification);
     }
 
-    protected boolean isHigherEducation(final PrecedentDegreeInformation lastCompletedQualification) {
+    protected boolean isPostHighEducation(final PrecedentDegreeInformation precedentDegreeInformation) {
+        return precedentDegreeInformation.getSchoolLevel() != null
+                && (precedentDegreeInformation.getSchoolLevel().isHigherEducation()
+                        || isCetEducation(precedentDegreeInformation));
+    }
+
+    protected boolean isCetEducation(final PrecedentDegreeInformation lastCompletedQualification) {
         return lastCompletedQualification.getSchoolLevel() != null
-                && lastCompletedQualification.getSchoolLevel().isHigherEducation();
+                && lastCompletedQualification.getSchoolLevel() == SchoolLevelType.TECHNICAL_SPECIALIZATION;
     }
 
     protected void validaGrauPrecedenteCompleto(final Unit institutionUnit, final ExecutionYear executionYear,
@@ -455,8 +458,7 @@ public class RaidesService {
             return;
         }
 
-        if (lastCompletedQualification.getSchoolLevel() == null
-                || !lastCompletedQualification.getSchoolLevel().isHigherEducation()) {
+        if (lastCompletedQualification.getSchoolLevel() == null || !isPostHighEducation(lastCompletedQualification)) {
             return;
         }
 
@@ -482,7 +484,7 @@ public class RaidesService {
     protected void validaCursoOficialInstituicaoOficial(final Unit institutionUnit, final ExecutionYear executionYear,
             final Registration registration, final PrecedentDegreeInformation lastCompletedQualification,
             final IGrauPrecedenteCompleto bean) {
-        if (!isPrecedentDegreePortugueseHigherEducation(lastCompletedQualification)) {
+        if (!isPortuguesePostHighSchool(lastCompletedQualification)) {
             return;
         }
 
@@ -512,7 +514,7 @@ public class RaidesService {
         }
 
         if ((Raides.isMasterDegreeOrDoctoralDegree(registration) || Raides.isSpecializationDegree(registration))
-                && !isHigherEducation(lastCompletedQualification)) {
+                && !isPostHighEducation(lastCompletedQualification)) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.isMasterDoctoralOrSpecialization.but.completed.qualification.is.not.higher",
                             formatArgs(registration, executionYear)));
@@ -526,8 +528,7 @@ public class RaidesService {
             return;
         }
 
-        if (lastCompletedQualification.getSchoolLevel() == null
-                || !lastCompletedQualification.getSchoolLevel().isHigherEducation()) {
+        if (lastCompletedQualification.getSchoolLevel() == null || !isPostHighEducation(lastCompletedQualification)) {
             return;
         }
 
@@ -544,8 +545,7 @@ public class RaidesService {
             bean.markAsInvalid();
         }
 
-        if (isPrecedentDegreePortugueseHigherEducation(lastCompletedQualification)
-                && Raides.Cursos.OUTRO.equals(bean.getCursoEscolarAnt())) {
+        if (isPortuguesePostHighSchool(lastCompletedQualification) && Raides.Cursos.OUTRO.equals(bean.getCursoEscolarAnt())) {
             LegalReportContext.addError("", i18n(
                     "error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
                     formatArgs(registration, executionYear)));
@@ -722,12 +722,16 @@ public class RaidesService {
     }
 
     protected BigDecimal enrolledEcts(final ExecutionYear executionYear, final Registration registration,
-            final DateTime maximumAnnulmentDate) {
+            final DateTime maximumAnnulmentDate, final boolean mobility) {
         final StudentCurricularPlan studentCurricularPlan = registration.getStudentCurricularPlan(executionYear);
         double result = 0.0;
 
         for (final Enrolment enrolment : studentCurricularPlan.getEnrolmentsSet()) {
             if (Raides.isEnrolmentAnnuled(enrolment, maximumAnnulmentDate)) {
+                continue;
+            }
+
+            if (!mobility && enrolment.getCurriculumGroup().isNoCourseGroupCurriculumGroup()) {
                 continue;
             }
 
@@ -760,12 +764,12 @@ public class RaidesService {
 
     protected BigDecimal doctoralEnrolledEcts(final ExecutionYear executionYear, final Registration registration,
             final DateTime maximumAnnulmentDate) {
-        if(isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION)) {
+        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION)) {
             return null;
         }
-        
-        if (BigDecimal.ZERO.compareTo(enrolledEcts(executionYear, registration, maximumAnnulmentDate)) != 0) {
-            BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate);
+
+        BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate, false);
+        if (BigDecimal.ZERO.compareTo(enrolledEcts) != 0) {
 
             enrolledEcts =
                     enrolledEcts.subtract(phdDissertationEnrolledEctsCredits(executionYear, registration, maximumAnnulmentDate));
@@ -789,10 +793,8 @@ public class RaidesService {
         for (final CurricularCourse dissertation : allDissertationCurricularCourses) {
 
             boolean isEnrollmentInDissertationCurricularCourse = studentCurricularPlan.getEnrolmentsByExecutionYear(executionYear)
-                    .stream()
-                    .filter(e -> e.getCurricularCourse() == dissertation)
-                    .filter(e -> !Raides.isEnrolmentAnnuled(e, maximumAnnulmentDate))
-                    .count() > 0;
+                    .stream().filter(e -> e.getCurricularCourse() == dissertation)
+                    .filter(e -> !Raides.isEnrolmentAnnuled(e, maximumAnnulmentDate)).count() > 0;
 
             if (isEnrollmentInDissertationCurricularCourse) {
                 result = result.add(new BigDecimal(dissertation.getEctsCredits()));

@@ -45,7 +45,7 @@ public class MobilidadeInternacionalService extends RaidesService {
 
         final DateTime maximumAnnulmentDate =
                 findMaximumAnnulmentDate(raidesRequestParameter.getPeriodsForInternationalMobility(), executionYear);
-        final BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate);
+        final BigDecimal enrolledEcts = enrolledEcts(executionYear, registration, maximumAnnulmentDate, true);
         if (enrolledEcts != null && enrolledEcts.compareTo(BigDecimal.ZERO) > 0) {
             //HACK HACK: some institutions declare ECTS that are not multiple of 0.5
             final Double enrollectsEctsAsDouble = enrolledEcts.doubleValue();
