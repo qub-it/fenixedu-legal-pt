@@ -12,7 +12,7 @@ abstract public class FenixEduLegalPTConfiguration {
 
     @ConfigurationManager(description = "FenixEdu Legal-PT Configuration")
     public interface ConfigurationProperties {
-        
+
         @ConfigurationProperty(key = "a3es.url", defaultValue = "http://testes.a3es.pt/si/iportal.php")
         public String a3esURL();
     }

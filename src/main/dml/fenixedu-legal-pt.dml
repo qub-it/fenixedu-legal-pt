@@ -1,7 +1,50 @@
 package org.fenixedu.legalpt.domain;
 
+enum org.fenixedu.legalpt.domain.a3es.A3esProcessType as A3esProcessType; 
 
 external class .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+external class .org.fenixedu.bennu.core.domain.Bennu;
+external class .org.fenixedu.academic.domain.DegreeCurricularPlan;
+external class .org.fenixedu.academic.domain.ExecutionYear;
+
+
+// ==================== BEGIN: A3esProcess ====================
+
+class a3es.A3esPeriod {
+	A3esProcessType type (REQUIRED);
+	DateTime fillInDateBegin (REQUIRED);
+    DateTime fillInDateEnd (REQUIRED);
+}
+	relation A3esPeriodRoot {
+	    a3es.A3esPeriod playsRole a3esPeriod { multiplicity *; }
+	    .org.fenixedu.bennu.core.domain.Bennu playsRole root { multiplicity 1..1; }
+	}
+	
+	relation A3esPeriodExecutionYear {
+	    a3es.A3esPeriod playsRole a3esPeriod { multiplicity *; }
+	    .org.fenixedu.academic.domain.ExecutionYear playsRole executionYear { multiplicity 1..1; }
+	}
+
+class a3es.A3esProcess {
+	String identifier (REQUIRED);
+	String description (REQUIRED);
+}
+	relation A3esProcessRoot {
+	    a3es.A3esProcess playsRole a3esProcess { multiplicity *; }
+	    .org.fenixedu.bennu.core.domain.Bennu playsRole root { multiplicity 1..1; }
+	}
+	
+	relation A3esProcess {
+	    a3es.A3esProcess playsRole process { multiplicity *; }
+	    a3es.A3esPeriod playsRole period { multiplicity 1..1; }
+	}
+	
+	relation A3esProcessDegreeCurricularPlan {
+	    a3es.A3esProcess playsRole a3esProcess { multiplicity 0..1; }
+	    .org.fenixedu.academic.domain.DegreeCurricularPlan playsRole degreeCurricularPlan { multiplicity 1..1; }
+	}
+	
+// ==================== END: A3esProcess ====================
 
 
 /*
@@ -15,3 +58,4 @@ class rebides.RebidesInstance extends .org.fenixedu.ulisboa.specifications.domai
 	String interlocutorPhone;
 	String passwordToZip;
 }
+

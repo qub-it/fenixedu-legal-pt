@@ -114,3 +114,47 @@ function createDataTablesWithSortSwitch(tableid, showsearchbox, showtools, pagin
 		$(this).toggleClass('selected');
 	});
 }
+
+function createDataTablesWithSelectionByCheckbox(tableid, showsearchbox, showtools, pagination, sortable, pagecontext,i18nurl) {
+	var dom = "";
+	if (showsearchbox == true && showtools == true) {
+		dom = '<"col-sm-5"l><"col-sm-3"f><"col-sm-3"B>rtip'; //FilterBox = YES && ExportOptions = YES
+	} else if (showsearchbox == true && showtools == false) {
+		dom = '<"col-sm-6"l><"col-sm-6"f>rtip'; // FilterBox = YES && ExportOptions = NO
+	} else if (showsearchbox == false && showtools == true) {
+		dom = 'T<"clear">lrtip'; // FilterBox = NO && ExportOptions = YES
+	} else {
+		dom = '<"col-sm-6"l>rtip'; // FilterBox = NO && ExportOptions = NO
+	}
+	var table = $('#'+tableid)
+			.DataTable({language : {
+				url : i18nurl,			
+			},
+			"bSort" : sortable,
+			"bDeferRender" : true,
+			"bPaginate" : pagination,
+			"dom" : dom, 
+            "buttons": [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
+			"tableTools" : {
+				"sSwfPath" : pagecontext + "/webjars/datatables-tools/2.2.4/swf/copy_csv_xls_pdf.swf"
+			},
+            "columnDefs": [
+                {
+                   'targets': 0,
+                   'checkboxes': {
+                      'selectRow': true
+                   }
+                }
+            ],
+            'select': {
+                'style': 'multi'
+            }
+	});
+	
+	table.columns.adjust().draw();
+}
