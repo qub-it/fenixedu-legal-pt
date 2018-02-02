@@ -157,4 +157,6 @@ function createDataTablesWithSelectionByCheckbox(tableid, showsearchbox, showtoo
 	});
 	
 	table.columns.adjust().draw();
+	
+	return table;
 }

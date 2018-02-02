@@ -403,6 +403,10 @@ abstract public class A3esExportService {
 
         bean.getCoursesData().forEach(data -> {
 
+            if (!bean.getSelectedIds().isEmpty() && !bean.getSelectedIds().contains(data.getFormattedId())) {
+                return;
+            }
+
             final JSONObject root = new JSONObject();
 
             root.put(getCoursesFieldKey("1"), data.getFieldUnique("1").getValue());
@@ -445,6 +449,10 @@ abstract public class A3esExportService {
         }
 
         bean.getTeachersData().forEach(data -> {
+
+            if (!bean.getSelectedIds().isEmpty() && !bean.getSelectedIds().contains(data.getFormattedId())) {
+                return;
+            }
 
             final JSONObject root = new JSONObject();
 

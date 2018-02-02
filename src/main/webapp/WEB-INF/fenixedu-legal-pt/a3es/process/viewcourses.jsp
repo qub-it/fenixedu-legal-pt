@@ -44,7 +44,13 @@
 					}
 				
 					$scope.upload = function(){
+						var selectedCheckboxes = $('#searchTable').DataTable().column(0).checkboxes.selected();
+						$scope.object.selectedIds = [];
+						for(var i = 0; i < selectedCheckboxes.length; i++) {
+							$scope.object.selectedIds.push(selectedCheckboxes[i]);
+						}
 						$('#exportForm').attr('action', '${pageContext.request.contextPath}<%= A3esProcessController.COURSESUPLOAD_URL %>');
+						$scope.$apply();
 						$('#exportForm').submit();
 					}
 				
@@ -160,7 +166,7 @@
 			</div>
 		</div>
 	</c:if>
-		
+	
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">
@@ -214,12 +220,12 @@
 				<tbody>
 					<c:forEach var="iter" items="${processBean.coursesData}" varStatus="loop">
 						<tr>
-							<td></td>
+							<td><c:out value="${iter.id}" /></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("1").getValue()%>"></c:out></td>
 							<td>
-								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()""><spring:message code='label.view'/></a>
+								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()"><spring:message code='label.view'/></a>
 								
 								<div class="modal fade" id="detailsModal${loop.index}">
 									<div class="modal-dialog">
@@ -265,7 +271,7 @@
 				</tbody>
 			</table>
 			<script type="text/javascript">
-				createDataTablesWithSelectionByCheckbox(
+				window.datatable = createDataTablesWithSelectionByCheckbox(
 						'searchTable', 
 						true /*filterable*/, 
 						false /*show tools*/, 

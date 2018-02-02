@@ -44,7 +44,13 @@
 					}
 				
 					$scope.upload = function(){
+						var selectedCheckboxes = $('#searchTable').DataTable().column(0).checkboxes.selected();
+						$scope.object.selectedIds = [];
+						for(var i = 0; i < selectedCheckboxes.length; i++) {
+							$scope.object.selectedIds.push(selectedCheckboxes[i]);
+						}
 						$('#exportForm').attr('action', '${pageContext.request.contextPath}<%= A3esProcessController.TEACHERSUPLOAD_URL %>');
+						$scope.$apply();
 						$('#exportForm').submit();
 					}
 				
@@ -160,7 +166,13 @@
 			</div>
 		</div>
 	</c:if>
-	
+
+<%--
+	<div class="alert alert-info" role="alert">
+		<spring:message code="label.evaluation.manageMarkSheet.updateEvaluations.instructions" arguments="${competenceCourseMarkSheet.gradeScaleDescription}" />
+	</div>
+--%>	
+
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">
@@ -172,6 +184,7 @@
 		<spring:message code="label.no" var="noLabel" />
 	
 		<div class="panel-body">
+		
 			<table class="table">
 				<tbody>
 					<tr>
@@ -213,7 +226,7 @@
 				<tbody>
 					<c:forEach var="iter" items="${processBean.teachersData}" varStatus="loop">
 						<tr>
-							<td></td>
+							<td><c:out value="${iter.id}" /></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("firstTeacherService").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("name").getValue()%>"/></td>
 							<td>
@@ -411,7 +424,7 @@
 				</tbody>
 			</table>
 			<script type="text/javascript">
-				createDataTablesWithSelectionByCheckbox(
+				window.datatable = createDataTablesWithSelectionByCheckbox(
 						'searchTable', 
 						true /*filterable*/, 
 						false /*show tools*/, 

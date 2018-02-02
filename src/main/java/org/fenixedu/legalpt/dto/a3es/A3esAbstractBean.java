@@ -40,7 +40,7 @@ public abstract class A3esAbstractBean implements Serializable {
     }
 
     public String getFormattedId() {
-        return String.format("%08d", beanId);
+        return String.format("%d", beanId);
     }
 
     private static Long generateId() {
