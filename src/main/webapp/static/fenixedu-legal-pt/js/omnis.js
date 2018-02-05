@@ -115,7 +115,7 @@ function createDataTablesWithSortSwitch(tableid, showsearchbox, showtools, pagin
 	});
 }
 
-function createDataTablesWithSelectionByCheckbox(tableid, showsearchbox, showtools, pagination, sortable, pagecontext,i18nurl) {
+function createDataTablesWithSelectionByCheckbox(tableid, showsearchbox, showtools, pagination, pagecontext, i18nurl) {
 	var dom = "";
 	if (showsearchbox == true && showtools == true) {
 		dom = '<"col-sm-5"l><"col-sm-3"f><"col-sm-3"B>rtip'; //FilterBox = YES && ExportOptions = YES
@@ -130,7 +130,6 @@ function createDataTablesWithSelectionByCheckbox(tableid, showsearchbox, showtoo
 			.DataTable({language : {
 				url : i18nurl,			
 			},
-			"bSort" : sortable,
 			"bDeferRender" : true,
 			"bPaginate" : pagination,
 			"dom" : dom, 
