@@ -55,6 +55,7 @@ import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.services.OccupationPeriodServices;
+import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -185,24 +186,33 @@ abstract public class A3esExportService {
         return (JSONArray) ((JSONObject) JSONValue.parse(getClientBuilder(target).get(String.class))).get("list");
     }
 
-    private String post(final WebTarget target, final JSONObject json, final String name) {
+    private String create(final WebTarget target, final JSONObject json, final String name) {
         final Response response = getClientBuilder(target).buildPost(Entity.text(json.toJSONString())).invoke();
-        return parseResponse(response, name);
+        return buildResponseText("create", response, name);
     }
 
     private String delete(final WebTarget target, final String name) {
         final Response response = getClientBuilder(target).buildDelete().invoke();
-        return parseResponse(response, name);
+        return buildResponseText("delete", response, name);
     }
 
-    private String parseResponse(final Response response, final String name) {
-        final int status = response.getStatus();
-        if (status == HttpStatus.SC_NO_CONTENT) {
-            return "";
+    private String buildResponseText(final String action, final Response response, final String name) {
+        return "[" + new DateTime().toString("yyyy-dd-MM HH:mm:ss") + SEPARATOR_3 + label(action) + SEPARATOR_3 + label("response")
+                + ": " + parseResponse(response) + "] " + name;
+    }
+
+    private String parseResponse(final Response response) {
+        if (response == null) {
+            return "-";
         }
 
-        final String statusText = HttpStatus.getStatusText(status);
-        return "[" + statusText + "] " + name;
+        final int status = response.getStatus();
+        if (status == HttpStatus.SC_NO_CONTENT) {
+            return "-";
+        }
+
+        final String result = label(String.valueOf(status));
+        return result.contains("!") ? HttpStatus.getStatusText(status) : result;
     }
 
     abstract protected String getFormName();
@@ -243,12 +253,8 @@ abstract public class A3esExportService {
         return (JSONArray) invoke(target.path(API_CVFOLDER)).get("folders");
     }
 
-    static private String fieldLabel(final String input) {
-        return i18n("label." + input);
-    }
-
     static private String reportLabel(final String label) {
-        return fieldLabel("note") + ": " + label;
+        return label("note") + ": " + label;
     }
 
     public List<String> coursesUpload(final A3esProcessBean bean) {
@@ -273,7 +279,7 @@ abstract public class A3esExportService {
                     result.addAll(deleteAttachmentsWithSameName(attachPath, folderId, attachExisting, name));
 
                     // try to create
-                    result.add(post(attachTarget, json, name));
+                    result.add(create(attachTarget, json, name));
                 }
 
                 result.add(deleteAttachmentsWithInvalidName(attachTarget, attachPath, folderId));
@@ -309,7 +315,7 @@ abstract public class A3esExportService {
                     result.addAll(deleteAttachmentsWithSameName(attachPath, folderId, attachExisting, name));
 
                     // try to create
-                    result.add(post(attachTarget, json, name));
+                    result.add(create(attachTarget, json, name));
                 }
 
                 result.add(deleteAttachmentsWithInvalidName(attachTarget, attachPath, folderId));
@@ -538,12 +544,12 @@ abstract public class A3esExportService {
     static public void coursesDownload(final SpreadsheetBuilder builder, final A3esProcessBean bean) throws IOException {
         final Set<A3esCourseBean> datas = bean.getCoursesData();
 
-        builder.addSheet(fieldLabel("courseFiles").replaceAll(" ", "_"), new SheetData<A3esCourseBean>(datas) {
+        builder.addSheet(label("courseFiles").replaceAll(" ", "_"), new SheetData<A3esCourseBean>(datas) {
             @Override
             protected void makeLine(final A3esCourseBean data) {
 
-                addCell(fieldLabel("degreeCode"), bean.getDegreeCode());
-                addCell(fieldLabel("degree"), bean.getDegreeCurricularPlan().getPresentationName());
+                addCell(label("degreeCode"), bean.getDegreeCode());
+                addCell(label("degree"), bean.getDegreeCurricularPlan().getPresentationName());
 
                 data.getFields().forEach(i -> {
                     addCell(i.getLabel(), i.getValue());
@@ -556,7 +562,7 @@ abstract public class A3esExportService {
     static public void teachersDownload(final SpreadsheetBuilder builder, final A3esProcessBean bean) throws IOException {
         final Set<A3esTeacherBean> datas = bean.getTeachersData();
 
-        builder.addSheet(fieldLabel("teacherFiles").replaceAll(" ", "_"), new SheetData<A3esTeacherBean>(datas) {
+        builder.addSheet(label("teacherFiles").replaceAll(" ", "_"), new SheetData<A3esTeacherBean>(datas) {
             @Override
             protected void makeLine(final A3esTeacherBean data) {
 
@@ -570,32 +576,32 @@ abstract public class A3esExportService {
                     addCell(reportLabel(i.getLabel()), i.getReport());
                 });
 
-                String label = fieldLabel("otherAcademicDegreesOrTitle");
+                String label = label("otherAcademicDegreesOrTitle");
                 String value = data.getOtherAttainedDegrees().stream().map(i -> concat(i)).collect(Collectors.joining("\n"));
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
 
-                label = fieldLabel("scientificActivity");
+                label = label("scientificActivity");
                 value = concat(data.getPrimePublishedWork());
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
 
-                label = fieldLabel("developmentActivity");
+                label = label("developmentActivity");
                 value = concat(data.getPrimeProfessionalActivities());
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
 
-                label = fieldLabel("otherPublicationActivity");
+                label = label("otherPublicationActivity");
                 value = concat(data.getOtherPublishedWork());
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
 
-                label = fieldLabel("otherProfessionalActivity");
+                label = label("otherProfessionalActivity");
                 value = concat(data.getOtherProfessionalActivities());
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
 
-                label = fieldLabel("teachingServiceAllocation");
+                label = label("teachingServiceAllocation");
                 value = data.getTeachingServices().stream().map(i -> concat(i)).collect(Collectors.joining("\n"));
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
@@ -610,6 +616,10 @@ abstract public class A3esExportService {
                 return StringUtils.isBlank(value) ? labelFieldMissing() : value.contains(CUT) ? labelFieldCutInfo() : null;
             }
         });
+    }
+
+    static private String label(final String input) {
+        return i18n("label." + input);
     }
 
     public static String i18n(final String code, String... args) {
