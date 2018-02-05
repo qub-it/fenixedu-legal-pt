@@ -44,11 +44,16 @@
 					}
 				
 					$scope.upload = function(){
+						$('#uploadModal').hide();
+						$('.modal-backdrop').hide();
+						openPleaseWaitDialog();
+						
 						var selectedCheckboxes = $('#searchTable').DataTable().column(0).checkboxes.selected();
 						$scope.object.selectedIds = [];
 						for(var i = 0; i < selectedCheckboxes.length; i++) {
 							$scope.object.selectedIds.push(selectedCheckboxes[i]);
 						}
+						
 						$('#exportForm').attr('action', '${pageContext.request.contextPath}<%= A3esProcessController.COURSESUPLOAD_URL %>');
 						$scope.$apply();
 						$('#exportForm').submit();
@@ -168,7 +173,7 @@
 	</c:if>
 
 	<div class="alert alert-info" role="alert">
-		<spring:message code="label.A3es.instructions" />
+		<spring:message code="label.A3es.upload.instructions" />
 	</div>
 
 	<div class="panel panel-primary">
@@ -343,5 +348,7 @@
 		<!-- /.modal-dialog -->
 	</div>
 	<!-- /.modal -->
+	
+	<jsp:include page="<%= "/layout/pleasewait.jsp"%>"/>
 	
 </form>

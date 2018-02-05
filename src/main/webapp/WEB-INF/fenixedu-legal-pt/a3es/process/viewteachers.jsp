@@ -44,11 +44,16 @@
 					}
 				
 					$scope.upload = function(){
+						$('#uploadModal').hide();
+						$('.modal-backdrop').hide();
+						openPleaseWaitDialog();
+						
 						var selectedCheckboxes = $('#searchTable').DataTable().column(0).checkboxes.selected();
 						$scope.object.selectedIds = [];
 						for(var i = 0; i < selectedCheckboxes.length; i++) {
 							$scope.object.selectedIds.push(selectedCheckboxes[i]);
 						}
+						
 						$('#exportForm').attr('action', '${pageContext.request.contextPath}<%= A3esProcessController.TEACHERSUPLOAD_URL %>');
 						$scope.$apply();
 						$('#exportForm').submit();
@@ -159,7 +164,7 @@
 		    <a href="#" onclick="$('#uploadResults').slideToggle('fast');" style="color: inherit; text-decoration: none;">
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;<spring:message code="info.A3es.upload.results" />
 		    </a>
-			<div id="uploadResults" style="border: #ddd dotted 1px; display: none;">
+			<div id="uploadResults" style="display: none; border: #ddd dotted 1px;">
 				<c:forEach var="uploadResult" items="${uploadResults}">
 					<p><c:out value="${uploadResult}" /></p>
 				</c:forEach>
@@ -168,7 +173,7 @@
 	</c:if>
 
 	<div class="alert alert-info" role="alert">
-		<spring:message code="label.A3es.instructions" />
+		<spring:message code="label.A3es.upload.instructions" />
 	</div>
 
 	<div class="panel panel-primary">
@@ -489,5 +494,7 @@
 		<!-- /.modal-dialog -->
 	</div>
 	<!-- /.modal -->
+	
+	<jsp:include page="<%= "/layout/pleasewait.jsp"%>"/>
 	
 </form>
