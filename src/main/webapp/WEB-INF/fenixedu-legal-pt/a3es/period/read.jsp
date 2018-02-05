@@ -158,23 +158,23 @@
 				<table class="table">
 					<tbody>
 						<tr>
-							<th scope="row" class="col-xs-3"><spring:message code="label.creationDate" /></th>
+							<th scope="row" class="col-xs-2"><spring:message code="label.creationDate" /></th>
 							<td><joda:format value="${period.versioningCreationDate}" pattern="yyyy-MM-dd HH:mm" /></td>
 						</tr>
 						<tr>
-							<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.executionYear" /></th>
+							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.executionYear" /></th>
 							<td><c:out value="${period.executionYear.qualifiedName}"/></td>
 						</tr>
 	                    <tr>
-	                        <th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.type" /></th>
+	                        <th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.type" /></th>
 	                        <td><c:out value="${period.type.code}"/> - <c:out value="${period.type.localizedName.content}"/></td>
 	                    </tr>
 						<tr>
-							<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.fillInDateBegin" /></th>
+							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.fillInDateBegin" /></th>
 							<td><joda:format value="${period.fillInDateBegin}" pattern="yyyy-MM-dd HH:mm" /></td>
 						</tr>
 						<tr>
-							<th scope="row" class="col-xs-3"><spring:message code="label.A3esPeriod.fillInDateEnd" /></th>
+							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.fillInDateEnd" /></th>
 							<td><joda:format value="${period.fillInDateEnd}" pattern="yyyy-MM-dd HH:mm" /></td>
 						</tr>
 					</tbody>

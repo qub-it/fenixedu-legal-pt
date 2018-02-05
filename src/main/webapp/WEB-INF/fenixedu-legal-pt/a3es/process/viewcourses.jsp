@@ -166,7 +166,11 @@
 			</div>
 		</div>
 	</c:if>
-	
+
+	<div class="alert alert-info" role="alert">
+		<spring:message code="label.A3es.instructions" />
+	</div>
+
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">
@@ -181,19 +185,19 @@
 			<table class="table">
 				<tbody>
 					<tr>
-						<th scope="row" class="col-xs-4"><spring:message code="label.creationDate" /></th>
+						<th scope="row" class="col-xs-2"><spring:message code="label.creationDate" /></th>
 						<td><joda:format value="${process.versioningCreationDate}" pattern="yyyy-MM-dd HH:mm" /></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-4"><spring:message code="label.A3esProcess.name" /></th>
+						<th scope="row" class="col-xs-2"><spring:message code="label.A3esProcess.name" /></th>
 						<td><c:out value="${process.name}"/></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-4"><spring:message code="label.A3esPeriod.description" /></th>
+						<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.description" /></th>
 						<td><c:out value="${process.description}"/></td>
 					</tr>
 					<tr>
-						<th scope="row" class="col-xs-4"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
+						<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
 						<td><c:out value="${process.degreeCurricularPlan.presentationName}"/></td>
 					</tr>
 				</tbody>
