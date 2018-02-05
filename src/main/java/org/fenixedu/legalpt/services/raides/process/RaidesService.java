@@ -27,6 +27,7 @@ import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.degreeStructure.RootCourseGroup;
 import org.fenixedu.academic.domain.organizationalStructure.AcademicalInstitutionType;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
+import org.fenixedu.academic.domain.organizationalStructure.UnitUtils;
 import org.fenixedu.academic.domain.raides.DegreeClassification;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
@@ -306,7 +307,8 @@ public class RaidesService {
         if (isPortuguesePostHighSchool(lastCompletedQualification)
                 && !Strings.isNullOrEmpty(lastCompletedQualification.getDegreeDesignation())) {
 
-            if (lastCompletedQualification.getInstitution() != null && lastCompletedQualification.getInstitution().isOfficial()) {
+            if (lastCompletedQualification.getInstitution() != null && (lastCompletedQualification.getInstitution().isOfficial()
+                    || UnitUtils.readInstitutionUnit() == lastCompletedQualification.getInstitution())) {
                 bean.setEstabEscolaridadeAnt(lastCompletedQualification.getInstitution().getCode());
             } else if (lastCompletedQualification.getInstitution() != null) {
                 bean.setEstabEscolaridadeAnt(Raides.Estabelecimentos.OUTRO);

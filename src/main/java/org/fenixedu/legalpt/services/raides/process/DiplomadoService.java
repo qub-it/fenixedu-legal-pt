@@ -113,7 +113,7 @@ public class DiplomadoService extends RaidesService {
             }
         }
 
-        preencheMobilidadeCredito(registration, bean);
+        preencheMobilidadeCredito(registration, bean, executionYear);
         preencheGrauPrecedentCompleto(bean, institutionUnit, executionYear, registration);
 
         validaClassificacao(executionYear, graduatedPeriod, registration, bean);
@@ -156,7 +156,7 @@ public class DiplomadoService extends RaidesService {
         /* Override Ramo to report the branch open inside first cycle curriculum group */
         preencheRamo(report, bean, executionYear, registration, true);
 
-        preencheMobilidadeCredito(registration, bean);
+        preencheMobilidadeCredito(registration, bean, executionYear);
         preencheGrauPrecedentCompleto(bean, raidesRequestParameter.getInstitution(), executionYear, registration);
 
         validaClassificacao(executionYear, graduatedPeriod, registration, bean);
@@ -165,13 +165,14 @@ public class DiplomadoService extends RaidesService {
         return bean;
     }
 
-    protected void preencheMobilidadeCredito(final Registration registration, final TblDiplomado bean) {
+    protected void preencheMobilidadeCredito(final Registration registration, final TblDiplomado bean,
+            final ExecutionYear executionYear) {
 
         bean.setMobilidadeCredito(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(false));
 
-        if (MobilityRegistrationInformation.hasAnyInternationalOutgoingMobility(registration)) {
+        if (MobilityRegistrationInformation.hasAnyInternationalOutgoingMobilityUntil(registration, executionYear)) {
 
-            final MobilityRegistrationInformation mobility = findOutgoingMobility(registration);
+            final MobilityRegistrationInformation mobility = findOutgoingMobility(registration, executionYear);
 
             bean.setMobilidadeCredito(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(true));
             bean.setTipoMobilidadeCredito(LegalMapping.find(report, LegalMappingType.INTERNATIONAL_MOBILITY_ACTIVITY)
@@ -190,15 +191,15 @@ public class DiplomadoService extends RaidesService {
         }
     }
 
-    private MobilityRegistrationInformation findOutgoingMobility(Registration registration) {
+    private MobilityRegistrationInformation findOutgoingMobility(Registration registration, ExecutionYear executionYear) {
 
         final MobilityRegistrationInformation mainInformation =
-                MobilityRegistrationInformation.findMainInternationalOutgoingInformation(registration);
+                MobilityRegistrationInformation.findMainInternationalOutgoingInformationUntil(registration, executionYear);
         if (mainInformation != null) {
             return mainInformation;
         }
 
-        return MobilityRegistrationInformation.findInternationalOutgoingInformations(registration).stream()
+        return MobilityRegistrationInformation.findInternationalOutgoingInformationsUntil(registration, executionYear).stream()
                 .sorted((x, y) -> x.getExternalId().compareTo(y.getExternalId())).findFirst().orElse(null);
     }
 
@@ -286,12 +287,12 @@ public class DiplomadoService extends RaidesService {
     protected void validaMobilidadeCredito(final ExecutionYear executionYear, final Registration registration,
             final TblDiplomado bean) {
 
-        if (!MobilityRegistrationInformation.hasAnyInternationalOutgoingMobility(registration)) {
+        if (!MobilityRegistrationInformation.hasAnyInternationalOutgoingMobilityUntil(registration, executionYear)) {
             return;
         }
 
-        if (MobilityRegistrationInformation.findInternationalOutgoingInformations(registration).size() > 1
-                && MobilityRegistrationInformation.findMainInternationalOutgoingInformation(registration) == null) {
+        if (MobilityRegistrationInformation.findInternationalOutgoingInformationsUntil(registration,executionYear).size() > 1
+                && MobilityRegistrationInformation.findMainInternationalOutgoingInformationUntil(registration,executionYear) == null) {
             LegalReportContext.addError("", i18n("error.Raides.validation.graduated.mobility.mainInformation.missing",
                     formatArgs(registration, executionYear)));
         }
