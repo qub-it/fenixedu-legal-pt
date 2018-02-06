@@ -654,14 +654,7 @@ public class Raides {
         }
 
         final RegistrationDataByExecutionYear registrationData = getRegistrationDataByExecutionYear(registration, executionYear);
-        final boolean withHistoric = registrationData != null && registrationData.getEnrolmentDate() != null;
-
-        if (withHistoric) {
-            LegalReportContext.addWarn("", i18n("warn.Raides.enrolledInExecutionYear.with.historic.but.not.enrolments",
-                    formatArgs(registration, executionYear)));
-        }
-
-        return withHistoric;
+        return registrationData != null && registrationData.getEnrolmentDate() != null;
     }
 
     protected Collection<Enrolment> filterExtraCurricularCourses(final Collection<Enrolment> enrolments) {
