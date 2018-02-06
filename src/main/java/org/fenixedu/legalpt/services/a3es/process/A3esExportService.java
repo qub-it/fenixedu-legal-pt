@@ -44,7 +44,6 @@ import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
-import org.fenixedu.legalpt.FenixEduLegalPTConfiguration;
 import org.fenixedu.legalpt.domain.a3es.A3esPeriod;
 import org.fenixedu.legalpt.domain.exceptions.LegalPTDomainException;
 import org.fenixedu.legalpt.dto.a3es.A3esAbstractBean;
@@ -54,6 +53,7 @@ import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.util.LegalPTUtil;
+import org.fenixedu.ulisboa.specifications.domain.legal.settings.LegalSettings;
 import org.fenixedu.ulisboa.specifications.domain.services.OccupationPeriodServices;
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
@@ -171,7 +171,7 @@ abstract public class A3esExportService {
 
     protected WebTarget getClientTarget() {
         final Client client = ClientBuilder.newClient();
-        return client.target(FenixEduLegalPTConfiguration.getConfiguration().a3esURL());
+        return client.target(LegalSettings.getInstance().getA3esURL());
     }
 
     private Builder getClientBuilder(final WebTarget target) {
@@ -197,8 +197,8 @@ abstract public class A3esExportService {
     }
 
     private String buildResponseText(final String action, final Response response, final String name) {
-        return "[" + new DateTime().toString("yyyy-dd-MM HH:mm:ss") + SEPARATOR_3 + label(action) + SEPARATOR_3 + label("response")
-                + ": " + parseResponse(response) + "] " + name;
+        return "[" + new DateTime().toString("yyyy-dd-MM HH:mm:ss") + SEPARATOR_3 + label(action) + SEPARATOR_3
+                + label("response") + ": " + parseResponse(response) + "] " + name;
     }
 
     private String parseResponse(final Response response) {

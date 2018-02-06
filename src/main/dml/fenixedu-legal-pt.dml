@@ -43,6 +43,9 @@ class a3es.A3esProcess {
 	    a3es.A3esProcess playsRole a3esProcess { multiplicity 0..1; }
 	    .org.fenixedu.academic.domain.DegreeCurricularPlan playsRole degreeCurricularPlan { multiplicity 1..1; }
 	}
+
+class a3es.A3esInstance extends .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport {
+}
 	
 // ==================== END: A3esProcess ====================
 

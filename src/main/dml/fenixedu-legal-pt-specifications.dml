@@ -306,15 +306,11 @@ class legal.raides.RaidesInstance extends legal.report.LegalReport {
 /* Legal Settings */
 
 class legal.settings.LegalSettings {
-	
+	int numberOfLessonWeeks;
+	String a3esURL;	
 }
 
-	relation BennuLegalSettings {
-		.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
-			multiplicity 1..1;
-		}
-	
-		legal.settings.LegalSettings playsRole legalSettings {
-			multiplicity *;
-		}
+	relation LegalSettingsRoot {
+		legal.settings.LegalSettings playsRole legalSettings { multiplicity *; }
+		.org.fenixedu.bennu.core.domain.Bennu playsRole bennu { multiplicity 1..1; }
 	}
