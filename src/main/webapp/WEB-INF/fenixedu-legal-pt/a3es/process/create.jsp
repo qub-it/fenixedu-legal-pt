@@ -114,7 +114,7 @@
 		
 			<div class="form-group row">
 				<div class="col-sm-2 control-label">
-					<spring:message code="label.A3esProcess.executionYear" />
+					<spring:message code="label.A3esPeriod.executionYear" />
 				</div>
 				<div class="col-sm-2">
 					<ui-select	id="executionYearSelect" name="executionYear" ng-model="$parent.object.executionYear" theme="bootstrap" on-select="onExecutionYearChange($model)" on-remove="onExecutionYearChange($model)">
@@ -127,7 +127,7 @@
 			</div>
 			<div class="form-group row">
 				<div class="col-sm-2 control-label">
-					<spring:message code="label.A3esProcess.type" />
+					<spring:message code="label.A3esPeriod.type" />
 				</div>
 				<div class="col-sm-6">
 					<ui-select	id="typeSelected" name="type" ng-model="$parent.object.type" theme="bootstrap">

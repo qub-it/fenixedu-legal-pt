@@ -25,8 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.common.collect.Sets;
 
 @Component("org.fenixedu.legalpt.ui.a3es.period")
-@SpringFunctionality(app = FenixeduLegalPTController.class, title = "title.a3es.accreditation.periodes",
-        accessGroup = "#managers")
+@SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.searchA3esPeriod", accessGroup = "#managers")
 @RequestMapping(A3esPeriodController.CONTROLLER_URL)
 public class A3esPeriodController extends FenixeduLegalPTBaseController {
 

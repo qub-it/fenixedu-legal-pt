@@ -37,8 +37,7 @@ import com.google.common.collect.Sets;
 import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 
 @Component("org.fenixedu.legalpt.ui.a3es.process")
-@SpringFunctionality(app = FenixeduLegalPTController.class, title = "title.a3es.accreditation.processes",
-        accessGroup = "#managers")
+@SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.searchA3esProcess", accessGroup = "#managers")
 @RequestMapping(A3esProcessController.CONTROLLER_URL)
 public class A3esProcessController extends FenixeduLegalPTBaseController {
 
@@ -284,7 +283,7 @@ public class A3esProcessController extends FenixeduLegalPTBaseController {
             final ByteArrayOutputStream result = new ByteArrayOutputStream();
             A3esExportService.coursesDownload(builder, bean);
             builder.build(WorkbookExportFormat.EXCEL, result);
-            writeFile(response, getFileName(bean, LegalPTUtil.bundle("label.coursesFiles")), "application/vnd.ms-excel",
+            writeFile(response, getFileName(bean, LegalPTUtil.bundle("label.courseFiles")), "application/vnd.ms-excel",
                     result.toByteArray());
         }
     }
