@@ -2,15 +2,20 @@ package org.fenixedu.legalpt.domain.a3es.mapping;
 
 import java.util.Set;
 
+import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.domain.TeacherCategory;
 import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.DomainObjectLegalMapping;
+import org.fenixedu.ulisboa.specifications.domain.legal.mapping.EnumerationLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+
+import com.google.common.collect.Sets;
 
 import pt.ist.fenixframework.FenixFramework;
 
@@ -49,6 +54,24 @@ public enum A3esMappingType implements ILegalMappingType {
         @Override
         public LocalizedString getLocalizedNameKey(final String key) {
             return ((QualificationLevel) FenixFramework.getDomainObject(key)).getName();
+        }
+    },
+
+    SHIFT_TYPE {
+
+        @Override
+        public Set<?> getValues() {
+            return Sets.newHashSet(ShiftType.values());
+        }
+
+        @Override
+        public LegalMapping createMapping(final LegalReport report) {
+            return new EnumerationLegalMapping(report, this);
+        }
+
+        @Override
+        public LocalizedString getLocalizedNameKey(final String key) {
+            return new LocalizedString().with(I18N.getLocale(), ShiftType.valueOf(key).getFullNameTipoAula());
         }
     }
 
