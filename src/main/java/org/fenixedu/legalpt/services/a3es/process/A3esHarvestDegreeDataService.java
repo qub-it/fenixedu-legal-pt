@@ -277,8 +277,6 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillHasBranches() {
-// TODO legidio
-//
 //        String hasBranches = this.degreeCurricularPlan.getCourseGroupBranches().isEmpty() ? i18n("label.yes") : i18n("label.no");
 //        a3esDegree.setHasBranches(hasBranches);
     }
@@ -286,8 +284,6 @@ public class A3esHarvestDegreeDataService {
     private void fillBranches() {
 
         final Collection<CourseGroup> activeBranches = null;
-// TODO legidio
-//
 //                Collections2.filter(this.degreeCurricularPlan.getCourseGroupBranches(), new Predicate<CourseGroup>() {
 //                    @Override
 //                    public boolean apply(CourseGroup courseGroup) {
@@ -588,7 +584,7 @@ public class A3esHarvestDegreeDataService {
 
             final Multimap<Integer, Registration> concludedByYearDuration = HashMultimap.create();
             for (final Registration registration : concludedInExecutionYear) {
-                final Integer yearsDuration = null; // TODO legidio registration.getEnrolmentYearsIncludingPrecedentRegistrations().size();
+                final Integer yearsDuration = null; // registration.getEnrolmentYearsIncludingPrecedentRegistrations().size();
                 if (yearsDuration.intValue() >= degreeDuration.intValue()) {
                     concludedByYearDuration.put(yearsDuration, registration);
                 }

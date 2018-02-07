@@ -122,7 +122,7 @@ public class A3esHarvestStudentsDataService {
             @Override
             public boolean apply(Registration registration) {
                 final Student student = registration.getStudent();
-                return false; // TODO legidio student.getPerson().getCurrentAge() != null && (minAge != null ? student.getPerson().getCurrentAge() >= minAge : true) && (maxAge != null ? student.getPerson().getCurrentAge() < maxAge : true);
+                return false; // student.getPerson().getCurrentAge() != null && (minAge != null ? student.getPerson().getCurrentAge() >= minAge : true) && (maxAge != null ? student.getPerson().getCurrentAge() < maxAge : true);
             }
         }).size();
 
