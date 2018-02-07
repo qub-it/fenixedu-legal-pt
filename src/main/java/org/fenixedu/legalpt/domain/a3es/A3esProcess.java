@@ -48,7 +48,7 @@ public class A3esProcess extends A3esProcess_Base {
             throw new LegalPTDomainException("error.A3esProcess.period.required");
         }
 
-        if (Strings.isNullOrEmpty(getIdentifier())) {
+        if (StringUtils.isBlank(getIdentifier())) {
             throw new LegalPTDomainException("error.A3esProcess.identifier.required");
         }
 
@@ -81,7 +81,7 @@ public class A3esProcess extends A3esProcess_Base {
 
         return period == null ? Sets.newHashSet() : period.getProcessSet().stream()
 
-                .filter(i -> Strings.isNullOrEmpty(identifier) || StringUtils.equalsIgnoreCase(i.getIdentifier(), identifier))
+                .filter(i -> StringUtils.isBlank(identifier) || StringUtils.equalsIgnoreCase(i.getIdentifier(), identifier))
 
                 .filter(i -> plan == null || i.getDegreeCurricularPlan() == plan)
 
