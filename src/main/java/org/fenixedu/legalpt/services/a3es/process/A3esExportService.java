@@ -44,7 +44,9 @@ import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
+import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.A3esPeriod;
+import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.domain.exceptions.LegalPTDomainException;
 import org.fenixedu.legalpt.dto.a3es.A3esAbstractBean;
 import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
@@ -53,6 +55,7 @@ import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.util.LegalPTUtil;
+import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.settings.LegalSettings;
 import org.fenixedu.ulisboa.specifications.domain.services.OccupationPeriodServices;
 import org.joda.time.DateTime;
@@ -144,8 +147,7 @@ abstract public class A3esExportService {
 
             final String processPlan = (String) process.get("study_cycle");
             if (!bean.getDegreeCurricularPlan().getPresentationName().contains(processPlan)) {
-                // TODO legidio, remove
-                // throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
+                throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
             }
 
             final String processState = (String) process.get("state");
@@ -474,7 +476,6 @@ abstract public class A3esExportService {
             file.put("uo", data.getFieldUnique("uo").getValue());
             file.put("research_center", data.getFieldUnique("research_center").getValue());
             file.put("cat", data.getFieldUnique("cat").getValue());
-// TODO legidio 
             // Titulo de Especialista
             // Área em que é reconhecido como especialista
 
@@ -553,7 +554,12 @@ abstract public class A3esExportService {
 
                 data.getFields().forEach(i -> {
                     addCell(i.getLabel(), i.getValue());
-                    addCell(reportLabel(i.getLabel()), i.getReport());
+
+                    // avoid report on basic fields
+                    final String report = i.getReport();
+                    if (!StringUtils.isBlank(report)) {
+                        addCell(reportLabel(i.getLabel()), report);
+                    }
                 });
             }
         });
@@ -568,7 +574,12 @@ abstract public class A3esExportService {
 
                 data.getFields().forEach(i -> {
                     addCell(i.getLabel(), i.getValue());
-                    addCell(reportLabel(i.getLabel()), i.getReport());
+
+                    // avoid report on basic fields
+                    final String report = i.getReport();
+                    if (!StringUtils.isBlank(report)) {
+                        addCell(reportLabel(i.getLabel()), report);
+                    }
                 });
 
                 data.getAttainedDegree().getFields().forEach(i -> {
@@ -701,9 +712,8 @@ abstract public class A3esExportService {
                 .flatMap(c -> c.getAssociatedExecutionCoursesSet().stream()).filter(ec -> ec.getExecutionYear() == year);
     }
 
-    static public String getShiftTypeAcronym(ShiftType t) {
-        // TODO legidio, mapping 
-        return t.getSiglaTipoAula();
+    static public String getShiftTypeAcronym(final ShiftType t) {
+        return LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.SHIFT_TYPE).translate(t);
     }
 
     static public String getTeachingHours(final Set<Professorship> professorships) {
