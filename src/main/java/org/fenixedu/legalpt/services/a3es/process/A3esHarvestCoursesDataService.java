@@ -10,18 +10,17 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByShiftType;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourseProfessorships;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourses;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionSemester;
@@ -34,7 +33,6 @@ import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 
 @SuppressWarnings("deprecation")
 public class A3esHarvestCoursesDataService {
@@ -143,17 +141,16 @@ public class A3esHarvestCoursesDataService {
     }
 
     private String getBibliography(final CompetenceCourse competence) {
-        final List<String> references = new ArrayList<String>();
+        final Set<String> result = new HashSet<String>();
+
         final BibliographicReferences data = competence.getBibliographicReferences(this.semester);
         if (data != null) {
             data.getMainBibliographicReferences().stream().forEach(r -> {
-                final List<String> info = Lists.newArrayList(r.getTitle(), r.getAuthors(), r.getYear(), r.getReference());
-                references.add(Joiner.on(SEPARATOR_3)
-                        .join(info.stream().filter(i -> !StringUtils.isBlank(i)).collect(Collectors.toList())));
+                result.add(getApaFormat(r.getAuthors(), r.getYear(), r.getTitle(), r.getReference()));
             });
         }
 
-        return Joiner.on(SEPARATOR_2).join(references);
+        return result.stream().collect(Collectors.joining(SEPARATOR_2));
     }
 
 }

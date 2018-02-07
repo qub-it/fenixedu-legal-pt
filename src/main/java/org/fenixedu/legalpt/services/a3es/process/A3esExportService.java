@@ -728,4 +728,25 @@ abstract public class A3esExportService {
         return hours.toString();
     }
 
+    static public String getApaFormat(final String authors, final String date, final String title, final String aditionalInfo) {
+        final List<String> info = new ArrayList<>();
+
+        if (!StringUtils.isBlank(authors)) {
+            info.add(authors.trim());
+        }
+        if (!StringUtils.isBlank(date)) {
+            info.add("(" + date.trim() + ")");
+        }
+
+        if (!StringUtils.isBlank(title)) {
+            info.add(title.trim());
+        }
+
+        if (!StringUtils.isBlank(aditionalInfo)) {
+            info.add(aditionalInfo.trim());
+        }
+
+        return info.stream().collect(Collectors.joining(". ")).trim();
+    }
+
 }

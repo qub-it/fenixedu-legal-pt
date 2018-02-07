@@ -54,7 +54,11 @@ public class A3esBeanField implements IBean {
         result.setValue(value);
 
         if (StringUtils.isBlank(value)) {
-            result.addReport(limit == _UNSUPPORTED ? labelFieldUnsupported() : labelFieldMissing(), "error");
+            if (limit == _UNSUPPORTED) {
+                result.addReport(labelFieldUnsupported(), "info");
+            } else {
+                result.addReport(labelFieldMissing(), "error");
+            }
 
         } else if (limit > 0) {
             final int length = value.getBytes().length;
