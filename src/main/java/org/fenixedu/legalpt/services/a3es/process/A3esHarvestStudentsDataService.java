@@ -1,7 +1,7 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.i18n;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -62,8 +62,8 @@ public class A3esHarvestStudentsDataService {
         final BigDecimal femalePercentage = getPercentageOfStudentsByGender(Gender.FEMALE);
 
         TreeMap<String, String> studentsByGender = new TreeMap<String, String>();
-        studentsByGender.put(i18n("label.female"), String.valueOf(femalePercentage));
-        studentsByGender.put(i18n("label.male"), String.valueOf(malePercentage));
+        studentsByGender.put(label("female"), String.valueOf(femalePercentage));
+        studentsByGender.put(label("male"), String.valueOf(malePercentage));
         this.data.setStudentsByGender(studentsByGender);
     }
 
@@ -107,10 +107,10 @@ public class A3esHarvestStudentsDataService {
         final BigDecimal rangeOver28 = getPercentageOfStudentsByAge(AGE_28YEARS, null);
 
         TreeMap<String, String> studentsByAge = new TreeMap<String, String>();
-        studentsByAge.put(i18n("label.rangeUnder20"), String.valueOf(rangeUnder20));
-        studentsByAge.put(i18n("label.range20_23"), String.valueOf(range20_23));
-        studentsByAge.put(i18n("label.range24_27"), String.valueOf(range24_27));
-        studentsByAge.put(i18n("label.rangeOver28"), String.valueOf(rangeOver28));
+        studentsByAge.put(label("rangeUnder20"), String.valueOf(rangeUnder20));
+        studentsByAge.put(label("range20_23"), String.valueOf(range20_23));
+        studentsByAge.put(label("range24_27"), String.valueOf(range24_27));
+        studentsByAge.put(label("rangeOver28"), String.valueOf(rangeOver28));
 
         this.data.setStudentsByAge(studentsByAge);
     }

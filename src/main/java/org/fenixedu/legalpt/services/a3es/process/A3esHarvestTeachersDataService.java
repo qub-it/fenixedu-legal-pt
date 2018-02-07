@@ -7,6 +7,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._200;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._30;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._500;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHours;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readExecutionCourses;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -29,15 +31,21 @@ import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Qualification;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.TeacherAuthorization;
+import org.fenixedu.academic.domain.TeacherCategory;
+import org.fenixedu.academic.domain.academicStructure.AcademicArea;
+import org.fenixedu.academic.domain.academicStructure.AcademicAreaType;
 import org.fenixedu.academic.domain.organizationalStructure.Accountability;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.legalpt.domain.a3es.A3esInstance;
+import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
+import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 
 import com.google.common.collect.Sets;
 
@@ -88,7 +96,7 @@ public class A3esHarvestTeachersDataService {
         final ExecutionYear firstTeacherService = map.values().stream().flatMap(i -> i.stream())
                 .map(p -> p.getExecutionCourse().getExecutionYear()).distinct().min(Comparator.naturalOrder()).orElse(null);
 
-        data.addField("firstTeacherService", "firstTeacherService", firstTeacherService.getQualifiedName(), _UNLIMITED);
+        data.addField("firstTeacherService", "firstTeacherService", firstTeacherService.getQualifiedName(), _UNSUPPORTED);
     }
 
     static private void fillName(final A3esTeacherBean data, final Person person) {
@@ -104,7 +112,7 @@ public class A3esHarvestTeachersDataService {
     }
 
     private void fillAssociatedResearchCentre(final A3esTeacherBean data, final Person person) {
-        Collection<Unit> allResearchUnits = new HashSet<>(); // TODO legidio Bennu.getInstance().getInstitutionUnit().getAllSubUnits(PartyTypeEnum.RESEARCH_UNIT);
+        Collection<Unit> allResearchUnits = new HashSet<>(); // Bennu.getInstance().getInstitutionUnit().getAllSubUnits(PartyTypeEnum.RESEARCH_UNIT);
 
         Set<Unit> activeResearchUnits = Sets.newHashSet();
 
@@ -128,44 +136,43 @@ public class A3esHarvestTeachersDataService {
         }
 
         final String source = researchUnitsString.toString();
-        data.addField("research_center", "researchUnitFiliation", source, _200);
+        data.addField("research_center", "researchUnitFiliation", source, _UNSUPPORTED /* _200 */);
     }
 
     private void fillCategory(final A3esTeacherBean data, final Teacher teacher) {
         final TeacherAuthorization auth = teacher == null ? null : teacher
                 .getLatestTeacherAuthorizationInInterval(this.year.getAcademicInterval().toInterval()).orElse(null);
-        final String source = auth == null ? null : auth.getTeacherCategory().getName().getContent(PT);
+        final TeacherCategory category = auth == null ? null : auth.getTeacherCategory();
+        final String source =
+                LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.CONTRACT_CATEGORY).translate(category);
         data.addField("cat", "category", source, _UNLIMITED);
     }
 
     static private void fillSpecialty(final A3esTeacherBean data, final Person person) {
-// TODO legidio
-        // Titulo de Especialista
-        // Área em que é reconhecido como especialista
+        data.addField("spec", "specialist", (String) null, _UNSUPPORTED);
+        data.addField("spec_area", "specialistArea", getSpecializationArea(person), _200);
     }
 
     static private void fillTimeAllocation(final A3esTeacherBean data, final Person person) {
-// TODO legidio
-        final String source = null; //contract.getContractServiceRegime().getRequiresWorkPercentage() ? String.valueOf(contract.getWorkPercentage()) : "100";
-        data.addField("time", "regime", source, _UNLIMITED);
+        data.addField("time", "regime", (String) null, _UNSUPPORTED);
     }
 
     static private void fillAttainedDegree(final A3esTeacherBean data, final Person person) {
-        final Qualification q = findMostRelevantQualification(person.getAssociatedQualificationsSet());
+        final Qualification q = findMostRelevantQualification(person);
 
         final AttainedDegree attainedDegree = new AttainedDegree();
         data.setAttainedDegree(attainedDegree);
 
         attainedDegree.addField("deg", "degreeType", q == null ? null : q.getDegree(), _200);
         attainedDegree.addField("degarea", "degreeScientificArea", (String) null, _200);
-        attainedDegree.addField("ano_grau", "degreeYear", (String) null, _UNLIMITED);
+        attainedDegree.addField("ano_grau", "degreeYear", q == null ? null : q.getYear(), _UNLIMITED);
         attainedDegree.addField("instituicao_conferente", "degreeInstitution", q == null ? null : q.getSchool(), _200);
     }
 
     static private void fillOtherAttainedDegrees(final A3esTeacherBean data, final Person person) {
         final Set<Qualification> otherQual = new HashSet<Qualification>();
         otherQual.addAll(person.getAssociatedQualificationsSet());
-        final Qualification major = findMostRelevantQualification(otherQual);
+        final Qualification major = findMostRelevantQualification(person);
         if (major != null) {
             otherQual.remove(major);
         }
@@ -176,11 +183,11 @@ public class A3esHarvestTeachersDataService {
             final AttainedDegree attainedDegree = new AttainedDegree();
             otherAttainedDegrees.add(attainedDegree);
 
-            attainedDegree.addField("year", "year", (String) null, _UNLIMITED);
+            attainedDegree.addField("year", "year", q.getYear(), _UNLIMITED);
             attainedDegree.addField("degree", "degreeTypeOrTitle", q.getDegree(), _30);
             attainedDegree.addField("area", "area", (String) null, _100);
             attainedDegree.addField("ies", "institution", (String) null, _100);
-            attainedDegree.addField("rank", "classification", (String) null, _30);
+            attainedDegree.addField("rank", "classification", q.getMark(), _30);
 
             if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
                 break;
@@ -299,43 +306,28 @@ public class A3esHarvestTeachersDataService {
         data.setTeachingServices(teachingServices);
     }
 
-    static public Qualification findMostRelevantQualification(Set<Qualification> qualifications) {
-        if (qualifications.isEmpty()) {
-            return null;
+    static private String getSpecializationArea(final Person person) {
+        String result = null;
+
+        final Qualification qualification = findMostRelevantQualification(person);
+        if (qualification != null) {
+
+            result = qualification.getSpecializationArea();
+
+            if (StringUtils.isBlank(result)) {
+                final AcademicArea area = qualification.getAcademicAreasSet().stream()
+                        .filter(a -> a.getType() == AcademicAreaType.findByCode("DEGREE_SPECIALIZATION")).findFirst()
+                        .orElse(null);
+                result = area == null ? null : area.getName().getContent(PT);
+            }
         }
-        Qualification phd = null;
-        Qualification higherEd = null;
-        for (Qualification qualification : qualifications) {
-// TODO legidio
-//
-//            if (qualification.getSchoolLevel() == null) {
-//                continue;
-//            }
-//            if (qualification.getSchoolLevel().isPhDDegree()) {
-//                if (phd == null) {
-//                    phd = qualification;
-//                } else if (qualification.getConclusionYear() != null
-//                        && qualification.getConclusionYear() > phd.getConclusionYear()) {
-//                    phd = qualification;
-//                }
-//            }
-//
-//            if (qualification.getSchoolLevel().isHigherEducation()) {
-//                if (higherEd == null) {
-//                    higherEd = qualification;
-//                } else if (qualification.getConclusionYear() != null
-//                        && qualification.getConclusionYear() > higherEd.getConclusionYear()) {
-//                    higherEd = qualification;
-//                }
-//            }
-        }
-        if (phd != null) {
-            return phd;
-        } else if (higherEd != null) {
-            return higherEd;
-        } else {
-            return null;
-        }
+
+        return result;
+    }
+
+    static private Qualification findMostRelevantQualification(final Person person) {
+        // TODO legidio
+        return person.getAssociatedQualificationsSet().stream().max(Qualification.COMPARATOR_BY_YEAR).orElse(null);
     }
 
     static private Set<String> findMostRecentPublications(final Person person) {

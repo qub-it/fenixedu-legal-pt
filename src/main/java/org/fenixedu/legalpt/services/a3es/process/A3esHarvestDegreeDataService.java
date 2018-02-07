@@ -6,6 +6,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEPAR
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.i18n;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -277,7 +278,7 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillHasBranches() {
-//        String hasBranches = this.degreeCurricularPlan.getCourseGroupBranches().isEmpty() ? i18n("label.yes") : i18n("label.no");
+//        String hasBranches = this.degreeCurricularPlan.getCourseGroupBranches().isEmpty() ? label("yes") : label("no");
 //        a3esDegree.setHasBranches(hasBranches);
     }
 
@@ -375,7 +376,7 @@ public class A3esHarvestDegreeDataService {
             if (executionDegree.getExecutionYear() == year) {
                 for (Coordinator coordinator : executionDegree.getCoordinatorsListSet()) {
                     coordinatorList.add(coordinator.getPerson().getName()
-                            + (coordinator.isResponsible() ? " (" + i18n("label.responsable") + ")" : ""));
+                            + (coordinator.isResponsible() ? " (" + label("responsable") + ")" : ""));
                 }
             }
         }

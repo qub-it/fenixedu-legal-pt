@@ -63,7 +63,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("deprecation")
@@ -72,6 +71,7 @@ abstract public class A3esExportService {
     static final public Locale PT = new Locale("pt");
     static final public Locale EN = Locale.UK;
 
+    static public int _UNSUPPORTED = -2;
     static public int _UNLIMITED = -1;
     static protected int _0 = 0;
     static protected int _3 = 3;
@@ -110,7 +110,7 @@ abstract public class A3esExportService {
 
     private void initializeHash(final A3esProcessBean bean) {
         this.base64Hash = bean.getBase64Hash();
-        if (Strings.isNullOrEmpty(bean.getBase64Hash())) {
+        if (StringUtils.isBlank(bean.getBase64Hash())) {
             this.base64Hash = new String(Base64.getEncoder().encode((bean.getUser() + ":" + bean.getPassword()).getBytes()));
             bean.setBase64Hash(this.base64Hash);
         }
@@ -119,7 +119,7 @@ abstract public class A3esExportService {
     private void initializeFormId(final A3esProcessBean bean) {
         this.formId = bean.getFormId();
 
-        if (Strings.isNullOrEmpty(bean.getFormId())) {
+        if (StringUtils.isBlank(bean.getFormId())) {
 
             final A3esPeriod period = bean.getPeriod();
             if (!period.isInFillingPeriod()) {
@@ -476,8 +476,8 @@ abstract public class A3esExportService {
             file.put("uo", data.getFieldUnique("uo").getValue());
             file.put("research_center", data.getFieldUnique("research_center").getValue());
             file.put("cat", data.getFieldUnique("cat").getValue());
-            // Titulo de Especialista
-            // Área em que é reconhecido como especialista
+            file.put("spec", data.getFieldUnique("spec").getValue());
+            file.put("spec_area", data.getFieldUnique("spec_area").getValue());
 
             final AttainedDegree attainedDegree = data.getAttainedDegree();
             file.put("deg", attainedDegree.getFieldUnique("deg").getValue());
@@ -629,11 +629,11 @@ abstract public class A3esExportService {
         });
     }
 
-    static private String label(final String input) {
+    static public String label(final String input) {
         return i18n("label." + input);
     }
 
-    public static String i18n(final String code, String... args) {
+    static public String i18n(final String code, String... args) {
         return LegalPTUtil.bundleI18N(code, args).getContent(PT);
     }
 
@@ -644,10 +644,10 @@ abstract public class A3esExportService {
     static protected MultiLanguageString createMLS(final String pt, final String en) {
         MultiLanguageString result = new MultiLanguageString();
 
-        if (!Strings.isNullOrEmpty(pt)) {
+        if (!StringUtils.isBlank(pt)) {
             result = result.with(PT, pt);
         }
-        if (!Strings.isNullOrEmpty(en)) {
+        if (!StringUtils.isBlank(en)) {
             result = result.with(EN, en);
         }
 

@@ -7,7 +7,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEPAR
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByShiftType;
@@ -68,8 +68,8 @@ public class A3esHarvestCoursesDataService {
 
     private void fillBasics(final A3esCourseBean data, final CompetenceCourse competence) {
         data.addField("currentInfo", "currentInfo", competence.findCompetenceCourseInformationForExecutionPeriod(this.semester)
-                .getExecutionInterval().getQualifiedName(), _UNLIMITED);
-        data.addField("code", "code", competence.getCode(), _UNLIMITED);
+                .getExecutionInterval().getQualifiedName(), _UNSUPPORTED);
+        data.addField("code", "code", competence.getCode(), _UNSUPPORTED);
     }
 
     private void fillCourseName(final A3esCourseBean data, final CompetenceCourse competence) {

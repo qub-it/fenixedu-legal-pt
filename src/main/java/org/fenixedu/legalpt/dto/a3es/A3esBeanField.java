@@ -1,15 +1,15 @@
 package org.fenixedu.legalpt.dto.a3es;
 
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.i18n;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.IBean;
 import org.json.simple.JSONObject;
-
-import com.google.common.base.Strings;
 
 @SuppressWarnings("deprecation")
 public class A3esBeanField implements IBean {
@@ -50,11 +50,13 @@ public class A3esBeanField implements IBean {
         final String label = i18n(labelKey) + language;
         result.setLabel(label);
 
-        String value = Strings.isNullOrEmpty(source) ? null : JSONObject.escape(source);
-        if (Strings.isNullOrEmpty(value)) {
-            result.addReport(labelFieldMissing(), "error");
+        String value = StringUtils.isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject.escape(source);
+        result.setValue(value);
 
-        } else if (limit != _UNLIMITED) {
+        if (StringUtils.isBlank(value)) {
+            result.addReport(limit == _UNSUPPORTED ? labelFieldUnsupported() : labelFieldMissing(), "error");
+
+        } else if (limit > 0) {
             final int length = value.getBytes().length;
 
             if (length > limit) {
@@ -64,17 +66,20 @@ public class A3esBeanField implements IBean {
                 result.addReport(i18n("label.field.status", String.valueOf(limit - length), String.valueOf(limit)), "-");
             }
         }
-        result.setValue(value);
 
         return result;
     }
 
     static public String labelFieldMissing() {
-        return i18n("label.field.missing");
+        return label("field.missing");
+    }
+
+    static private String labelFieldUnsupported() {
+        return label("field.unsupported");
     }
 
     static public String labelFieldCutInfo() {
-        return i18n("label.field.cut.info");
+        return label("field.cut.info");
     }
 
     public String getId() {
