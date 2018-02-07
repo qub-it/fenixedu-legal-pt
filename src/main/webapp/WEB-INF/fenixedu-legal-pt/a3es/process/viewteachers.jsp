@@ -254,13 +254,27 @@
 														<c:forEach var="field" items="${iter.fields}" varStatus="loop">
 															<tr>
 																<th scope="row" class="col-xs-4">${field.label}</th>
-																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																	<c:choose>
+																		<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																		<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																		<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																	</c:choose>
+																	<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																</small></c:if></td>
 															</tr>
 														</c:forEach>
 														<c:forEach var="field" items="${iter.attainedDegree.fields}" varStatus="loop">
 															<tr>
 																<th scope="row" class="col-xs-4">${field.label}</th>
-																<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																	<c:choose>
+																		<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																		<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																		<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																	</c:choose>
+																	<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																</small></c:if></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -275,7 +289,14 @@
 																	<c:forEach var="field" items="${attainedDegree.fields}" varStatus="loop">
 																		<tr>
 																			<th scope="row" class="col-xs-4">${field.label}</th>
-																			<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																			<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																				<c:choose>
+																					<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																					<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																					<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																				</c:choose>
+																				<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																			</small></c:if></td>
 																		</tr>
 																	</c:forEach>
 																</c:forEach>
@@ -283,7 +304,7 @@
 															<c:otherwise>
 																<tr>
 																	<th scope="row" class="col-xs-4">&nbsp;</th>
-																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																	<td><small><div class="alert-danger" style="background-color: transparent; font-style: italic;"><p><span class="glyphicon glyphicon-exclamation-sign"></span> <spring:message code="label.field.missing" /></p></div></small></td>
 																</tr>
 															</c:otherwise>
 														</c:choose>
@@ -299,14 +320,21 @@
 																<c:forEach var="field" items="${iter.primePublishedWork.fields}" varStatus="loop">
 																	<tr>
 																		<th scope="row" class="col-xs-4">${field.label}</th>
-																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																		<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																			<c:choose>
+																				<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																				<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																				<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																			</c:choose>
+																			<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																		</small></c:if></td>
 																	</tr>
 																</c:forEach>
 															</c:when>
 															<c:otherwise>
 																<tr>
 																	<th scope="row" class="col-xs-4">&nbsp;</th>
-																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																	<td><small><div class="alert-danger" style="background-color: transparent; font-style: italic;"><p><span class="glyphicon glyphicon-exclamation-sign"></span> <spring:message code="label.field.missing" /></p></div></small></td>
 																</tr>
 															</c:otherwise>
 														</c:choose>
@@ -322,14 +350,21 @@
 																<c:forEach var="field" items="${iter.primeProfessionalActivities.fields}" varStatus="loop">
 																	<tr>
 																		<th scope="row" class="col-xs-4">${field.label}</th>
-																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																		<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																			<c:choose>
+																				<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																				<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																				<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																			</c:choose>
+																			<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																		</small></c:if></td>
 																	</tr>
 																</c:forEach>
 															</c:when>
 															<c:otherwise>
 																<tr>
 																	<th scope="row" class="col-xs-4">&nbsp;</th>
-																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																	<td><small><div class="alert-danger" style="background-color: transparent; font-style: italic;"><p><span class="glyphicon glyphicon-exclamation-sign"></span> <spring:message code="label.field.missing" /></p></div></small></td>
 																</tr>
 															</c:otherwise>
 														</c:choose>
@@ -345,14 +380,21 @@
 																<c:forEach var="field" items="${iter.otherPublishedWork.fields}" varStatus="loop">
 																	<tr>
 																		<th scope="row" class="col-xs-4">${field.label}</th>
-																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																		<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																			<c:choose>
+																				<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																				<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																				<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																			</c:choose>
+																			<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																		</small></c:if></td>
 																	</tr>
 																</c:forEach>
 															</c:when>
 															<c:otherwise>
 																<tr>
 																	<th scope="row" class="col-xs-4">&nbsp;</th>
-																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																	<td><small><div class="alert-danger" style="background-color: transparent; font-style: italic;"><p><span class="glyphicon glyphicon-exclamation-sign"></span> <spring:message code="label.field.missing" /></p></div></small></td>
 																</tr>
 															</c:otherwise>
 														</c:choose>
@@ -368,14 +410,21 @@
 																<c:forEach var="field" items="${iter.otherProfessionalActivities.fields}" varStatus="loop">
 																	<tr>
 																		<th scope="row" class="col-xs-4">${field.label}</th>
-																		<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																		<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																			<c:choose>
+																				<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																				<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																				<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																			</c:choose>
+																			<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																		</small></c:if></td>
 																	</tr>
 																</c:forEach>
 															</c:when>
 															<c:otherwise>
 																<tr>
 																	<th scope="row" class="col-xs-4">&nbsp;</th>
-																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																	<td><small><div class="alert-danger" style="background-color: transparent; font-style: italic;"><p><span class="glyphicon glyphicon-exclamation-sign"></span> <spring:message code="label.field.missing" /></p></div></small></td>
 																</tr>
 															</c:otherwise>
 														</c:choose>
@@ -391,7 +440,14 @@
 																	<c:forEach var="field" items="${teachingService.fields}" varStatus="loop">
 																		<tr>
 																			<th scope="row" class="col-xs-4">${field.label}</th>
-																			<td><c:out value="${field.value}"/><small><em><p><c:out value="${field.report}"/></p></em></small></td>
+																			<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																				<c:choose>
+																					<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																					<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																					<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+																				</c:choose>
+																				<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
+																			</small></c:if></td>
 																		</tr>
 																	</c:forEach>
 																</c:forEach>
@@ -399,7 +455,7 @@
 															<c:otherwise>
 																<tr>
 																	<th scope="row" class="col-xs-4">&nbsp;</th>
-																	<td><small><em><p><spring:message code="label.field.missing" /></p></em></small></td>
+																	<td><small><div class="alert-danger" style="background-color: transparent; font-style: italic;"><p><span class="glyphicon glyphicon-exclamation-sign"></span> <spring:message code="label.field.missing" /></p></div></small></td>
 																</tr>
 															</c:otherwise>
 														</c:choose>

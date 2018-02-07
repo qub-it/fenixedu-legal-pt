@@ -22,6 +22,7 @@ public class A3esBeanField implements IBean {
     private String value;
     private Integer limit;
     private String report;
+    private String reportType;
 
     private A3esBeanField() {
     }
@@ -51,16 +52,16 @@ public class A3esBeanField implements IBean {
 
         String value = Strings.isNullOrEmpty(source) ? null : JSONObject.escape(source);
         if (Strings.isNullOrEmpty(value)) {
-            result.setReport(labelFieldMissing());
+            result.addReport(labelFieldMissing(), "error");
 
         } else if (limit != _UNLIMITED) {
             final int length = value.getBytes().length;
 
             if (length > limit) {
-                result.setReport(i18n("label.field.cut", String.valueOf(limit)));
+                result.addReport(i18n("label.field.cut", String.valueOf(limit)), "info");
                 value = value.substring(0, limit - 4 - (length - value.length())) + CUT;
             } else {
-                result.setReport(i18n("label.field.status", String.valueOf(limit - length), String.valueOf(limit)));
+                result.addReport(i18n("label.field.status", String.valueOf(limit - length), String.valueOf(limit)), "-");
             }
         }
         result.setValue(value);
@@ -126,6 +127,19 @@ public class A3esBeanField implements IBean {
 
     public void setReport(String report) {
         this.report = report;
+    }
+
+    public String getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+
+    public void addReport(final String report, final String reportType) {
+        setReport(report);
+        setReportType(reportType);
     }
 
 }
