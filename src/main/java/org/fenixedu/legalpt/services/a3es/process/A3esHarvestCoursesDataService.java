@@ -1,9 +1,8 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.BREAKLINE;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PLUS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SLASH;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
@@ -108,7 +107,7 @@ public class A3esHarvestCoursesDataService {
             return person.getName() + " ("
                     + getTeachingHoursByShiftType(personProfessorships.stream().filter(p).collect(Collectors.toSet())) + ")";
 
-        }).filter(i -> !StringUtils.isBlank(i)).collect(Collectors.joining(SLASH));
+        }).filter(i -> !StringUtils.isBlank(i)).collect(Collectors.joining(PLUS));
     }
 
     private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {
@@ -158,7 +157,7 @@ public class A3esHarvestCoursesDataService {
             });
         }
 
-        return result.stream().collect(Collectors.joining(BREAKLINE));
+        return result.stream().collect(Collectors.joining(PLUS));
     }
 
 }
