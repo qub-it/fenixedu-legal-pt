@@ -41,6 +41,8 @@ import com.google.common.base.Strings;
 
 public class XmlToBaseFileWriter {
 
+    private static final String ENCODING = "UTF-8";
+
     public static LegalReportResultFile write(final LegalReportRequest reportRequest,
             final RaidesRequestParameter raidesRequestParameter, final Raides raides) {
         try {
@@ -64,10 +66,10 @@ public class XmlToBaseFileWriter {
             final JAXBContext context = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             final Marshaller marshaller = context.createMarshaller();
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final OutputStreamWriter osw = new OutputStreamWriter(baos, Charset.forName("ISO-8859-15"));
+            final OutputStreamWriter osw = new OutputStreamWriter(baos, Charset.forName(ENCODING));
 
             try {
-                marshaller.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-15");
+                marshaller.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(informacaoAlunos, osw);
                 byte[] content = baos.toByteArray();
