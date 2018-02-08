@@ -185,16 +185,14 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private void fillOtherAttainedDegrees(final A3esTeacherBean data, final Person person) {
-        final Set<Qualification> otherQual = new HashSet<Qualification>();
-        otherQual.addAll(person.getAssociatedQualificationsSet());
-        final Qualification major = findMostRelevantQualification(person);
-        if (major != null) {
-            otherQual.remove(major);
-        }
-
         final Set<AttainedDegree> otherAttainedDegrees = new HashSet<AttainedDegree>();
 
-        for (final Qualification q : otherQual) {
+        final Qualification main = findMostRelevantQualification(person);
+        person.getAssociatedQualificationsSet().stream().filter(q -> q != main).forEach(q -> {
+            if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
+                return;
+            }
+
             final AttainedDegree attainedDegree = new AttainedDegree();
             otherAttainedDegrees.add(attainedDegree);
 
@@ -205,11 +203,7 @@ public class A3esHarvestTeachersDataService {
             attainedDegree.addField("ies", "institution",
                     q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _100);
             attainedDegree.addField("rank", "classification", q.getMark(), _30);
-
-            if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
-                break;
-            }
-        }
+        });
 
         data.setOtherAttainedDegrees(otherAttainedDegrees);
     }
@@ -219,11 +213,11 @@ public class A3esHarvestTeachersDataService {
         final String id = "investigation";
 
         for (final String source : findPublications(person, ResearchPublicationType.findByCode("AC"))) {
-            result.addField(id, id, source, _500);
-
             if (result.getField(id).size() == _PUBLICATIONS) {
                 break;
             }
+
+            result.addField(id, id, source, _500);
         }
 
         data.setPrimePublishedWork(result);
@@ -234,11 +228,11 @@ public class A3esHarvestTeachersDataService {
         String id = "highlevelactivities";
 
         for (final String source : findJobs(person, JobType.findByCode("ADNP"))) {
-            result.addField(id, id, source, _200);
-
             if (result.getField(id).size() == _ACTIVITIES) {
                 break;
             }
+
+            result.addField(id, id, source, _200);
         }
 
         data.setPrimeProfessionalActivities(result);
@@ -249,11 +243,11 @@ public class A3esHarvestTeachersDataService {
         final String id = "otherpublications";
 
         for (final String source : findPublications(person, ResearchPublicationType.findByCode("PP"))) {
-            result.addField(id, id, source, _500);
-
             if (result.getField(id).size() == _PUBLICATIONS) {
                 break;
             }
+
+            result.addField(id, id, source, _500);
         }
 
         data.setOtherPublishedWork(result);
@@ -264,11 +258,11 @@ public class A3esHarvestTeachersDataService {
         final String id = "profession";
 
         for (final String source : findJobs(person, JobType.findByCode("EP"))) {
-            result.addField(id, id, source, _200);
-
             if (result.getField(id).size() == _ACTIVITIES) {
                 break;
             }
+
+            result.addField(id, id, source, _200);
         }
 
         data.setOtherProfessionalActivities(result);
@@ -288,15 +282,20 @@ public class A3esHarvestTeachersDataService {
                     competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
                             .forEach(sp -> {
 
+                                if (teachingServices.size() == _TEACHING_SERVICES) {
+                                    return;
+                                }
+
                                 final List<ShiftType> types = sp.getShift().getTypes();
                                 if (types.size() != 1) {
                                     return;
                                 }
                                 final ShiftType type = types.iterator().next();
 
-                                final ExecutionCourse execution = sp.getProfessorship().getExecutionCourse();
-
                                 final TeachingService service = new TeachingService();
+                                teachingServices.add(service);
+
+                                final ExecutionCourse execution = sp.getProfessorship().getExecutionCourse();
                                 service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
                                 service.addField("studyCycle", "studyCycle",
                                         execution.getAssociatedCurricularCoursesSet().stream()
@@ -306,12 +305,6 @@ public class A3esHarvestTeachersDataService {
                                         _200);
                                 service.addField("type", "type", getShiftTypeAcronym(type), _30);
                                 service.addField("hoursPerWeek", "totalContactHours", getTeachingHours(sp), _UNLIMITED);
-
-                                teachingServices.add(service);
-
-                                if (teachingServices.size() == _TEACHING_SERVICES) {
-                                    return;
-                                }
                             });
                 });
 
