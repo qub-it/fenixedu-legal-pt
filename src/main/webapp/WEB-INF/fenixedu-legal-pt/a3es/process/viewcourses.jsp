@@ -255,14 +255,14 @@
 														<c:forEach var="field" items="${iter.fields}" varStatus="loop">
 															<tr>
 																<th scope="row" class="col-xs-4">${field.label}</th>
-																<td><c:out value="${field.value}"/><c:if test="${not empty field.report}"><small>
+																<td><c:out value="${field.value}"/><c:if test="${not empty field.report}">
 																	<c:choose>
-																		<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
-																		<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-exclamation-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+																		<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-warning-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+																		<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-info-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
 																		<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
 																	</c:choose>
-																	<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <c:out value="${field.report}"/></p></div>
-																</small></c:if></td>
+																	<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <small><c:out value="${field.report}"/></small></p></div>
+																</c:if></td>
 															</tr>
 														</c:forEach>
 													</tbody>

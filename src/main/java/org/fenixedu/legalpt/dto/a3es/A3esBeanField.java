@@ -64,7 +64,7 @@ public class A3esBeanField implements IBean {
             final int length = value.getBytes().length;
 
             if (length > limit) {
-                result.addReport(i18n("label.field.cut", String.valueOf(limit)), "info");
+                result.addReport(i18n("label.field.cut", String.valueOf(limit)), "error");
                 value = value.substring(0, limit - 4 - (length - value.length())) + CUT;
             } else {
                 result.addReport(i18n("label.field.status", String.valueOf(limit - length), String.valueOf(limit)), "-");
