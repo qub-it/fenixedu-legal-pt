@@ -6,6 +6,7 @@ import static org.fenixedu.legalpt.dto.a3es.A3esBeanField.labelFieldMissing;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -726,13 +727,14 @@ abstract public class A3esExportService {
         final BigDecimal shiftTotalHours =
                 sp.getShift().getUnitHours().multiply(new BigDecimal(LegalSettings.getInstance().getNumberOfLessonWeeks()));
         final BigDecimal result = sp.getPercentage() != null ? shiftTotalHours.multiply(new BigDecimal(sp.getPercentage()))
-                .divide(BigDecimal.valueOf(100d)) : shiftTotalHours;
+                .divide(BigDecimal.valueOf(100d)).setScale(2, RoundingMode.DOWN) : shiftTotalHours;
         return result.toString();
     }
 
     static public String getTeachingHoursByShiftType(final Set<Professorship> professorships) {
         return professorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                .map(sp -> getTeachingHours(sp)).collect(Collectors.joining(SEMICOLON));
+                .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - " + getTeachingHours(sp))
+                .collect(Collectors.joining(SEMICOLON));
     }
 
     static public String getApaFormat(final String authors, final String date, final String title, final String aditionalInfo) {
