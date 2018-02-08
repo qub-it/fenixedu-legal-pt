@@ -116,13 +116,6 @@
 		<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;<a class=""
 			href="${pageContext.request.contextPath}<%=A3esProcessController.READ_URL%>${process.externalId}"><spring:message
 				code="label.event.back" /></a>
-				
-  		&nbsp;|&nbsp; <span class="glyphicon glyphicon-export" aria-hidden="true"></span>&nbsp;<a class="" ng-click="download()"
-			href="#"><spring:message code="label.export" /></a>
-        
-  		&nbsp;|&nbsp; <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;<a class="" onclick="function inline(){$('#uploadModal').modal('toggle')}; inline()"
-			href="#"><spring:message code="label.send" /></a>
-			
 	</div>
 
 	<c:if test="${not empty infoMessages}">
@@ -207,6 +200,10 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="panel panel-footer">
+			<button type="button" class="btn btn-primary" role="button" ng-click="download()"><spring:message code="label.export" /></button>
+			<button type="button" class="btn btn-primary" role="button" onclick="function inline(){$('#uploadModal').modal('toggle')}; inline()"><spring:message code="label.send" /></button>
 		</div>
 	</div>
 

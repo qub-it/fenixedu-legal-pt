@@ -116,13 +116,6 @@
 		<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;<a class=""
 			href="${pageContext.request.contextPath}<%=A3esProcessController.READ_URL%>${process.externalId}"><spring:message
 				code="label.event.back" /></a>
-				
-  		&nbsp;|&nbsp; <span class="glyphicon glyphicon-export" aria-hidden="true"></span>&nbsp;<a class="" ng-click="download()"
-			href="#"><spring:message code="label.export" /></a>
-        
-  		&nbsp;|&nbsp; <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;<a class="" onclick="function inline(){$('#uploadModal').modal('toggle')}; inline()"
-			href="#"><spring:message code="label.send" /></a>
-			
 	</div>
 
 	<c:if test="${not empty infoMessages}">
@@ -164,7 +157,7 @@
 		    <a href="#" onclick="$('#uploadResults').slideToggle('fast');" style="color: inherit; text-decoration: none;">
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;<spring:message code="info.A3es.upload.results" />
 		    </a>
-			<div id="uploadResults" style="border: #ddd dotted 1px; display: none;">
+			<div id="uploadResults" style="display: none; border: #ddd dotted 1px;">
 				<c:forEach var="uploadResult" items="${uploadResults}">
 					<p><c:out value="${uploadResult}" /></p>
 				</c:forEach>
@@ -207,6 +200,10 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="panel panel-footer">
+			<button type="button" class="btn btn-primary" role="button" ng-click="download()"><spring:message code="label.export" /></button>
+			<button type="button" class="btn btn-primary" role="button" onclick="function inline(){$('#uploadModal').modal('toggle')}; inline()"><spring:message code="label.send" /></button>
 		</div>
 	</div>
 
