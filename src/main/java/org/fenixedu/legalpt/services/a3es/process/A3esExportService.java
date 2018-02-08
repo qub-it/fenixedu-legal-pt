@@ -40,6 +40,7 @@ import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
+import org.fenixedu.academic.domain.ShiftProfessorship;
 import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.spreadsheet.SheetData;
@@ -82,10 +83,10 @@ abstract public class A3esExportService {
     static protected int _500 = 200;
     static protected int _1000 = 1000;
     static protected int _3000 = 3000;
-    static protected String SEPARATOR_1 = "; ";
-    static protected String SEPARATOR_2 = "\n";
-    static protected String SEPARATOR_3 = " / ";
-    static protected String SEPARATOR_4 = " + ";
+    static protected String SEMICOLON = "; ";
+    static protected String BREAKLINE = "\n";
+    static protected String SLASH = " / ";
+    static protected String PLUS = " + ";
 
     static final private String API_PROCESS = "api_process";
     static final private String API_ID = "id";
@@ -200,8 +201,8 @@ abstract public class A3esExportService {
     }
 
     private String buildResponseText(final String action, final Response response, final String name) {
-        return "[" + new DateTime().toString("yyyy-dd-MM HH:mm:ss") + SEPARATOR_3 + label(action) + SEPARATOR_3
-                + label("response") + ": " + parseResponse(response) + "] " + name;
+        return "[" + new DateTime().toString("yyyy-dd-MM HH:mm:ss") + SLASH + label(action) + SLASH + label("response") + ": "
+                + parseResponse(response) + "] " + name;
     }
 
     private String parseResponse(final Response response) {
@@ -589,7 +590,8 @@ abstract public class A3esExportService {
                 });
 
                 String label = label("otherAcademicDegreesOrTitle");
-                String value = data.getOtherAttainedDegrees().stream().map(i -> concat(i)).collect(Collectors.joining("\n"));
+                String value =
+                        data.getOtherAttainedDegrees().stream().map(i -> concat(i, SLASH)).collect(Collectors.joining(BREAKLINE));
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
 
@@ -614,14 +616,18 @@ abstract public class A3esExportService {
                 addCell(reportLabel(label), concatReport(value));
 
                 label = label("teachingServiceAllocation");
-                value = data.getTeachingServices().stream().map(i -> concat(i)).collect(Collectors.joining("\n"));
+                value = data.getTeachingServices().stream().map(i -> concat(i, SLASH)).collect(Collectors.joining(BREAKLINE));
                 addCell(label, value);
                 addCell(reportLabel(label), concatReport(value));
             }
 
             private String concat(final A3esAbstractBean input) {
+                return concat(input, BREAKLINE);
+            }
+
+            private String concat(final A3esAbstractBean input, final String separator) {
                 return input.getFields().stream().map(i -> i.getValue()).filter(i -> !StringUtils.isBlank(i))
-                        .collect(Collectors.joining(SEPARATOR_2));
+                        .collect(Collectors.joining(separator));
             }
 
             private Object concatReport(final String value) {
@@ -716,16 +722,16 @@ abstract public class A3esExportService {
         return LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.SHIFT_TYPE).translate(t);
     }
 
-    static public String getTeachingHours(final Set<Professorship> professorships) {
-        // TODO legidio
-        BigDecimal hours = BigDecimal.ZERO;
-        return hours.toString();
+    static public String getTeachingHours(final ShiftProfessorship sp) {
+        final BigDecimal shiftTotalHours = sp.getShift().getTotalHours();
+        final BigDecimal result =
+                sp.getPercentage() != null ? shiftTotalHours.multiply(new BigDecimal(sp.getPercentage())) : shiftTotalHours;
+        return result.toString();
     }
 
     static public String getTeachingHoursByShiftType(final Set<Professorship> professorships) {
-        // TODO legidio ex "(TP -24; OT - 6)"
-        BigDecimal hours = BigDecimal.ZERO;
-        return hours.toString();
+        return professorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
+                .map(sp -> getTeachingHours(sp)).collect(Collectors.joining(SEMICOLON));
     }
 
     static public String getApaFormat(final String authors, final String date, final String title, final String aditionalInfo) {

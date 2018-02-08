@@ -1,7 +1,7 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEPARATOR_1;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEMICOLON;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._200;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._30;
@@ -12,13 +12,13 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getAp
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHours;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readExecutionCourses;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readProfessorships;
 
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -29,11 +29,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
+import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Job;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Qualification;
+import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.TeacherAuthorization;
 import org.fenixedu.academic.domain.TeacherCategory;
@@ -74,11 +76,11 @@ public class A3esHarvestTeachersDataService {
 
         readProfessorships(this.degreeCurricularPlan, this.year).entrySet().stream().map(entry -> {
             final Person person = entry.getKey();
-            final Map<CompetenceCourse, Set<Professorship>> planProfessorships = entry.getValue();
+            final Map<CompetenceCourse, Set<Professorship>> personProfessorships = entry.getValue();
 
             final A3esTeacherBean data = new A3esTeacherBean();
 
-            fillBasics(data, planProfessorships);
+            fillBasics(data, person);
             fillName(data, person);
             fillInstitutionName(data);
             fillSchoolName(data);
@@ -95,14 +97,16 @@ public class A3esHarvestTeachersDataService {
             fillOtherPublishedWork(data, person);
             fillOtherProfessionalActivities(data, person);
 
-            fillTeachingService(data, planProfessorships);
+            fillTeachingService(data, personProfessorships);
 
             return data;
         }).collect(Collectors.toCollection(() -> bean.getTeachersData()));
     }
 
-    private void fillBasics(final A3esTeacherBean data, final Map<CompetenceCourse, Set<Professorship>> map) {
-        final ExecutionYear firstTeacherService = map.values().stream().flatMap(i -> i.stream())
+    private void fillBasics(final A3esTeacherBean data, final Person person) {
+        final ExecutionYear firstTeacherService = person.getProfessorshipsSet().stream()
+                .filter(p -> p.getExecutionCourse().getAssociatedCurricularCoursesSet().stream()
+                        .anyMatch(cc -> cc.getDegreeCurricularPlan() == this.degreeCurricularPlan))
                 .map(p -> p.getExecutionCourse().getExecutionYear()).distinct().min(Comparator.naturalOrder()).orElse(null);
 
         data.addField("firstTeacherService", "firstTeacherService", firstTeacherService.getQualifiedName(), _UNSUPPORTED);
@@ -137,11 +141,11 @@ public class A3esHarvestTeachersDataService {
 
         final StringBuilder researchUnitsString = new StringBuilder();
         for (final Unit unit : activeResearchUnits) {
-            researchUnitsString.append(unit.getName()).append(SEPARATOR_1);
+            researchUnitsString.append(unit.getName()).append(SEMICOLON);
         }
 
-        if (researchUnitsString.toString().endsWith(SEPARATOR_1)) {
-            researchUnitsString.delete(researchUnitsString.length() - SEPARATOR_1.length(), researchUnitsString.length());
+        if (researchUnitsString.toString().endsWith(SEMICOLON)) {
+            researchUnitsString.delete(researchUnitsString.length() - SEMICOLON.length(), researchUnitsString.length());
         }
 
         final String source = researchUnitsString.toString();
@@ -281,28 +285,34 @@ public class A3esHarvestTeachersDataService {
                     final CompetenceCourse competence = entry.getKey();
                     final Set<Professorship> competenceProfessorships = entry.getValue();
 
-                    final TeachingService service = new TeachingService();
-                    service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
-                    service.addField("studyCycle", "studyCycle",
-                            readExecutionCourses(this.degreeCurricularPlan, this.year, competence)
-                                    .flatMap(ec -> ec.getAssociatedCurricularCoursesSet().stream()
-                                            .flatMap(c -> c.getDegree().getCycleTypes().stream()))
-                                    .map(ct -> ct.getDescriptionI18N().getContent()).distinct().sorted()
-                                    .collect(Collectors.joining(SEPARATOR_1)),
-                            _200);
-                    service.addField("type", "type",
-                            competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                                    .map(sp -> sp.getShift()).flatMap(s -> s.getSortedTypes().stream())
-                                    .map(t -> getShiftTypeAcronym(t)).filter(i -> i != null).distinct().sorted()
-                                    .collect(Collectors.joining(" + ")),
-                            _30);
-                    service.addField("hoursPerWeek", "totalContactHours", getTeachingHours(competenceProfessorships), _UNLIMITED);
+                    competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
+                            .forEach(sp -> {
 
-                    teachingServices.add(service);
+                                final List<ShiftType> types = sp.getShift().getTypes();
+                                if (types.size() != 1) {
+                                    return;
+                                }
+                                final ShiftType type = types.iterator().next();
 
-                    if (teachingServices.size() == _TEACHING_SERVICES) {
-                        return;
-                    }
+                                final ExecutionCourse execution = sp.getProfessorship().getExecutionCourse();
+
+                                final TeachingService service = new TeachingService();
+                                service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
+                                service.addField("studyCycle", "studyCycle",
+                                        execution.getAssociatedCurricularCoursesSet().stream()
+                                                .flatMap(c -> c.getDegree().getCycleTypes().stream())
+                                                .map(ct -> ct.getDescriptionI18N().getContent()).distinct().sorted()
+                                                .collect(Collectors.joining(SEMICOLON)),
+                                        _200);
+                                service.addField("type", "type", getShiftTypeAcronym(type), _30);
+                                service.addField("hoursPerWeek", "totalContactHours", getTeachingHours(sp), _UNLIMITED);
+
+                                teachingServices.add(service);
+
+                                if (teachingServices.size() == _TEACHING_SERVICES) {
+                                    return;
+                                }
+                            });
                 });
 
         data.setTeachingServices(teachingServices);

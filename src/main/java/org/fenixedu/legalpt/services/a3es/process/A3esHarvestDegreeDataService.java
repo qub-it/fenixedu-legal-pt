@@ -2,7 +2,7 @@ package org.fenixedu.legalpt.services.a3es.process;
 
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEPARATOR_1;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEMICOLON;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.i18n;
@@ -294,11 +294,11 @@ public class A3esHarvestDegreeDataService {
 
         final StringBuilder branchesString = new StringBuilder();
         for (final CourseGroup branch : activeBranches) {
-            branchesString.append(branch.getName()).append(SEPARATOR_1);
+            branchesString.append(branch.getName()).append(SEMICOLON);
         }
 
-        if (branchesString.toString().endsWith(SEPARATOR_1)) {
-            branchesString.delete(branchesString.length() - SEPARATOR_1.length(), branchesString.length());
+        if (branchesString.toString().endsWith(SEMICOLON)) {
+            branchesString.delete(branchesString.length() - SEMICOLON.length(), branchesString.length());
         }
 
         this.data.setBranches(branchesString.toString());

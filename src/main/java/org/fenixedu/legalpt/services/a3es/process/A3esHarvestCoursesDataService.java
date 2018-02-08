@@ -1,9 +1,9 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.BREAKLINE;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEPARATOR_2;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEPARATOR_3;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SLASH;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionSemester;
@@ -31,8 +32,6 @@ import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
-
-import com.google.common.base.Joiner;
 
 @SuppressWarnings("deprecation")
 public class A3esHarvestCoursesDataService {
@@ -76,32 +75,40 @@ public class A3esHarvestCoursesDataService {
     }
 
     private void fillAllTeachersInfo(final A3esCourseBean data, final CompetenceCourse course) {
-        final Map<Person, Set<Professorship>> professorships =
+        final Map<Person, Set<Professorship>> courseProfessorships =
                 readCourseProfessorships(this.degreeCurricularPlan, this.year, course);
 
-        fillTeachersInfo(data, professorships);
-        fillAssistantTeachersInfo(data, professorships);
+        fillTeachersInfo(data, courseProfessorships);
+        fillAssistantTeachersInfo(data, courseProfessorships);
     }
 
-    static private void fillTeachersInfo(final A3esCourseBean data, final Map<Person, Set<Professorship>> professorships) {
-        final String source = getTeachersAndTeachingHours(professorships, p -> p.isResponsibleFor());
+    static private void fillTeachersInfo(final A3esCourseBean data, final Map<Person, Set<Professorship>> courseProfessorships) {
+        final String source = getTeachersAndTeachingHours(courseProfessorships, p -> p.isResponsibleFor());
         data.addField("2", "responsibleTeacherAndTeachingHours", source, _1000);
     }
 
     static private void fillAssistantTeachersInfo(final A3esCourseBean data,
-            final Map<Person, Set<Professorship>> professorships) {
-        final String source = getTeachersAndTeachingHours(professorships, p -> !p.isResponsibleFor());
+            final Map<Person, Set<Professorship>> courseProfessorships) {
+
+        final String source = getTeachersAndTeachingHours(courseProfessorships, p -> !p.isResponsibleFor());
         data.addField("3", "otherTeachersAndTeachingHours", source, _1000);
     }
 
-    static private String getTeachersAndTeachingHours(final Map<Person, Set<Professorship>> input,
+    static private String getTeachersAndTeachingHours(final Map<Person, Set<Professorship>> courseProfessorships,
             final Predicate<Professorship> p) {
 
-        return Joiner.on(SEPARATOR_3)
-                .join(input.entrySet().stream()
-                        .map(entry -> entry.getKey().getName() + " - "
-                                + getTeachingHoursByShiftType(entry.getValue().stream().filter(p).collect(Collectors.toSet())))
-                        .collect(Collectors.toSet()));
+        return courseProfessorships.entrySet().stream().map(entry -> {
+
+            final Person person = entry.getKey();
+            final Set<Professorship> personProfessorships = entry.getValue();
+            if (personProfessorships.stream().noneMatch(p)) {
+                return "";
+            }
+
+            return person.getName() + " ("
+                    + getTeachingHoursByShiftType(personProfessorships.stream().filter(p).collect(Collectors.toSet())) + ")";
+
+        }).filter(i -> !StringUtils.isBlank(i)).collect(Collectors.joining(SLASH));
     }
 
     private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {
@@ -151,7 +158,7 @@ public class A3esHarvestCoursesDataService {
             });
         }
 
-        return result.stream().collect(Collectors.joining(SEPARATOR_2));
+        return result.stream().collect(Collectors.joining(BREAKLINE));
     }
 
 }
