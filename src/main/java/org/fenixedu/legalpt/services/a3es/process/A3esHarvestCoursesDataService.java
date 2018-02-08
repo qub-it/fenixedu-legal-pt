@@ -46,37 +46,38 @@ public class A3esHarvestCoursesDataService {
         this.semester = this.year.getFirstExecutionPeriod();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
-        readCourses(this.degreeCurricularPlan, this.year).stream().map(competence -> {
+        readCourses(this.degreeCurricularPlan, this.year).stream().map(course -> {
 
             final A3esCourseBean data = new A3esCourseBean();
 
-            fillBasics(data, competence);
-            fillCourseName(data, competence);
-            fillAllTeachersInfo(data, competence);
-            fillLearningObjectives(data, competence);
-            fillCourseProgram(data, competence);
-            fillCourseProgramJustification(data, competence);
-            fillTeachingMethodology(data, competence);
-            fillTeachingMethodologyJustification(data, competence);
-            fillBibliography(data, competence);
+            fillBasics(data, course);
+            fillCourseName(data, course);
+            fillAllTeachersInfo(data, course);
+            fillLearningObjectives(data, course);
+            fillCourseProgram(data, course);
+            fillCourseProgramJustification(data, course);
+            fillTeachingMethodology(data, course);
+            fillTeachingMethodologyJustification(data, course);
+            fillBibliography(data, course);
 
             return data;
         }).collect(Collectors.toCollection(() -> bean.getCoursesData()));
     }
 
-    private void fillBasics(final A3esCourseBean data, final CompetenceCourse competence) {
-        data.addField("currentInfo", "currentInfo", competence.findCompetenceCourseInformationForExecutionPeriod(this.semester)
-                .getExecutionInterval().getQualifiedName(), _UNSUPPORTED);
-        data.addField("code", "code", competence.getCode(), _UNSUPPORTED);
+    private void fillBasics(final A3esCourseBean data, final CompetenceCourse course) {
+        data.addField("currentInfo", "currentInfo",
+                course.findCompetenceCourseInformationForExecutionPeriod(this.semester).getExecutionInterval().getQualifiedName(),
+                _UNSUPPORTED);
+        data.addField("code", "code", course.getCode(), _UNSUPPORTED);
     }
 
-    private void fillCourseName(final A3esCourseBean data, final CompetenceCourse competence) {
-        data.addField("1", "curricularUnitName", competence.getNameI18N(this.semester), _100);
+    private void fillCourseName(final A3esCourseBean data, final CompetenceCourse course) {
+        data.addField("1", "curricularUnitName", course.getNameI18N(this.semester), _100);
     }
 
-    private void fillAllTeachersInfo(final A3esCourseBean data, final CompetenceCourse competence) {
+    private void fillAllTeachersInfo(final A3esCourseBean data, final CompetenceCourse course) {
         final Map<Person, Set<Professorship>> professorships =
-                readCourseProfessorships(this.degreeCurricularPlan, this.year, competence);
+                readCourseProfessorships(this.degreeCurricularPlan, this.year, course);
 
         fillTeachersInfo(data, professorships);
         fillAssistantTeachersInfo(data, professorships);
@@ -103,47 +104,47 @@ public class A3esHarvestCoursesDataService {
                         .collect(Collectors.toSet()));
     }
 
-    private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse competence) {
-        final MultiLanguageString source = competence.getObjectivesI18N(this.semester);
+    private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {
+        final MultiLanguageString source = course.getObjectivesI18N(this.semester);
         data.addField("4", "learningOutcomes", PT, source, _1000);
         data.addField("4", "learningOutcomes", EN, source, _1000);
     }
 
-    private void fillCourseProgram(final A3esCourseBean data, final CompetenceCourse competence) {
-        final MultiLanguageString source = competence.getProgramI18N(this.semester);
+    private void fillCourseProgram(final A3esCourseBean data, final CompetenceCourse course) {
+        final MultiLanguageString source = course.getProgramI18N(this.semester);
         data.addField("5", "syllabus", PT, source, _1000);
         data.addField("5", "syllabus", EN, source, _1000);
     }
 
-    private void fillCourseProgramJustification(final A3esCourseBean data, final CompetenceCourse competence) {
+    private void fillCourseProgramJustification(final A3esCourseBean data, final CompetenceCourse course) {
         // TODO legidio
-        final MultiLanguageString source = createEmptyMLS(); // competence.getProgramI18N(this.semester);
+        final MultiLanguageString source = createEmptyMLS(); // course.getProgramI18N(this.semester);
         data.addField("6", "syllabusDemonstration", PT, source, _1000);
         data.addField("6", "syllabusDemonstration", EN, source, _1000);
     }
 
-    private void fillTeachingMethodology(final A3esCourseBean data, final CompetenceCourse competence) {
+    private void fillTeachingMethodology(final A3esCourseBean data, final CompetenceCourse course) {
         final MultiLanguageString source =
-                createMLS(competence.getEvaluationMethod(this.semester), competence.getEvaluationMethodEn(this.semester));
+                createMLS(course.getEvaluationMethod(this.semester), course.getEvaluationMethodEn(this.semester));
         data.addField("7", "teachingMethodologies", PT, source, _1000);
         data.addField("7", "teachingMethodologies", EN, source, _1000);
     }
 
-    private void fillTeachingMethodologyJustification(final A3esCourseBean data, final CompetenceCourse competence) {
+    private void fillTeachingMethodologyJustification(final A3esCourseBean data, final CompetenceCourse course) {
         // TODO legidio
-        final MultiLanguageString source = createEmptyMLS(); // competence.getProgramI18N(this.semester);
+        final MultiLanguageString source = createEmptyMLS(); // course.getProgramI18N(this.semester);
         data.addField("8", "teachingMethodologiesDemonstration", PT, source, _3000);
         data.addField("8", "teachingMethodologiesDemonstration", EN, source, _3000);
     }
 
-    private void fillBibliography(final A3esCourseBean data, final CompetenceCourse competence) {
-        data.addField("9", "bibliographicReferences", getBibliography(competence), _1000);
+    private void fillBibliography(final A3esCourseBean data, final CompetenceCourse course) {
+        data.addField("9", "bibliographicReferences", getBibliography(course), _1000);
     }
 
-    private String getBibliography(final CompetenceCourse competence) {
+    private String getBibliography(final CompetenceCourse course) {
         final Set<String> result = new HashSet<String>();
 
-        final BibliographicReferences data = competence.getBibliographicReferences(this.semester);
+        final BibliographicReferences data = course.getBibliographicReferences(this.semester);
         if (data != null) {
             data.getMainBibliographicReferences().stream().forEach(r -> {
                 result.add(getApaFormat(r.getAuthors(), r.getYear(), r.getTitle(), r.getReference()));

@@ -73,12 +73,12 @@ public class A3esHarvestTeachersDataService {
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
         readProfessorships(this.degreeCurricularPlan, this.year).entrySet().stream().map(entry -> {
-
             final Person person = entry.getKey();
+            final Map<CompetenceCourse, Set<Professorship>> planProfessorships = entry.getValue();
 
             final A3esTeacherBean data = new A3esTeacherBean();
 
-            fillBasics(data, entry.getValue());
+            fillBasics(data, planProfessorships);
             fillName(data, person);
             fillInstitutionName(data);
             fillSchoolName(data);
@@ -95,7 +95,7 @@ public class A3esHarvestTeachersDataService {
             fillOtherPublishedWork(data, person);
             fillOtherProfessionalActivities(data, person);
 
-            fillTeachingService(data, entry.getValue());
+            fillTeachingService(data, planProfessorships);
 
             return data;
         }).collect(Collectors.toCollection(() -> bean.getTeachersData()));

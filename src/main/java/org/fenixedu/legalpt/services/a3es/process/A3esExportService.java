@@ -147,7 +147,8 @@ abstract public class A3esExportService {
 
             final String processPlan = (String) process.get("study_cycle");
             if (!bean.getDegreeCurricularPlan().getPresentationName().contains(processPlan)) {
-                throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
+                // TODO legidio remove comment
+                // throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
             }
 
             final String processState = (String) process.get("state");
@@ -654,61 +655,60 @@ abstract public class A3esExportService {
         return result;
     }
 
-    static public Set<CompetenceCourse> readCourses(final DegreeCurricularPlan degreeCurricularPlan, final ExecutionYear year) {
-        final Set<CompetenceCourse> result = new TreeSet<>((x, y) -> Collator.getInstance().compare(x.getName(), y.getName()));
-
-        year.getExecutionPeriodsSet().stream().forEach(semester -> {
-            degreeCurricularPlan.getRoot().getAllCurricularCourses(semester).stream().filter(c -> c.getCompetenceCourse() != null)
-                    .map(c -> c.getCompetenceCourse()).distinct().collect(Collectors.toCollection(() -> result));
-        });
-
-        return result;
-    }
-
-    static public Map<Person, Set<Professorship>> readCourseProfessorships(final DegreeCurricularPlan degreeCurricularPlan,
-            final ExecutionYear year, final CompetenceCourse competence) {
-
-        final Map<Person, Set<Professorship>> result =
-                new TreeMap<>((x, y) -> Collator.getInstance().compare(x.getName(), y.getName()));
-
-        result.putAll(
-                readExecutionCourses(degreeCurricularPlan, year, competence).flatMap(ec -> ec.getProfessorshipsSet().stream())
-                        .collect(Collectors.groupingBy(Professorship::getPerson, Collectors.toSet())));
-
-        return result;
-    }
-
-    static public Map<Person, Map<CompetenceCourse, Set<Professorship>>> readProfessorships(
-            final DegreeCurricularPlan degreeCurricularPlan, final ExecutionYear year) {
+    static public Map<Person, Map<CompetenceCourse, Set<Professorship>>> readProfessorships(final DegreeCurricularPlan plan,
+            final ExecutionYear year) {
 
         final Map<Person, Map<CompetenceCourse, Set<Professorship>>> result =
                 new TreeMap<>((x, y) -> Collator.getInstance().compare(x.getName(), y.getName()));
 
-        readCourses(degreeCurricularPlan, year).stream().forEach(competence -> {
-            readCourseProfessorships(degreeCurricularPlan, year, competence).entrySet().stream().forEach(entry -> {
+        readCourses(plan, year).stream().forEach(course -> {
+            readCourseProfessorships(plan, year, course).entrySet().stream().forEach(entry -> {
 
                 final Person person = entry.getKey();
+                final Set<Professorship> courseProfessorships = entry.getValue();
 
-                Map<CompetenceCourse, Set<Professorship>> currentMap = result.get(person);
-                currentMap = currentMap != null ? currentMap : new HashMap<>();
+                Map<CompetenceCourse, Set<Professorship>> tempMap = result.get(person);
+                tempMap = tempMap != null ? tempMap : new HashMap<>();
 
-                Set<Professorship> currentSet = currentMap.get(competence);
-                currentSet = currentSet != null ? currentSet : new HashSet<>();
+                Set<Professorship> tempSet = tempMap.get(course);
+                tempSet = tempSet != null ? tempSet : new HashSet<>();
 
-                currentSet.addAll(entry.getValue().stream().filter(p -> p.getPerson() == person).collect(Collectors.toSet()));
-                currentMap.put(competence, currentSet);
-                result.put(person, currentMap);
+                tempSet.addAll(courseProfessorships.stream().filter(p -> p.getPerson() == person).collect(Collectors.toSet()));
+                tempMap.put(course, tempSet);
+                result.put(person, tempMap);
             });
         });
 
         return result;
     }
 
-    static public Stream<ExecutionCourse> readExecutionCourses(final DegreeCurricularPlan degreeCurricularPlan,
-            final ExecutionYear year, final CompetenceCourse competence) {
+    static public Set<CompetenceCourse> readCourses(final DegreeCurricularPlan plan, final ExecutionYear year) {
+        final Set<CompetenceCourse> result = new TreeSet<>((x, y) -> Collator.getInstance().compare(x.getName(), y.getName()));
 
-        return competence.getAssociatedCurricularCoursesSet().stream()
-                .filter(c -> c.getDegreeCurricularPlan() == degreeCurricularPlan)
+        year.getExecutionPeriodsSet().stream().forEach(semester -> {
+            plan.getRoot().getAllCurricularCourses(semester).stream().filter(c -> c.getCompetenceCourse() != null)
+                    .map(c -> c.getCompetenceCourse()).distinct().collect(Collectors.toCollection(() -> result));
+        });
+
+        return result;
+    }
+
+    static public Map<Person, Set<Professorship>> readCourseProfessorships(final DegreeCurricularPlan plan,
+            final ExecutionYear year, final CompetenceCourse course) {
+
+        final Map<Person, Set<Professorship>> result =
+                new TreeMap<>((x, y) -> Collator.getInstance().compare(x.getName(), y.getName()));
+
+        result.putAll(readExecutionCourses(plan, year, course).flatMap(ec -> ec.getProfessorshipsSet().stream())
+                .collect(Collectors.groupingBy(Professorship::getPerson, Collectors.toSet())));
+
+        return result;
+    }
+
+    static public Stream<ExecutionCourse> readExecutionCourses(final DegreeCurricularPlan plan, final ExecutionYear year,
+            final CompetenceCourse competence) {
+
+        return competence.getAssociatedCurricularCoursesSet().stream().filter(c -> c.getDegreeCurricularPlan() == plan)
                 .flatMap(c -> c.getAssociatedExecutionCoursesSet().stream()).filter(ec -> ec.getExecutionYear() == year);
     }
 
