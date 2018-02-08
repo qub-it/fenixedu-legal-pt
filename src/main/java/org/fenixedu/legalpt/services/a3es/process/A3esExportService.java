@@ -734,7 +734,7 @@ abstract public class A3esExportService {
     static public String getTeachingHoursByShiftType(final Set<Professorship> professorships) {
         return professorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
                 .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - " + getTeachingHours(sp))
-                .collect(Collectors.joining(SEMICOLON));
+                .sorted().collect(Collectors.joining(SEMICOLON));
     }
 
     static public String getApaFormat(final String authors, final String date, final String title, final String aditionalInfo) {

@@ -14,7 +14,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTe
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourseProfessorships;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourses;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -107,7 +107,7 @@ public class A3esHarvestCoursesDataService {
             return person.getName() + " ("
                     + getTeachingHoursByShiftType(personProfessorships.stream().filter(p).collect(Collectors.toSet())) + ")";
 
-        }).filter(i -> !StringUtils.isBlank(i)).collect(Collectors.joining(PLUS));
+        }).sorted().filter(i -> !StringUtils.isBlank(i)).collect(Collectors.joining(PLUS));
     }
 
     private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {
@@ -148,11 +148,11 @@ public class A3esHarvestCoursesDataService {
     }
 
     private String getBibliography(final CompetenceCourse course) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new LinkedHashSet<String>();
 
         final BibliographicReferences data = course.getBibliographicReferences(this.semester);
         if (data != null) {
-            data.getMainBibliographicReferences().stream().forEach(r -> {
+            data.getBibliographicReferencesSortedByOrder().stream().forEach(r -> {
                 result.add(getApaFormat(r.getAuthors(), r.getYear(), r.getTitle(), r.getReference()));
             });
         }

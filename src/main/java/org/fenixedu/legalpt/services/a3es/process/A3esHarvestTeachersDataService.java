@@ -18,6 +18,7 @@ import java.text.Collator;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -185,25 +186,26 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private void fillOtherAttainedDegrees(final A3esTeacherBean data, final Person person) {
-        final Set<AttainedDegree> otherAttainedDegrees = new HashSet<AttainedDegree>();
+        final Set<AttainedDegree> otherAttainedDegrees = new LinkedHashSet<AttainedDegree>();
 
         final Qualification main = findMostRelevantQualification(person);
-        person.getAssociatedQualificationsSet().stream().filter(q -> q != main).forEach(q -> {
-            if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
-                return;
-            }
+        person.getAssociatedQualificationsSet().stream().filter(q -> q != main)
+                .sorted(Qualification.COMPARATOR_BY_YEAR.reversed()).forEach(q -> {
+                    if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
+                        return;
+                    }
 
-            final AttainedDegree attainedDegree = new AttainedDegree();
-            otherAttainedDegrees.add(attainedDegree);
+                    final AttainedDegree attainedDegree = new AttainedDegree();
+                    otherAttainedDegrees.add(attainedDegree);
 
-            attainedDegree.addField("year", "year", q.getYear(), _UNLIMITED);
-            attainedDegree.addField("degree", "degreeTypeOrTitle",
-                    q.getDegreeUnit() != null ? q.getDegreeUnit().getName() : q.getDegree(), _30);
-            attainedDegree.addField("area", "area", q.getSpecializationArea(), _100);
-            attainedDegree.addField("ies", "institution",
-                    q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _100);
-            attainedDegree.addField("rank", "classification", q.getMark(), _30);
-        });
+                    attainedDegree.addField("year", "year", q.getYear(), _UNLIMITED);
+                    attainedDegree.addField("degree", "degreeTypeOrTitle",
+                            q.getDegreeUnit() != null ? q.getDegreeUnit().getName() : q.getDegree(), _30);
+                    attainedDegree.addField("area", "area", q.getSpecializationArea(), _100);
+                    attainedDegree.addField("ies", "institution",
+                            q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _100);
+                    attainedDegree.addField("rank", "classification", q.getMark(), _30);
+                });
 
         data.setOtherAttainedDegrees(otherAttainedDegrees);
     }
@@ -271,7 +273,7 @@ public class A3esHarvestTeachersDataService {
     private void fillTeachingService(final A3esTeacherBean data,
             final Map<CompetenceCourse, Set<Professorship>> personProfessorships) {
 
-        final Set<TeachingService> teachingServices = new HashSet<>();
+        final Set<TeachingService> teachingServices = new LinkedHashSet<>();
 
         personProfessorships.entrySet().stream()
                 .sorted((x, y) -> Collator.getInstance().compare(x.getKey().getName(), y.getKey().getName())).forEach(entry -> {
