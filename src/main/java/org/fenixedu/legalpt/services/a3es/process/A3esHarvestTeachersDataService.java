@@ -174,7 +174,7 @@ public class A3esHarvestTeachersDataService {
 
         attainedDegree.addField("deg", "degreeType",
                 q == null ? null : q.getDegreeUnit() != null ? q.getDegreeUnit().getName() : q.getDegree(), _200);
-        attainedDegree.addField("degarea", "degreeScientificArea", (String) null, _200);
+        attainedDegree.addField("degarea", "degreeScientificArea", q == null ? null : q.getSpecializationArea(), _200);
         attainedDegree.addField("ano_grau", "degreeYear", q == null ? null : q.getYear(), _UNLIMITED);
         attainedDegree.addField("instituicao_conferente", "degreeInstitution",
                 q == null ? null : q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _200);
@@ -197,7 +197,7 @@ public class A3esHarvestTeachersDataService {
             attainedDegree.addField("year", "year", q.getYear(), _UNLIMITED);
             attainedDegree.addField("degree", "degreeTypeOrTitle",
                     q.getDegreeUnit() != null ? q.getDegreeUnit().getName() : q.getDegree(), _30);
-            attainedDegree.addField("area", "area", (String) null, _100);
+            attainedDegree.addField("area", "area", q.getSpecializationArea(), _100);
             attainedDegree.addField("ies", "institution",
                     q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _100);
             attainedDegree.addField("rank", "classification", q.getMark(), _30);
@@ -328,8 +328,7 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private Qualification findMostRelevantQualification(final Person person) {
-        // TODO legidio
-        return person.getAssociatedQualificationsSet().stream().max(Qualification.COMPARATOR_BY_YEAR).orElse(null);
+        return person.getAssociatedQualificationsSet().stream().filter(q -> q.getMainQualification()).findAny().orElse(null);
     }
 
     static private Set<String> findPublications(final Person person, final Optional<ResearchPublicationType> type) {
