@@ -41,7 +41,7 @@ import com.google.common.base.Strings;
 
 public class XmlToBaseFileWriter {
 
-    private static final String ENCODING = "UTF-8";
+    private static final String ENCODING = "utf-8";
 
     public static LegalReportResultFile write(final LegalReportRequest reportRequest,
             final RaidesRequestParameter raidesRequestParameter, final Raides raides) {

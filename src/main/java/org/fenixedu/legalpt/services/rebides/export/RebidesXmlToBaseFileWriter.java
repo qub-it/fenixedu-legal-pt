@@ -44,7 +44,7 @@ import org.joda.time.LocalDate;
 
 public class RebidesXmlToBaseFileWriter {
 
-    private static final String ENCODING = "UTF-8";
+    private static final String ENCODING = "utf-8";
 
     public static LegalReportResultFile write(final LegalReportRequest reportRequest, final RebidesBean rebides) {
         try {
@@ -70,7 +70,7 @@ public class RebidesXmlToBaseFileWriter {
             final JAXBContext context = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             final Marshaller marshaller = context.createMarshaller();
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            //TODO: check encoding on manual (UTF-8 ?)
+            //TODO: check encoding on manual (utf-8 ?)
             final OutputStreamWriter osw = new OutputStreamWriter(baos, Charset.forName(ENCODING));
 
             try {
