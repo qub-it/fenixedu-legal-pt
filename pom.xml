@@ -155,7 +155,7 @@
         <dependency>
         	<groupId>org.fenixedu.ulisboa</groupId>
 			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>1.0.19</version>
+			<version>1.0.21</version>
         </dependency>
 		
 	</dependencies>
