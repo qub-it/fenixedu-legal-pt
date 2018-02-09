@@ -496,7 +496,7 @@ abstract public class A3esExportService {
                 final JSONObject academic = new JSONObject();
 
                 academic.put("year", x.getFieldUnique("year").getValue());
-                academic.put("degreeCurricularPlan", x.getFieldUnique("degreeCurricularPlan").getValue());
+                academic.put("degree", x.getFieldUnique("degree").getValue());
                 academic.put("area", x.getFieldUnique("area").getValue());
                 academic.put("ies", x.getFieldUnique("ies").getValue());
                 academic.put("rank", x.getFieldUnique("rank").getValue());
