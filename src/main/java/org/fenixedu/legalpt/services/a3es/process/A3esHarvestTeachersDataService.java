@@ -190,7 +190,7 @@ public class A3esHarvestTeachersDataService {
 
         final Qualification main = findMostRelevantQualification(person);
         person.getAssociatedQualificationsSet().stream().filter(q -> q != main)
-                .sorted(Qualification.COMPARATOR_BY_YEAR.reversed()).forEach(q -> {
+                .sorted(Comparator.comparing(Qualification::getYear).reversed()).forEach(q -> {
                     if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
                         return;
                     }
@@ -337,7 +337,7 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private Set<String> findPublications(final Person person, final Optional<ResearchPublicationType> type) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new LinkedHashSet<String>();
 
         ResearchPublication.findPublicationsSortedByRelevance(person, type.orElse(null)).forEach(r -> {
             result.add(getApaFormat(r.getAuthors(), r.getYear() == null ? null : r.getYear().toString(),
@@ -348,7 +348,7 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private Set<String> findJobs(final Person person, final Optional<JobType> type) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new LinkedHashSet<String>();
 
         findJobsSortedByBeginDate(person, type.orElse(null)).forEach(r -> {
             result.add(getJobFormat(r));
@@ -387,7 +387,7 @@ public class A3esHarvestTeachersDataService {
             result += "- " + job.getEmployerName() + " ";
         }
 
-        return result;
+        return result.trim();
     }
 
 }
