@@ -46,6 +46,7 @@ import org.fenixedu.academic.domain.organizationalStructure.Accountability;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
 import org.fenixedu.academic.domain.person.JobType;
+import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublication;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublicationType;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -177,12 +178,44 @@ public class A3esHarvestTeachersDataService {
         final AttainedDegree attainedDegree = new AttainedDegree();
         data.setAttainedDegree(attainedDegree);
 
-        attainedDegree.addField("deg", "degreeType",
-                q == null ? null : q.getDegreeUnit() != null ? q.getDegreeUnit().getName() : q.getDegree(), _200);
-        attainedDegree.addField("degarea", "degreeScientificArea", q == null ? null : q.getSpecializationArea(), _200);
-        attainedDegree.addField("ano_grau", "degreeYear", q == null ? null : q.getYear(), _UNLIMITED);
-        attainedDegree.addField("instituicao_conferente", "degreeInstitution",
-                q == null ? null : q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _200);
+        final String year = q == null ? null : q.getYear();
+        final String level = getDegreeLevel(q);
+        final String area = getDegreeArea(q);
+        final String institution = getDegreeInstitution(q);
+
+        attainedDegree.addField("deg", "degreeType", level, _200);
+        attainedDegree.addField("degarea", "degreeScientificArea", area, _200);
+        attainedDegree.addField("ano_grau", "degreeYear", year, _UNLIMITED);
+        attainedDegree.addField("instituicao_conferente", "degreeInstitution", institution, _200);
+    }
+
+    static private String getDegreeLevel(final Qualification q) {
+        final QualificationLevel level = q == null ? null : q.getLevel();
+        return level == null ? null : LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.SCHOOL_LEVEL)
+                .translate(level);
+    }
+
+    static private String getDegreeArea(final Qualification q) {
+        if (q != null) {
+
+            if (!StringUtils.isBlank(q.getSpecializationArea())) {
+                return q.getSpecializationArea().trim();
+            }
+
+            if (q.getDegreeUnit() != null) {
+                return q.getDegreeUnit().getName();
+            }
+
+            if (!StringUtils.isBlank(q.getDegree())) {
+                return q.getDegree().trim();
+            }
+        }
+
+        return q == null ? null : q.getSpecializationArea();
+    }
+
+    private static String getDegreeInstitution(final Qualification q) {
+        return q == null ? null : q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool();
     }
 
     static private void fillOtherAttainedDegrees(final A3esTeacherBean data, final Person person) {
@@ -198,13 +231,17 @@ public class A3esHarvestTeachersDataService {
                     final AttainedDegree attainedDegree = new AttainedDegree();
                     otherAttainedDegrees.add(attainedDegree);
 
-                    attainedDegree.addField("year", "year", q.getYear(), _UNLIMITED);
-                    attainedDegree.addField("degree", "degreeTypeOrTitle",
-                            q.getDegreeUnit() != null ? q.getDegreeUnit().getName() : q.getDegree(), _30);
-                    attainedDegree.addField("area", "area", q.getSpecializationArea(), _100);
-                    attainedDegree.addField("ies", "institution",
-                            q.getInstitutionUnit() != null ? q.getInstitutionUnit().getName() : q.getSchool(), _100);
-                    attainedDegree.addField("rank", "classification", q.getMark(), _30);
+                    final String year = q == null ? null : q.getYear();
+                    final String level = getDegreeLevel(q);
+                    final String area = getDegreeArea(q);
+                    final String institution = getDegreeInstitution(q);
+                    final String classification = q.getMark();
+
+                    attainedDegree.addField("year", "year", year, _UNLIMITED);
+                    attainedDegree.addField("degree", "degreeTypeOrTitle", level, _30);
+                    attainedDegree.addField("area", "area", area, _100);
+                    attainedDegree.addField("ies", "institution", institution, _100);
+                    attainedDegree.addField("rank", "classification", classification, _30);
                 });
 
         data.setOtherAttainedDegrees(otherAttainedDegrees);
