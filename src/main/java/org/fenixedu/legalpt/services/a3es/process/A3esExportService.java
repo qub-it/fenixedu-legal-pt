@@ -111,11 +111,7 @@ abstract public class A3esExportService {
     }
 
     private void initializeHash(final A3esProcessBean bean) {
-        this.base64Hash = bean.getBase64Hash();
-        if (StringUtils.isBlank(bean.getBase64Hash())) {
-            this.base64Hash = new String(Base64.getEncoder().encode((bean.getUser() + ":" + bean.getPassword()).getBytes()));
-            bean.setBase64Hash(this.base64Hash);
-        }
+        this.base64Hash = new String(Base64.getEncoder().encode((bean.getUser() + ":" + bean.getPassword()).getBytes()));
     }
 
     private void initializeFormId(final A3esProcessBean bean) {
@@ -239,7 +235,7 @@ abstract public class A3esExportService {
     }
 
     private JSONArray getCourseFolders(final WebTarget target) {
-        return (JSONArray) invokeToArray(target.path(API_FOLDER).queryParam(FORM_ID, formId));
+        return (JSONArray) invokeToArray(target.path(API_FOLDER).queryParam(FORM_ID, this.formId));
     }
 
     abstract protected String getTeachersFolderSectionName();

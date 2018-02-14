@@ -30,7 +30,6 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
 
     private String user;
     private String password;
-    private String base64Hash;
     private String formId;
     private List<String> selectedIds = new ArrayList<>();
 
@@ -148,14 +147,6 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getBase64Hash() {
-        return base64Hash;
-    }
-
-    public void setBase64Hash(String base64Hash) {
-        this.base64Hash = base64Hash;
     }
 
     public String getFormId() {
