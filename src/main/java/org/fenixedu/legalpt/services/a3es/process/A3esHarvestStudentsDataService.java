@@ -1,192 +1,110 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._20;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionYear;
+import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.person.Gender;
 import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.academic.domain.student.Student;
+import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esStudentsBean;
-import org.joda.time.DateTime;
+import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
+import org.fenixedu.ulisboa.specifications.domain.services.student.RegistrationDataServices;
+import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityRegistrationInformation;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 public class A3esHarvestStudentsDataService {
 
-    private final DegreeCurricularPlan degreeCurricularPlan;
     private final ExecutionYear year;
-    private final A3esStudentsBean data;
+    private final DegreeCurricularPlan degreeCurricularPlan;
 
-    public static int AGE_20YEARS = 20;
-    public static int AGE_24YEARS = 24;
-    public static int AGE_28YEARS = 28;
+    public A3esHarvestStudentsDataService(final A3esProcessBean bean) {
+        this.year = bean.getExecutionYear();
+        this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
-    public A3esHarvestStudentsDataService(DegreeCurricularPlan degreeCurricularPlan, ExecutionYear executionYear) {
-        this.degreeCurricularPlan = degreeCurricularPlan;
-        this.year = executionYear;
-        this.data = new A3esStudentsBean();
-    }
+        final Collection<Registration> registrations = getAllRegistrations();
 
-    public A3esStudentsBean getStudentsData() {
-        fillStudentsByGender();
-        fillStudentsByAge();
-        fillStudentsByCurricularYear();
-        fillDemandAmongStudents();
-        fillStudentsExtraInformation();
-        fillStudentsSupport();
-        fillStudentIntegrationMeasures();
-        fillFinanceAndEmploymentCounseling();
-        fillStudentSurveysImpact();
-        fillMobilityStrategy();
+        final A3esStudentsBean data = bean.getStudentsData();
 
-        return this.data;
-    }
-
-    private void fillStudentsByGender() {
-        final BigDecimal malePercentage = getPercentageOfStudentsByGender(Gender.MALE);
-        final BigDecimal femalePercentage = getPercentageOfStudentsByGender(Gender.FEMALE);
-
-        TreeMap<String, String> studentsByGender = new TreeMap<String, String>();
-        studentsByGender.put(label("female"), String.valueOf(femalePercentage));
-        studentsByGender.put(label("male"), String.valueOf(malePercentage));
-        this.data.setStudentsByGender(studentsByGender);
-    }
-
-    private BigDecimal getPercentageOfStudentsByGender(final Gender gender) {
-        Collection<Registration> allRegistrations = getAllRegistrations();
-
-        final Integer numberOfStudentsByGender = Collections2.filter(allRegistrations, new Predicate<Registration>() {
-            @Override
-            public boolean apply(Registration registration) {
-                Student student = registration.getStudent();
-                return student.getPerson().getGender() == gender;
-            }
-        }).size();
-
-        if (allRegistrations.size() == 0) {
-            return new BigDecimal(0);
-        }
-
-        return new BigDecimal(numberOfStudentsByGender).divide(new BigDecimal(allRegistrations.size()), 2, RoundingMode.HALF_EVEN)
-                .multiply(new BigDecimal(100));
+        fillStudentsEnroled(data, registrations);
+        fillStudentsByGender(data, registrations);
+        fillStudentsByCurricularYear(data, registrations);
+//        fillDemandAmongStudents(data);
+//        fillStudentsExtraInformation(data);
+//        fillStudentsSupport(data);
+//        fillStudentIntegrationMeasures(data);
+//        fillFinanceAndEmploymentCounseling(data);
+//        fillStudentSurveysImpact(data);
+//        fillMobilityStrategy(data);
     }
 
     private Collection<Registration> getAllRegistrations() {
+        // TODO legidio, filter mobility by agreement
 
-        final Set<Registration> result = Sets.newHashSet();
-        for (final Registration registration : this.degreeCurricularPlan.getStudentCurricularPlansSet().stream()
-                .map(scp -> scp.getRegistration()).collect(Collectors.toSet())) {
+        return this.year.getExecutionPeriodsSet().stream()
+                .flatMap(semester -> semester.getEnrolmentsSet().stream().filter(enrolment -> !enrolment.isAnnulled())
+                        .map(enrolment -> enrolment.getRegistration())
+                        .filter(registration -> registration.getDegree() == this.degreeCurricularPlan.getDegree())
+                        .filter(registration -> MobilityRegistrationInformation.findInternationalIncomingInformation(registration,
+                                this.year) == null)
+                        .filter(registration -> RegistrationDataServices.getRegistrationData(registration, this.year) != null))
+                .collect(Collectors.toSet());
+    }
 
-            if (!registration.getEnrolments(this.year).isEmpty()) {
-                result.add(registration);
-            }
+    static private void fillStudentsEnroled(final A3esStudentsBean data, final Collection<Registration> registrations) {
+        data.addField("q-II.5.1.1", "studentsEnroled", String.valueOf(registrations.size()), _20);
+    }
+
+    static private void fillStudentsByGender(final A3esStudentsBean data, final Collection<Registration> registrations) {
+        final BigDecimal malePercentage = getPercentageOfStudentsByGender(registrations, Gender.MALE);
+        final BigDecimal femalePercentage = getPercentageOfStudentsByGender(registrations, Gender.FEMALE);
+
+        data.addField("q-II.5.1.2.a", "studentsMale", malePercentage.toPlainString(), _20);
+        data.addField("q-II.5.1.2.b", "studentsFemale", femalePercentage.toPlainString(), _20);
+    }
+
+    static private BigDecimal getPercentageOfStudentsByGender(final Collection<Registration> registrations, final Gender gender) {
+        final int total = registrations.size();
+        if (total == 0) {
+            return BigDecimal.ZERO;
         }
 
-        return result;
+        final long filtered = registrations.stream().filter(r -> r.getPerson().getGender() == gender).count();
+        return new BigDecimal(filtered).divide(new BigDecimal(total), 2, RoundingMode.HALF_EVEN).multiply(new BigDecimal(100));
     }
 
-    private void fillStudentsByAge() {
-        final BigDecimal rangeUnder20 = getPercentageOfStudentsByAge(null, AGE_20YEARS);
-        final BigDecimal range20_23 = getPercentageOfStudentsByAge(AGE_20YEARS, AGE_24YEARS);
-        final BigDecimal range24_27 = getPercentageOfStudentsByAge(AGE_24YEARS, AGE_28YEARS);
-        final BigDecimal rangeOver28 = getPercentageOfStudentsByAge(AGE_28YEARS, null);
+    private void fillStudentsByCurricularYear(final A3esStudentsBean data, final Collection<Registration> registrations) {
+        for (final Map.Entry<Integer, Collection<Registration>> entry : groupStudentsByCurricularYear(registrations).entrySet()) {
+            final Integer curricularYear = entry.getKey();
+            final int number = entry.getValue().size();
 
-        TreeMap<String, String> studentsByAge = new TreeMap<String, String>();
-        studentsByAge.put(label("rangeUnder20"), String.valueOf(rangeUnder20));
-        studentsByAge.put(label("range20_23"), String.valueOf(range20_23));
-        studentsByAge.put(label("range24_27"), String.valueOf(range24_27));
-        studentsByAge.put(label("rangeOver28"), String.valueOf(rangeOver28));
+            // TODO legidio, make this more generic
+            final CycleType cycleType = this.degreeCurricularPlan.getDegreeType().getFirstOrderedCycleType();
+            final int cycle = cycleType == null ? 1 : cycleType.getWeight();
 
-        this.data.setStudentsByAge(studentsByAge);
-    }
-
-    private BigDecimal getPercentageOfStudentsByAge(final Integer minAge, final Integer maxAge) {
-        Collection<Registration> allRegistrations = getAllRegistrations();
-
-        final Integer numberOfStudentsByAge = Collections2.filter(allRegistrations, new Predicate<Registration>() {
-            @Override
-            public boolean apply(Registration registration) {
-                final Student student = registration.getStudent();
-                return false; // student.getPerson().getCurrentAge() != null && (minAge != null ? student.getPerson().getCurrentAge() >= minAge : true) && (maxAge != null ? student.getPerson().getCurrentAge() < maxAge : true);
-            }
-        }).size();
-
-        if (allRegistrations.size() == 0) {
-            return new BigDecimal(0);
+            data.addField("q-II.5.1.3." + curricularYear, "studentsCurricularYear" + curricularYear + cycle,
+                    String.valueOf(number), _20);
         }
-
-        return new BigDecimal(numberOfStudentsByAge).divide(new BigDecimal(allRegistrations.size()), 2, RoundingMode.HALF_EVEN)
-                .multiply(new BigDecimal(100));
     }
 
-    private void fillStudentsByCurricularYear() {
-
-        final Map<String, String> studentsByCurricularYears = new TreeMap<String, String>();
-        for (final Map.Entry<Integer, Collection<Registration>> entry : groupStudentsByCurricularYear().entrySet()) {
-            studentsByCurricularYears.put(entry.getKey().toString(), String.valueOf(entry.getValue().size()));
-        }
-
-        this.data.setStudentsByCurricularYear(studentsByCurricularYears);
-    }
-
-    private Map<Integer, Collection<Registration>> groupStudentsByCurricularYear() {
+    private Map<Integer, Collection<Registration>> groupStudentsByCurricularYear(final Collection<Registration> registrations) {
         final Multimap<Integer, Registration> registrationsByYear = ArrayListMultimap.create();
 
-        for (final Registration registration : getAllRegistrations()) {
-            final Integer year =
-                    registration.getStudentCurricularPlan(this.year).getCurriculum(new DateTime(), this.year).getCurricularYear();
-            registrationsByYear.put(year, registration);
+        for (final Registration registration : registrations) {
+            final int curricularYear = RegistrationServices.getCurricularYear(registration, this.year).getResult();
+            registrationsByYear.put(curricularYear, registration);
         }
 
         return registrationsByYear.asMap();
-    }
-
-    private void fillDemandAmongStudents() {
-        Map<ExecutionYear, Map<String, String>> demandAmongStudents = new HashMap<ExecutionYear, Map<String, String>>();
-        Map<String, String> map = new HashMap<String, String>();
-        demandAmongStudents.put(this.year, map);
-        demandAmongStudents.put(this.year.getPreviousExecutionYear(), map);
-        demandAmongStudents.put(this.year.getPreviousExecutionYear().getPreviousExecutionYear(), map);
-        this.data.setDemandAmongStudents(demandAmongStudents);
-    }
-
-    private void fillStudentsExtraInformation() {
-        this.data.setStudentsExtraInformation(createEmptyMLS());
-    }
-
-    private void fillStudentsSupport() {
-        this.data.setStudentsSupport(createEmptyMLS());
-    }
-
-    private void fillStudentIntegrationMeasures() {
-        this.data.setStudentIntegrationMeasures(createEmptyMLS());
-    }
-
-    private void fillFinanceAndEmploymentCounseling() {
-        this.data.setFinanceAndEmploymentCounseling(createEmptyMLS());
-    }
-
-    private void fillStudentSurveysImpact() {
-        this.data.setStudentSurveysImpact(createEmptyMLS());
-    }
-
-    private void fillMobilityStrategy() {
-        this.data.setMobilityStrategy(createEmptyMLS());
     }
 
 }

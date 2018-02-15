@@ -236,6 +236,41 @@ public class A3esProcessController extends FenixeduLegalPTBaseController {
         }
     }
 
+    private static final String _VIEWINFO_URI = "/viewinfo/";
+
+    @RequestMapping(value = _READ_URI + "{oid}" + _VIEWINFO_URI)
+    public String processReadToViewInfoData(@PathVariable("oid") final A3esProcess process, final Model model,
+            final RedirectAttributes redirectAttributes) {
+
+        setA3esProcess(process, model);
+        return redirect(VIEWINFO_URL + getA3esProcess(model).getExternalId(), model, redirectAttributes);
+    }
+
+    public static final String VIEWINFO_URL = CONTROLLER_URL + _VIEWINFO_URI;
+
+    @RequestMapping(value = _VIEWINFO_URI + "{oid}", method = RequestMethod.GET)
+    public String viewinfo(@PathVariable("oid") final A3esProcess process, final Model model) {
+        setA3esProcess(process, model);
+
+        final A3esProcessBean bean = new A3esProcessBean(process);
+        bean.updateInfoData();
+
+        this.setBean(bean, model);
+        return jspPage("viewinfo");
+    }
+
+    private static final String _VIEWINFOPOSTBACK_URI = "/viewinfopostback/";
+    public static final String VIEWINFOPOSTBACK_URL = CONTROLLER_URL + _VIEWINFOPOSTBACK_URI;
+
+    @RequestMapping(value = _VIEWINFOPOSTBACK_URI + "{oid}", method = RequestMethod.POST,
+            produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseEntity<String> viewinfopostback(@PathVariable("oid") final A3esProcess process,
+            @RequestParam(value = "bean", required = false) final A3esProcessBean bean, final Model model) {
+
+        this.setBean(bean, model);
+        return new ResponseEntity<String>(getBeanJson(bean), HttpStatus.OK);
+    }
+
     private static final String _VIEWCOURSES_URI = "/viewcourses/";
 
     @RequestMapping(value = _READ_URI + "{oid}" + _VIEWCOURSES_URI)

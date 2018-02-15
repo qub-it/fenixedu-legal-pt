@@ -107,6 +107,10 @@
 		&nbsp;|&nbsp; <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp;<a class="" href="#" 
 					ng-click="delete()"><spring:message code="label.event.delete" /></a>
 
+		&nbsp;|&nbsp; <span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp;<a class=""
+			href="${pageContext.request.contextPath}<%=A3esProcessController.READ_URL%>${process.externalId}/viewinfo/"><spring:message
+				code="label.infoFiles" /></a>
+				
 		&nbsp;|&nbsp; <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;<a class=""
 			href="${pageContext.request.contextPath}<%=A3esProcessController.READ_URL%>${process.externalId}/viewteachers/"><spring:message
 				code="label.teacherFiles" /></a>

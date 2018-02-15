@@ -77,6 +77,7 @@ abstract public class A3esExportService {
     static public int _UNLIMITED = -1;
     static protected int _0 = 0;
     static protected int _3 = 3;
+    static protected int _20 = 20;
     static protected int _30 = 30;
     static protected int _100 = 100;
     static protected int _200 = 200;
@@ -645,7 +646,7 @@ abstract public class A3esExportService {
         return createMLS(null, null);
     }
 
-    static protected MultiLanguageString createMLS(final String pt, final String en) {
+    static public MultiLanguageString createMLS(final String pt, final String en) {
         MultiLanguageString result = new MultiLanguageString();
 
         if (!StringUtils.isBlank(pt)) {

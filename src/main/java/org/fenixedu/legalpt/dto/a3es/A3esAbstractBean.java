@@ -1,6 +1,8 @@
 package org.fenixedu.legalpt.dto.a3es;
 
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.util.MultiLanguageString;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import com.google.common.collect.Lists;
 
@@ -57,6 +60,14 @@ public abstract class A3esAbstractBean implements Serializable {
 
     public List<A3esBeanField> getField(final String id) {
         return fields.stream().filter(i -> StringUtils.equalsIgnoreCase(i.getId(), id)).collect(Collectors.toList());
+    }
+
+    public A3esBeanField addField(final String id, final String fieldName, final Locale locale, final LocalizedString source,
+            final int limit) {
+        final A3esBeanField result =
+                A3esBeanField.create(id, fieldName, locale, createMLS(source.getContent(PT), source.getContent(EN)), limit);
+        getFields().add(result);
+        return result;
     }
 
     public A3esBeanField addField(final String id, final String fieldName, final Locale locale, final MultiLanguageString source,

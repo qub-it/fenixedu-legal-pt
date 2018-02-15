@@ -118,29 +118,29 @@ public class A3esHarvestCoursesDataService {
 
     private void fillCourseProgram(final A3esCourseBean data, final CompetenceCourse course) {
         final MultiLanguageString source = course.getProgramI18N(this.semester);
-        data.addField("5", "syllabus", PT, source, _1000);
-        data.addField("5", "syllabus", EN, source, _1000);
+        data.addField("5", "program", PT, source, _1000);
+        data.addField("5", "program", EN, source, _1000);
     }
 
     private void fillCourseProgramJustification(final A3esCourseBean data, final CompetenceCourse course) {
         // TODO legidio
         final MultiLanguageString source = createEmptyMLS(); // course.getProgramI18N(this.semester);
-        data.addField("6", "syllabusDemonstration", PT, source, _1000);
-        data.addField("6", "syllabusDemonstration", EN, source, _1000);
+        data.addField("6", "programDemonstration", PT, source, _1000);
+        data.addField("6", "programDemonstration", EN, source, _1000);
     }
 
     private void fillTeachingMethodology(final A3esCourseBean data, final CompetenceCourse course) {
         final MultiLanguageString source =
                 createMLS(course.getEvaluationMethod(this.semester), course.getEvaluationMethodEn(this.semester));
-        data.addField("7", "teachingMethodologies", PT, source, _1000);
-        data.addField("7", "teachingMethodologies", EN, source, _1000);
+        data.addField("7", "evaluationMethod", PT, source, _1000);
+        data.addField("7", "evaluationMethod", EN, source, _1000);
     }
 
     private void fillTeachingMethodologyJustification(final A3esCourseBean data, final CompetenceCourse course) {
         // TODO legidio
         final MultiLanguageString source = createEmptyMLS(); // course.getProgramI18N(this.semester);
-        data.addField("8", "teachingMethodologiesDemonstration", PT, source, _3000);
-        data.addField("8", "teachingMethodologiesDemonstration", EN, source, _3000);
+        data.addField("8", "evaluationMethodDemonstration", PT, source, _3000);
+        data.addField("8", "evaluationMethodDemonstration", EN, source, _3000);
     }
 
     private void fillBibliography(final A3esCourseBean data, final CompetenceCourse course) {

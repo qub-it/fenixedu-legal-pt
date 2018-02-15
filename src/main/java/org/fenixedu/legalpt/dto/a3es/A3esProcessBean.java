@@ -12,6 +12,8 @@ import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.legalpt.domain.a3es.A3esProcess;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestCoursesDataService;
+import org.fenixedu.legalpt.services.a3es.process.A3esHarvestDegreeDataService;
+import org.fenixedu.legalpt.services.a3es.process.A3esHarvestStudentsDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestTeachersDataService;
 
 public class A3esProcessBean extends A3esPeriodBean implements IBean {
@@ -25,6 +27,8 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
     private DegreeCurricularPlan degreeCurricularPlan;
     private List<TupleDataSourceBean> degreeCurricularPlanDataSource;
 
+    private A3esDegreeBean degreeData;
+    private A3esStudentsBean studentsData;
     private Set<A3esCourseBean> coursesData;
     private Set<A3esTeacherBean> teachersData;
 
@@ -117,6 +121,22 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
         return this.degreeCurricularPlanDataSource;
     }
 
+    public A3esDegreeBean getDegreeData() {
+        if (this.degreeData == null) {
+            this.degreeData = new A3esDegreeBean();
+        }
+
+        return this.degreeData;
+    }
+
+    public A3esStudentsBean getStudentsData() {
+        if (this.studentsData == null) {
+            this.studentsData = new A3esStudentsBean();
+        }
+
+        return this.studentsData;
+    }
+
     public Set<A3esCourseBean> getCoursesData() {
         if (this.coursesData == null) {
             this.coursesData = new HashSet<>();
@@ -183,6 +203,15 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
                         return tuple;
 
                     }).collect(Collectors.toCollection(() -> getDegreeCurricularPlanDataSource()));
+        }
+    }
+
+    public void updateInfoData() {
+        if (getDegreeData().getFields().isEmpty() && getExecutionYear() != null && getDegreeCurricularPlan() != null) {
+            new A3esHarvestDegreeDataService(this);
+        }
+        if (getStudentsData().getFields().isEmpty() && getExecutionYear() != null && getDegreeCurricularPlan() != null) {
+            new A3esHarvestStudentsDataService(this);
         }
     }
 
