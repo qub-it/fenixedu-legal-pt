@@ -287,11 +287,14 @@ public class RaidesService {
             bean.setEscolaridadeAnterior(LegalMapping.find(report, LegalMappingType.PRECEDENT_SCHOOL_LEVEL)
                     .translate(lastCompletedQualification.getSchoolLevel()));
 
-            if (SchoolLevelType.OTHER.equals(lastCompletedQualification.getSchoolLevel())) {
-
+            if (bean.getEscolaridadeAnterior().equals(Raides.NivelEscolaridadeAluno.OUTRO)) {
+                
                 if (!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())) {
                     bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getOtherSchoolLevel().substring(0,
                             Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getOtherSchoolLevel().length())));
+                } else {
+                    bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getSchoolLevel().getLocalizedName().substring(0,
+                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getSchoolLevel().getLocalizedName().length())));
                 }
             }
         }
@@ -401,15 +404,7 @@ public class RaidesService {
                     formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
-
-        if (Raides.NivelCursoOrigem.OUTRO.equals(Strings.isNullOrEmpty(bean.getOutroEscolaridadeAnterior()))) {
-            if (Strings.isNullOrEmpty(bean.getOutroEscolaridadeAnterior())) {
-                LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.other.school.level.missing",
-                        formatArgs(registration, executionYear)));
-                bean.markAsInvalid();
-            }
-        }
-
+        
         if (Strings.isNullOrEmpty(bean.getPaisEscolaridadeAnt())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.previous.complete.country.missing", formatArgs(registration, executionYear)));
@@ -422,20 +417,6 @@ public class RaidesService {
 
             bean.markAsInvalid();
         }
-
-        /*
-        if(Strings.isNullOrEmpty(bean.getAnoEscolaridadeAnt())) {
-            try {
-                
-            } catch(NumberFormatException e) {
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.previous.complete.year.missing",
-                                String.valueOf(registration.getStudent().getNumber()), registration.getDegree().getCode(),registration.getDegreeNameWithDescription(),
-                                executionYear.getQualifiedName()));
-                bean.markAsInvalid();
-            }
-        }
-        */
 
         validaEstabelecimentoAnteriorCompleto(institutionUnit, executionYear, registration, lastCompletedQualification, bean);
         validaCursoAnteriorCompleto(institutionUnit, executionYear, registration, lastCompletedQualification, bean);

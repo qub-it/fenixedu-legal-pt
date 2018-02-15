@@ -178,6 +178,10 @@ public class Raides {
     public static class NivelEscolaridade {
         public static final String NAO_DISPONIVEL = "22";
     }
+    
+    public static class NivelEscolaridadeAluno {
+        public static final String OUTRO = "19";
+    }
 
     public static class SituacaoProfissional {
         public static final String ALUNO = "17";
