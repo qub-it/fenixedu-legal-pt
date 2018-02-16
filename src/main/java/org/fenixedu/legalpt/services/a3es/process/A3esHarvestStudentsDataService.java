@@ -13,11 +13,11 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.person.Gender;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esStudentsBean;
 import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 import org.fenixedu.ulisboa.specifications.domain.services.student.RegistrationDataServices;
-import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityRegistrationInformation;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -48,16 +48,17 @@ public class A3esHarvestStudentsDataService {
     }
 
     private Collection<Registration> getAllRegistrations() {
-        // TODO legidio, filter mobility by agreement
-
         return this.year.getExecutionPeriodsSet().stream()
                 .flatMap(semester -> semester.getEnrolmentsSet().stream().filter(enrolment -> !enrolment.isAnnulled())
                         .map(enrolment -> enrolment.getRegistration())
                         .filter(registration -> registration.getDegree() == this.degreeCurricularPlan.getDegree())
-                        .filter(registration -> MobilityRegistrationInformation.findInternationalIncomingInformation(registration,
-                                this.year) == null)
+                        .filter(registration -> !isAgreementPartOfMobilityReport(registration))
                         .filter(registration -> RegistrationDataServices.getRegistrationData(registration, this.year) != null))
                 .collect(Collectors.toSet());
+    }
+
+    static private boolean isAgreementPartOfMobilityReport(final Registration registration) {
+        return A3esInstance.getInstance().getMobilityAgreementsSet().contains(registration.getRegistrationProtocol());
     }
 
     static private void fillStudentsEnroled(final A3esStudentsBean data, final Collection<Registration> registrations) {

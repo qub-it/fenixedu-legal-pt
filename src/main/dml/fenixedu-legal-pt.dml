@@ -46,6 +46,11 @@ class a3es.A3esProcess {
 
 class a3es.A3esInstance extends .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport {
 }
+
+	relation A3esInstanceMobilityAgreement {
+		a3es.A3esInstance playsRole a3esInstance { multiplicity 0..1; }
+		.org.fenixedu.academic.domain.student.RegistrationProtocol playsRole mobilityAgreements { multiplicity *; }
+	}
 	
 // ==================== END: A3esProcess ====================
 
