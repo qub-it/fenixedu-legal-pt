@@ -146,8 +146,7 @@ abstract public class A3esExportService {
 
             final String processPlan = (String) process.get("study_cycle");
             if (!bean.getDegreeCurricularPlan().getPresentationName().contains(processPlan)) {
-                // TODO legidio remove comment
-                // throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
+                throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
             }
 
             final String processState = (String) process.get("state");
