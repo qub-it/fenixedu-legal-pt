@@ -64,8 +64,8 @@ public abstract class A3esAbstractBean implements Serializable {
 
     public A3esBeanField addField(final String id, final String fieldName, final Locale locale, final LocalizedString source,
             final int limit) {
-        final A3esBeanField result =
-                A3esBeanField.create(id, fieldName, locale, createMLS(source.getContent(PT), source.getContent(EN)), limit);
+        final MultiLanguageString mls = source == null ? null : createMLS(source.getContent(PT), source.getContent(EN));
+        final A3esBeanField result = A3esBeanField.create(id, fieldName, locale, mls, limit);
         getFields().add(result);
         return result;
     }

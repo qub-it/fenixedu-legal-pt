@@ -7,7 +7,6 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createEmptyMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByShiftType;
@@ -28,7 +27,10 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
+import org.fenixedu.academic.domain.dml.DynamicField;
 import org.fenixedu.academic.util.MultiLanguageString;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 
@@ -46,27 +48,27 @@ public class A3esHarvestCoursesDataService {
 
         readCourses(this.degreeCurricularPlan, this.year).stream().map(course -> {
 
+            final CompetenceCourseInformation info = course.findCompetenceCourseInformationForExecutionPeriod(this.semester);
+
             final A3esCourseBean data = new A3esCourseBean();
 
-            fillBasics(data, course);
+            fillBasics(data, info);
             fillCourseName(data, course);
             fillAllTeachersInfo(data, course);
             fillLearningObjectives(data, course);
             fillCourseProgram(data, course);
-            fillCourseProgramJustification(data, course);
+            fillCourseProgramJustification(data, info);
             fillTeachingMethodology(data, course);
-            fillTeachingMethodologyJustification(data, course);
+            fillTeachingMethodologyJustification(data, info);
             fillBibliography(data, course);
 
             return data;
         }).collect(Collectors.toCollection(() -> bean.getCoursesData()));
     }
 
-    private void fillBasics(final A3esCourseBean data, final CompetenceCourse course) {
-        data.addField("currentInfo", "currentInfo",
-                course.findCompetenceCourseInformationForExecutionPeriod(this.semester).getExecutionInterval().getQualifiedName(),
-                _UNSUPPORTED);
-        data.addField("code", "code", course.getCode(), _UNSUPPORTED);
+    private void fillBasics(final A3esCourseBean data, final CompetenceCourseInformation info) {
+        data.addField("currentInfo", "currentInfo", info.getExecutionInterval().getQualifiedName(), _UNSUPPORTED);
+        data.addField("code", "code", info.getCompetenceCourse().getCode(), _UNSUPPORTED);
     }
 
     private void fillCourseName(final A3esCourseBean data, final CompetenceCourse course) {
@@ -122,11 +124,11 @@ public class A3esHarvestCoursesDataService {
         data.addField("5", "program", EN, source, _1000);
     }
 
-    private void fillCourseProgramJustification(final A3esCourseBean data, final CompetenceCourse course) {
-        // TODO legidio
-        final MultiLanguageString source = createEmptyMLS(); // course.getProgramI18N(this.semester);
-        data.addField("6", "programDemonstration", PT, source, _1000);
-        data.addField("6", "programDemonstration", EN, source, _1000);
+    private void fillCourseProgramJustification(final A3esCourseBean data, final CompetenceCourseInformation info) {
+        final String code = "programDemonstration";
+        final LocalizedString source = DynamicField.findField(info, code).getValue(LocalizedString.class);
+        data.addField("6", code, PT, source, _1000);
+        data.addField("6", code, EN, source, _1000);
     }
 
     private void fillTeachingMethodology(final A3esCourseBean data, final CompetenceCourse course) {
@@ -136,11 +138,11 @@ public class A3esHarvestCoursesDataService {
         data.addField("7", "evaluationMethod", EN, source, _1000);
     }
 
-    private void fillTeachingMethodologyJustification(final A3esCourseBean data, final CompetenceCourse course) {
-        // TODO legidio
-        final MultiLanguageString source = createEmptyMLS(); // course.getProgramI18N(this.semester);
-        data.addField("8", "evaluationMethodDemonstration", PT, source, _3000);
-        data.addField("8", "evaluationMethodDemonstration", EN, source, _3000);
+    private void fillTeachingMethodologyJustification(final A3esCourseBean data, final CompetenceCourseInformation info) {
+        final String code = "evaluationMethodDemonstration";
+        final LocalizedString source = DynamicField.findField(info, code).getValue(LocalizedString.class);
+        data.addField("8", code, PT, source, _3000);
+        data.addField("8", code, EN, source, _3000);
     }
 
     private void fillBibliography(final A3esCourseBean data, final CompetenceCourse course) {
