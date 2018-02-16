@@ -10,7 +10,6 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.legalpt.domain.exceptions.LegalPTDomainException;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
 import pt.ist.fenixframework.Atomic;
