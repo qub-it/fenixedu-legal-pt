@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.IBean;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 
 @SuppressWarnings("deprecation")
 public class A3esBeanField implements IBean {
@@ -50,7 +51,8 @@ public class A3esBeanField implements IBean {
         final String label = i18n(labelKey) + language;
         result.setLabel(label);
 
-        String value = StringUtils.isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject.escape(source);
+        String value = StringUtils
+                .isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject.escape(Jsoup.parse(source).text());
         result.setValue(value);
 
         if (StringUtils.isBlank(value)) {
