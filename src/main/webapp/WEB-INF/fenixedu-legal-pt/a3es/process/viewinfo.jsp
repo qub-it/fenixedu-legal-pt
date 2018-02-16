@@ -178,40 +178,61 @@
 		</div>
 	</div>
 
-	<table class="table responsive table-bordered table-hover" width="100%">
-		<tbody>
-			<c:forEach var="field" items="${processBean.degreeData.fields}" varStatus="loop">
-				<tr>
-					<th scope="row" class="col-xs-2">${field.label}</th>
-					<td><c:out value="${field.value}"/><c:if test="${not empty field.report}">
-						<c:choose>
-							<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-warning-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
-							<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-info-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
-							<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
-						</c:choose>
-						<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <small><c:out value="${field.report}"/></small></p></div>
-					</c:if></td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<spring:message code="label.infoFiles.1" />
+			</h3>
+		</div>
 
-	<table class="table responsive table-bordered table-hover" width="100%">
-		<tbody>
-			<c:forEach var="field" items="${processBean.studentsData.fields}" varStatus="loop">
-				<tr>
-					<th scope="row" class="col-xs-2">${field.label}</th>
-					<td><c:out value="${field.value}"/><c:if test="${not empty field.report}">
-						<c:choose>
-							<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-warning-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
-							<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-info-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
-							<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
-						</c:choose>
-						<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <small><c:out value="${field.report}"/></small></p></div>
-					</c:if></td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
+		<div class="panel-body">
+			<table class="table">
+				<tbody>
+					<c:forEach var="field" items="${processBean.degreeData.fields}" varStatus="loop">
+						<tr>
+							<th scope="row" class="col-xs-2">${field.label}</th>
+							<td><c:out value="${field.value}"/><c:if test="${not empty field.report}">
+								<c:choose>
+									<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-warning-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+									<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-info-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+									<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+								</c:choose>
+								<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <small><c:out value="${field.report}"/></small></p></div>
+							</c:if></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<spring:message code="label.infoFiles.2" />
+			</h3>
+		</div>
+
+		<div class="panel-body">
+			<table class="table">
+
+				<tbody>
+					<c:forEach var="field" items="${processBean.studentsData.fields}" varStatus="loop">
+						<tr>
+							<th scope="row" class="col-xs-2">${field.label}</th>
+							<td><c:out value="${field.value}"/><c:if test="${not empty field.report}">
+								<c:choose>
+									<c:when test="${field.reportType == 'error'}"><c:set var="iconClass">glyphicon glyphicon-warning-sign</c:set><c:set var="reportClass">alert-danger</c:set></c:when>
+									<c:when test="${field.reportType == 'info'}"><c:set var="iconClass">glyphicon glyphicon-info-sign</c:set><c:set var="reportClass">alert-warning</c:set></c:when>
+									<c:otherwise><c:set var="iconClass"></c:set><c:set var="reportClass"></c:set></c:otherwise>
+								</c:choose>
+								<div class="${reportClass}" style="background-color: transparent; font-style: italic;"><p><span class="${iconClass}"></span> <small><c:out value="${field.report}"/></small></p></div>
+							</c:if></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 </form>

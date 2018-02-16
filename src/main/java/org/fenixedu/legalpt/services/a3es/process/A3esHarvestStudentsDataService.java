@@ -1,6 +1,6 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._20;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -61,15 +61,15 @@ public class A3esHarvestStudentsDataService {
     }
 
     static private void fillStudentsEnroled(final A3esStudentsBean data, final Collection<Registration> registrations) {
-        data.addField("q-II.5.1.1", "studentsEnroled", String.valueOf(registrations.size()), _20);
+        data.addField("q-II.5.1.1", "studentsEnroled", String.valueOf(registrations.size()), _UNLIMITED);
     }
 
     static private void fillStudentsByGender(final A3esStudentsBean data, final Collection<Registration> registrations) {
         final BigDecimal malePercentage = getPercentageOfStudentsByGender(registrations, Gender.MALE);
         final BigDecimal femalePercentage = getPercentageOfStudentsByGender(registrations, Gender.FEMALE);
 
-        data.addField("q-II.5.1.2.a", "studentsMale", malePercentage.toPlainString(), _20);
-        data.addField("q-II.5.1.2.b", "studentsFemale", femalePercentage.toPlainString(), _20);
+        data.addField("q-II.5.1.2.a", "studentsMale", malePercentage.stripTrailingZeros().toPlainString() + " %", _UNLIMITED);
+        data.addField("q-II.5.1.2.b", "studentsFemale", femalePercentage.stripTrailingZeros().toPlainString() + " %", _UNLIMITED);
     }
 
     static private BigDecimal getPercentageOfStudentsByGender(final Collection<Registration> registrations, final Gender gender) {
@@ -92,7 +92,7 @@ public class A3esHarvestStudentsDataService {
             final int cycle = cycleType == null ? 1 : cycleType.getWeight();
 
             data.addField("q-II.5.1.3." + curricularYear, "studentsCurricularYear" + curricularYear + cycle,
-                    String.valueOf(number), _20);
+                    String.valueOf(number), _UNLIMITED);
         }
     }
 

@@ -4,41 +4,42 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PLUS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEMICOLON;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._200;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.DegreeInfo;
-import org.fenixedu.academic.domain.DegreeOfficialPublication;
 import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.a3es.A3esDegreeBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
-import org.fenixedu.ulisboa.specifications.domain.ExtendedDegreeInfo;
-import org.joda.time.DateTime;
-
-import com.google.common.base.Joiner;
 
 public class A3esHarvestDegreeDataService {
 
     private final ExecutionYear year;
     private final DegreeCurricularPlan degreeCurricularPlan;
     private final Degree degree;
+    private final DegreeInfo info;
 
     public A3esHarvestDegreeDataService(final A3esProcessBean bean) {
         this.year = bean.getExecutionYear();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
         this.degree = this.degreeCurricularPlan.getDegree();
+        this.info = this.degree.getMostRecentDegreeInfo(this.year.getAcademicInterval());
 
         final A3esDegreeBean data = bean.getDegreeData();
 
@@ -47,7 +48,7 @@ public class A3esHarvestDegreeDataService {
         fillSchoolName(data);
         fillDegreeName(data);
         fillDegreeType(data);
-        fillCurricularPlanPromulgation(data);
+//        fillCurricularPlanPromulgation(data);
         fillMainScientificArea(data);
 //        fillScientificAreas(data);
 //        fillMajorAreaClassification(data);
@@ -129,67 +130,58 @@ public class A3esHarvestDegreeDataService {
     }
 
     static private void fillInstitutionName(final A3esDegreeBean data) {
-        data.addField("q-a1_name", "higherEducationInstitution", UniversityUnit.getInstitutionsUniversityUnit().getName(), _200);
+        data.addField("q-a1_name", "higherEducationInstitution", UniversityUnit.getInstitutionsUniversityUnit().getName(),
+                _UNLIMITED);
     }
 
     static private void fillSchoolName(final A3esDegreeBean data) {
-        data.addField("ext-comp-1625", "organicUnit", Bennu.getInstance().getInstitutionUnit().getName(), _200);
+        data.addField("ext-comp-1625", "organicUnit", Bennu.getInstance().getInstitutionUnit().getName(), _UNLIMITED);
     }
 
     private void fillDegreeName(final A3esDegreeBean data) {
-        data.addField("q-II.1.3_pt", "plan", PT, this.degree.getNameI18N(), _200);
-        data.addField("q-II.1.3_en", "plan", EN, this.degree.getNameI18N(), _200);
+        final MultiLanguageString source = this.degree.getNameI18N();
+        data.addField("q-II.1.3_pt", "plan", PT, source, _UNLIMITED);
+        data.addField("q-II.1.3_en", "plan", EN, source, _UNLIMITED);
     }
 
     private void fillDegreeType(final A3esDegreeBean data) {
         final DegreeType degreeType = this.degree.getDegreeType();
-        data.addField("q-II.1.4_name", "degreeType", degreeType.getName().getContent(PT), _200);
-    }
-
-    private void fillCurricularPlanPromulgation(final A3esDegreeBean data) {
-        final DegreeOfficialPublication officialPublication = this.degree.getOfficialPublication(new DateTime());
-        final String curricularPlanPromulgation = officialPublication == null ? null : officialPublication.getOfficialReference();
-        data.addField("q-II.1.5", "curricularPlanPromulgation", curricularPlanPromulgation, _200);
+        data.addField("q-II.1.4_name", "degreeType", degreeType.getName().getContent(PT), _UNLIMITED);
     }
 
     private void fillMainScientificArea(final A3esDegreeBean data) {
-        data.addField("q-II.1.6_pt", "plan", PT, getMostRecentDegreeInfo().getPrevailingScientificArea(), _200);
-        data.addField("q-II.1.6_en", "plan", EN, getMostRecentDegreeInfo().getPrevailingScientificArea(), _200);
-    }
-
-    private DegreeInfo getMostRecentDegreeInfo() {
-        return this.degree.getMostRecentDegreeInfo(year.getAcademicInterval());
-    }
-
-    private ExtendedDegreeInfo getMostRecentDegreeInfoExtended() {
-        return getMostRecentDegreeInfo().getExtendedDegreeInfo();
+        final MultiLanguageString source = this.info.getPrevailingScientificArea();
+        data.addField("q-II.1.6_pt", "mainScientificArea", PT, source, _UNLIMITED);
+        data.addField("q-II.1.6_en", "mainScientificArea", EN, source, _UNLIMITED);
     }
 
     private void fillEctsCredits(final A3esDegreeBean data) {
         final Double source = this.degreeCurricularPlan.getRoot().getMinEctsCredits(this.year.getFirstExecutionPeriod());
-        data.addField("q-II.1.8", "ectsCredits", String.valueOf(source), _200);
+        data.addField("q-II.1.8", "ectsCredits", String.valueOf(source), _UNLIMITED);
     }
 
     private void fillDegreeDuration(final A3esDegreeBean data) {
-        final String degreeDuration = this.degreeCurricularPlan.getDegreeDuration().toString();
-        data.addField("DegreeDuration", "DegreeDuration", createMLS(degreeDuration, degreeDuration), _200);
-
-        data.addField("q-II.1.9_pt", "plan", PT, getMostRecentDegreeInfoExtended().getStudyProgrammeDuration(), _200);
-        data.addField("q-II.1.9_en", "plan", EN, getMostRecentDegreeInfoExtended().getStudyProgrammeDuration(), _200);
+        final LocalizedString source = this.info.getExtendedDegreeInfo().getStudyProgrammeDuration();
+        data.addField("q-II.1.9_pt", "degreeDuration", PT, source, _UNLIMITED);
+        data.addField("q-II.1.9_en", "degreeDuration", EN, source, _UNLIMITED);
     }
 
     private void fillNumerusClausus(final A3esDegreeBean data) {
-        data.addField("q-II.1.10", "numerusClausus", String.valueOf(getMostRecentDegreeInfo().getDriftsFirst()), _200);
+        final Integer drifts = this.info.getDriftsInitial();
+        final String source = drifts == null ? null : String.valueOf(drifts);
+        data.addField("q-II.1.10", "numerusClausus", source, _100);
     }
 
     private void fillIngressionSpecificConditions(final A3esDegreeBean data) {
-        data.addField("q-II.1.11_pt", "ingressionSpecificConditions", PT, getMostRecentDegreeInfo().getTestIngression(), _200);
-        data.addField("q-II.1.11_en", "ingressionSpecificConditions", EN, getMostRecentDegreeInfo().getTestIngression(), _200);
+        final MultiLanguageString source = this.info.getClassifications();
+        data.addField("q-II.1.11_pt", "ingressionSpecificConditions", PT, source, _1000);
+        data.addField("q-II.1.11_en", "ingressionSpecificConditions", EN, source, _1000);
     }
 
     private void fillRegistrationRegime(final A3esDegreeBean data) {
-        data.addField("q-II.1.12.1_pt", "registrationRegime", PT, getMostRecentDegreeInfoExtended().getStudyRegime(), _200);
-        data.addField("q-II.1.12.1_en", "registrationRegime", EN, getMostRecentDegreeInfoExtended().getStudyRegime(), _200);
+        final LocalizedString source = this.info.getExtendedDegreeInfo().getStudyRegime();
+        data.addField("q-II.1.12.1_pt", "registrationRegime", PT, source, _100);
+        data.addField("q-II.1.12.1_en", "registrationRegime", EN, source, _100);
     }
 
     private void fillBranches(final A3esDegreeBean data) {
@@ -198,10 +190,13 @@ public class A3esHarvestDegreeDataService {
         final Set<MultiLanguageString> minors = this.degreeCurricularPlan.getMinorBranches().stream()
                 .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
 
-        final String pt = Joiner.on(SEMICOLON).join(majors.stream().map(i -> "Major: " + i.getContent(PT)),
-                minors.stream().map(i -> "Minor: " + i.getContent(PT)));
-        final String en = Joiner.on(SEMICOLON).join(majors.stream().map(i -> "Major: " + i.getContent(EN)),
-                minors.stream().map(i -> "Minor: " + i.getContent(EN)));
+        final Stream<String> ptStream =
+                Stream.concat(majors.stream().map(i -> i.getContent(PT)), minors.stream().map(i -> i.getContent(PT)));
+        final Stream<String> enStream =
+                Stream.concat(majors.stream().map(i -> i.getContent(EN)), minors.stream().map(i -> i.getContent(EN)));
+
+        final String pt = ptStream.collect(Collectors.joining(SEMICOLON));
+        final String en = enStream.collect(Collectors.joining(SEMICOLON));
 
         final MultiLanguageString source = createMLS(pt, en);
         data.addField("branches", "branches", PT, source, _200);
