@@ -11,6 +11,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLI
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -157,7 +158,7 @@ public class A3esHarvestDegreeDataService {
 
     private void fillEctsCredits(final A3esDegreeBean data) {
         final Double source = this.degreeCurricularPlan.getRoot().getMinEctsCredits(this.year.getFirstExecutionPeriod());
-        data.addField("q-II.1.8", "ectsCredits", String.valueOf(source), _UNLIMITED);
+        data.addField("q-II.1.8", "ectsCredits", BigDecimal.valueOf(source).stripTrailingZeros().toPlainString(), _UNLIMITED);
     }
 
     private void fillDegreeDuration(final A3esDegreeBean data) {
