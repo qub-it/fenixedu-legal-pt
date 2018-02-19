@@ -126,7 +126,8 @@ public class A3esHarvestCoursesDataService {
 
     private void fillCourseProgramJustification(final A3esCourseBean data, final CompetenceCourseInformation info) {
         final String code = "programDemonstration";
-        final LocalizedString source = DynamicField.findField(info, code).getValue(LocalizedString.class);
+        final DynamicField field = DynamicField.findField(info, code);
+        final LocalizedString source = field == null ? null : field.getValue(LocalizedString.class);
         data.addField("6", code, PT, source, _1000);
         data.addField("6", code, EN, source, _1000);
     }
@@ -140,7 +141,8 @@ public class A3esHarvestCoursesDataService {
 
     private void fillTeachingMethodologyJustification(final A3esCourseBean data, final CompetenceCourseInformation info) {
         final String code = "evaluationMethodDemonstration";
-        final LocalizedString source = DynamicField.findField(info, code).getValue(LocalizedString.class);
+        final DynamicField field = DynamicField.findField(info, code);
+        final LocalizedString source = field == null ? null : field.getValue(LocalizedString.class);
         data.addField("8", code, PT, source, _3000);
         data.addField("8", code, EN, source, _3000);
     }
