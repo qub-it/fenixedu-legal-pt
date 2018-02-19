@@ -66,21 +66,19 @@ public class A3esHarvestStudentsDataService {
     }
 
     static private void fillStudentsByGender(final A3esStudentsBean data, final Collection<Registration> registrations) {
-        final BigDecimal malePercentage = getPercentageOfStudentsByGender(registrations, Gender.MALE);
-        final BigDecimal femalePercentage = getPercentageOfStudentsByGender(registrations, Gender.FEMALE);
-
-        data.addField("q-II.5.1.2.a", "studentsMale", malePercentage.stripTrailingZeros().toPlainString() + " %", _UNLIMITED);
-        data.addField("q-II.5.1.2.b", "studentsFemale", femalePercentage.stripTrailingZeros().toPlainString() + " %", _UNLIMITED);
+        data.addField("q-II.5.1.2.a", "studentsMale", getPercentOfStudentsByGender(registrations, Gender.MALE), _UNLIMITED);
+        data.addField("q-II.5.1.2.b", "studentsFemale", getPercentOfStudentsByGender(registrations, Gender.FEMALE), _UNLIMITED);
     }
 
-    static private BigDecimal getPercentageOfStudentsByGender(final Collection<Registration> registrations, final Gender gender) {
+    static private String getPercentOfStudentsByGender(final Collection<Registration> registrations, final Gender gender) {
         final int total = registrations.size();
         if (total == 0) {
-            return BigDecimal.ZERO;
+            return "0 %";
         }
 
         final long filtered = registrations.stream().filter(r -> r.getPerson().getGender() == gender).count();
-        return new BigDecimal(filtered).divide(new BigDecimal(total), 2, RoundingMode.HALF_EVEN).multiply(new BigDecimal(100));
+        return new BigDecimal(filtered).divide(new BigDecimal(total), 2, RoundingMode.HALF_EVEN).multiply(new BigDecimal(100))
+                .stripTrailingZeros().toPlainString() + " %";
     }
 
     private void fillStudentsByCurricularYear(final A3esStudentsBean data, final Collection<Registration> registrations) {

@@ -724,7 +724,7 @@ abstract public class A3esExportService {
                 sp.getShift().getUnitHours().multiply(new BigDecimal(LegalSettings.getInstance().getNumberOfLessonWeeks()));
         final BigDecimal result = sp.getPercentage() != null ? shiftTotalHours.multiply(new BigDecimal(sp.getPercentage()))
                 .divide(BigDecimal.valueOf(100d)).setScale(2, RoundingMode.DOWN) : shiftTotalHours;
-        return result.toString();
+        return result.stripTrailingZeros().toPlainString();
     }
 
     static public String getTeachingHoursByShiftType(final Set<Professorship> professorships) {
