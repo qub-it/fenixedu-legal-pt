@@ -26,6 +26,7 @@ import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
+import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.dml.DynamicField;
@@ -47,14 +48,20 @@ public class A3esHarvestCoursesDataService {
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
         readCourses(this.degreeCurricularPlan, this.year).stream().map(course -> {
+            final Map<Person, Set<Professorship>> courseProfessorships =
+                    readCourseProfessorships(this.degreeCurricularPlan, this.year, course);
 
-            final CompetenceCourseInformation info = course.findCompetenceCourseInformationForExecutionPeriod(this.semester);
+            final Teacher teacher = bean.getTeacher();
+            if (teacher != null && !courseProfessorships.containsKey(teacher.getPerson())) {
+                return null;
+            }
 
             final A3esCourseBean data = new A3esCourseBean();
 
+            final CompetenceCourseInformation info = course.findCompetenceCourseInformationForExecutionPeriod(this.semester);
             fillBasics(data, info);
             fillCourseName(data, course);
-            fillAllTeachersInfo(data, course);
+            fillAllTeachersInfo(data, courseProfessorships);
             fillLearningObjectives(data, course);
             fillCourseProgram(data, course);
             fillCourseProgramJustification(data, info);
@@ -63,7 +70,7 @@ public class A3esHarvestCoursesDataService {
             fillBibliography(data, course);
 
             return data;
-        }).collect(Collectors.toCollection(() -> bean.getCoursesData()));
+        }).filter(i -> i != null).collect(Collectors.toCollection(() -> bean.getCoursesData()));
     }
 
     private void fillBasics(final A3esCourseBean data, final CompetenceCourseInformation info) {
@@ -75,10 +82,7 @@ public class A3esHarvestCoursesDataService {
         data.addField("1", "curricularUnitName", course.getNameI18N(this.semester), _100);
     }
 
-    private void fillAllTeachersInfo(final A3esCourseBean data, final CompetenceCourse course) {
-        final Map<Person, Set<Professorship>> courseProfessorships =
-                readCourseProfessorships(this.degreeCurricularPlan, this.year, course);
-
+    private void fillAllTeachersInfo(final A3esCourseBean data, final Map<Person, Set<Professorship>> courseProfessorships) {
         fillTeachersInfo(data, courseProfessorships);
         fillAssistantTeachersInfo(data, courseProfessorships);
     }

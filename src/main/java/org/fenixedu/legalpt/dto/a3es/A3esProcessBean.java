@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
+import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.legalpt.domain.a3es.A3esProcess;
@@ -15,10 +16,12 @@ import org.fenixedu.legalpt.services.a3es.process.A3esHarvestCoursesDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestDegreeDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestStudentsDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestTeachersDataService;
+import org.joda.time.DateTime;
 
 public class A3esProcessBean extends A3esPeriodBean implements IBean {
 
     private A3esProcess process;
+    private Teacher teacher;
 
     private String identifier;
     private String name;
@@ -41,15 +44,20 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
         updateDataSources();
     }
 
-    public A3esProcessBean(final A3esProcess input) {
-        setProcess(input);
-        setPeriod(input.getPeriod());
-        setExecutionYear(input.getPeriod().getExecutionYear());
-        setType(input.getPeriod().getType());
-        setIdentifier(input.getIdentifier());
-        setName(input.getName());
-        setDescription(input.getDescription());
-        setDegreeCurricularPlan(input.getDegreeCurricularPlan());
+    public A3esProcessBean(final A3esProcess process) {
+        this(process, (Teacher) null);
+    }
+
+    public A3esProcessBean(final A3esProcess process, final Teacher teacher) {
+        setProcess(process);
+        setTeacher(teacher);
+        setPeriod(process.getPeriod());
+        setExecutionYear(process.getPeriod().getExecutionYear());
+        setType(process.getPeriod().getType());
+        setIdentifier(process.getIdentifier());
+        setName(process.getName());
+        setDescription(process.getDescription());
+        setDegreeCurricularPlan(process.getDegreeCurricularPlan());
 
         updateDataSources();
     }
@@ -105,6 +113,18 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
         return result;
     }
 
+    public String getExternalId() {
+        return getProcess().getExternalId();
+    }
+
+    public DateTime getVersioningCreationDate() {
+        return getProcess().getVersioningCreationDate();
+    }
+    
+    public String getPlanDescription() {
+        return A3esProcess.getPlanDescription(getDegreeCurricularPlan());
+    }
+
     public DegreeCurricularPlan getDegreeCurricularPlan() {
         return degreeCurricularPlan;
     }
@@ -151,6 +171,14 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
         }
 
         return this.teachersData;
+    }
+
+    public Teacher getTeacher() {
+        return this.teacher;
+    }
+
+    public void setTeacher(final Teacher input) {
+        this.teacher = input;
     }
 
     public String getUser() {
