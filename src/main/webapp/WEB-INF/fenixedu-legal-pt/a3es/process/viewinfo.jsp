@@ -125,23 +125,8 @@
 		</div>
 	</c:if>
 
-	<c:if test="${not empty uploadResults}">
-		<div class="alert alert-warning" role="alert">
-			<a href="#" onclick="$('#uploadResults').slideToggle('fast');" style="color: inherit; text-decoration: none;"> <span
-				class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;<spring:message code="info.A3es.upload.results" />
-			</a>
-			<div id="uploadResults" style="display: none; border: #ddd dotted 1px;">
-				<c:forEach var="uploadResult" items="${uploadResults}">
-					<p>
-						<c:out value="${uploadResult}" />
-					</p>
-				</c:forEach>
-			</div>
-		</div>
-	</c:if>
-
 	<div class="alert alert-info" role="alert">
-		<spring:message code="label.A3es.infoFiles" />
+		<spring:message code="label.A3es.upload.unavailable" />
 	</div>
 
 	<div class="panel panel-primary">

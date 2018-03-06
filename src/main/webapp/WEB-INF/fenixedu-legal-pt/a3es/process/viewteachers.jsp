@@ -166,7 +166,8 @@
 	</c:if>
 
 	<div class="alert alert-info" role="alert">
-		<spring:message code="label.A3es.upload.instructions" />
+		<div ng-show="${processBean.process.uploadable}"><spring:message code="label.A3es.upload.instructions" /></div>
+		<div ng-show="${!processBean.process.uploadable}"><spring:message code="label.A3es.upload.unavailable" /></div>
 	</div>
 
 	<div class="panel panel-primary">
@@ -203,7 +204,7 @@
 		</div>
 		<div class="panel panel-footer">
 			<button type="button" class="btn btn-primary" role="button" ng-click="download()"><spring:message code="label.export" /></button>
-			<button type="button" class="btn btn-primary" role="button" onclick="function inline(){$('#uploadModal').modal('toggle')}; inline()"><spring:message code="label.send" /></button>
+			<button type="button" class="btn btn-primary" role="button" ng-show="${processBean.process.uploadable}" onclick="function inline(){$('#uploadModal').modal('toggle')}; inline()"><spring:message code="label.send" /></button>
 		</div>
 	</div>
 

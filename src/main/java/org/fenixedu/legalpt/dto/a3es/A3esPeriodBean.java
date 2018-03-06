@@ -11,6 +11,8 @@ import org.fenixedu.legalpt.domain.a3es.A3esPeriod;
 import org.fenixedu.legalpt.domain.a3es.A3esProcessType;
 import org.joda.time.DateTime;
 
+import com.google.common.collect.Lists;
+
 public class A3esPeriodBean implements IBean {
 
     private A3esPeriod period;
@@ -117,7 +119,7 @@ public class A3esPeriodBean implements IBean {
     private void updateTypeDataSource() {
         if (getTypeDataSource().isEmpty()) {
 
-            A3esProcessType.getSupportedTypes().map(x -> {
+            Lists.newArrayList(A3esProcessType.values()).stream().map(x -> {
 
                 final TupleDataSourceBean tuple = new TupleDataSourceBean();
                 tuple.setId(x.name());

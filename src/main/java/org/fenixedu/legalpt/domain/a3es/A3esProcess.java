@@ -102,7 +102,11 @@ public class A3esProcess extends A3esProcess_Base {
     public A3esProcessType getType() {
         return getPeriod().getType();
     }
-
+    
+    public boolean isUploadable() {
+        return getType().getExportService() != null;
+    }
+    
     public String getName() {
         return String.format("%s/%s", getPeriod().getDescription(), getIdentifier());
     }
