@@ -48,6 +48,7 @@ import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.A3esPeriod;
+import org.fenixedu.legalpt.domain.a3es.A3esProcess;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.domain.exceptions.LegalPTDomainException;
 import org.fenixedu.legalpt.dto.a3es.A3esAbstractBean;
@@ -145,7 +146,7 @@ abstract public class A3esExportService {
             }
 
             final String processPlan = (String) process.get("study_cycle");
-            if (!bean.getDegreeCurricularPlan().getPresentationName().contains(processPlan)) {
+            if (!A3esProcess.getPlanDescription(bean.getDegreeCurricularPlan()).contains(processPlan)) {
                 throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
             }
 

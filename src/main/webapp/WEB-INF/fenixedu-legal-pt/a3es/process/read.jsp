@@ -183,7 +183,7 @@
 						</tr>
 						<tr>
 							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
-							<td><c:out value="${process.degreeCurricularPlan.presentationName}"/></td>
+							<td><c:out value="${process.planDescription}"/></td>
 						</tr>
 					</tbody>
 				</table>

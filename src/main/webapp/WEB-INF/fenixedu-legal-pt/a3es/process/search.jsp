@@ -169,7 +169,7 @@
 					<tr>
 						<td><joda:format value="${searchResult.versioningCreationDate}" pattern="yyyy-MM-dd HH:mm" /></td>
 						<td><c:out value="${searchResult.name}" /></td>
-						<td><c:out value="${searchResult.degreeCurricularPlan.presentationName}" /></td>
+						<td><c:out value="${searchResult.planDescription}" /></td>
 						<td>
 							<a  class="btn btn-default btn-xs" href="${pageContext.request.contextPath}<%=A3esProcessController.SEARCH_TO_VIEW_ACTION_URL%>${searchResult.externalId}"><spring:message code='label.view'/></a>
 						</td>

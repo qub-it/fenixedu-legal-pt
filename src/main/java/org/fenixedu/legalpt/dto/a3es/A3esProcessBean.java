@@ -199,7 +199,7 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
 
                         final TupleDataSourceBean tuple = new TupleDataSourceBean();
                         tuple.setId(x.getExternalId());
-                        tuple.setText(x.getPresentationName());
+                        tuple.setText(A3esProcess.getPlanDescription(x));
                         return tuple;
 
                     }).collect(Collectors.toCollection(() -> getDegreeCurricularPlanDataSource()));
