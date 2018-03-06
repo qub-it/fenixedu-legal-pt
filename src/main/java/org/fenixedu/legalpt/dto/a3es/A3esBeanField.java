@@ -53,7 +53,6 @@ public class A3esBeanField implements IBean {
 
         String value = StringUtils
                 .isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject.escape(Jsoup.parse(source).text());
-        result.setValue(value);
 
         if (StringUtils.isBlank(value)) {
             if (limit == _UNSUPPORTED) {
@@ -63,7 +62,7 @@ public class A3esBeanField implements IBean {
             }
 
         } else if (limit > 0) {
-            final int length = value.getBytes().length;
+            final int length = value.length();
 
             if (length > limit) {
                 result.addReport(i18n("label.field.cut", String.valueOf(limit)), "error");
@@ -72,6 +71,7 @@ public class A3esBeanField implements IBean {
                 result.addReport(i18n("label.field.status", String.valueOf(limit - length), String.valueOf(limit)), "-");
             }
         }
+        result.setValue(value);
 
         return result;
     }
