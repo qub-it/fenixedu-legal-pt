@@ -19,6 +19,7 @@ import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMapp
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestPeriodParameter;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityRegistrationInformation;
@@ -58,7 +59,7 @@ public class DiplomadoService extends RaidesService {
                     .getGraduatedExecutionYear()
                     .getQualifiedName() : terminalConclusionInfo.getConclusionYear().getQualifiedName());
             bean.setNumInscConclusao(
-                    String.valueOf(Raides.getEnrolmentYearsIncludingPrecedentRegistrations(registration).size()));
+                    String.valueOf(RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration).size()));
 
             if (Raides.isDoctoralDegree(registration) && !registrationConclusionBean.isConclusionProcessed()) {
                 LegalReportContext.addError("", i18n("error.Raides.validation.doctoral.degree.without.conclusion.process",
@@ -144,7 +145,7 @@ public class DiplomadoService extends RaidesService {
         bean.setAnoLectivo(
                 raidesRequestParameter.getGraduatedExecutionYear() != null ? raidesRequestParameter.getGraduatedExecutionYear()
                         .getQualifiedName() : scholarPartConclusionBean.getConclusionYear().getQualifiedName());
-        bean.setNumInscConclusao(String.valueOf(Raides
+        bean.setNumInscConclusao(String.valueOf(RegistrationServices
                 .getEnrolmentYearsIncludingPrecedentRegistrations(registration, scholarPartConclusionBean.getConclusionYear())
                 .size()));
 
@@ -291,8 +292,9 @@ public class DiplomadoService extends RaidesService {
             return;
         }
 
-        if (MobilityRegistrationInformation.findInternationalOutgoingInformationsUntil(registration,executionYear).size() > 1
-                && MobilityRegistrationInformation.findMainInternationalOutgoingInformationUntil(registration,executionYear) == null) {
+        if (MobilityRegistrationInformation.findInternationalOutgoingInformationsUntil(registration, executionYear).size() > 1
+                && MobilityRegistrationInformation.findMainInternationalOutgoingInformationUntil(registration,
+                        executionYear) == null) {
             LegalReportContext.addError("", i18n("error.Raides.validation.graduated.mobility.mainInformation.missing",
                     formatArgs(registration, executionYear)));
         }

@@ -101,7 +101,7 @@ public class InscritoService extends RaidesService {
 
         if (!isFirstTimeOnDegree(registration, executionYear)) {
 
-            final List<ExecutionYear> enrolmentsExecutionYears = Lists.newArrayList(Raides
+            final List<ExecutionYear> enrolmentsExecutionYears = Lists.newArrayList(RegistrationServices
                     .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear.getPreviousExecutionYear()));
 
             if (enrolmentsExecutionYears.size() >= 1) {
@@ -150,9 +150,9 @@ public class InscritoService extends RaidesService {
             final Unit institutionUnit, final ExecutionYear executionYear, final Registration registration) {
 
         if (!isFirstTimeOnDegree(registration, executionYear) && new Integer(0).equals(bean.getNumInscNesteCurso())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero",
-                            formatArgs(registration, executionYear)));
+            LegalReportContext.addError("", i18n(
+                    "error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero",
+                    formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
     }
@@ -289,8 +289,8 @@ public class InscritoService extends RaidesService {
     }
 
     protected Integer numberOfYearsEnrolled(final ExecutionYear executionYear, final Registration registration) {
-        return Raides.getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear.getPreviousExecutionYear())
-                .size();
+        return RegistrationServices
+                .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear.getPreviousExecutionYear()).size();
     }
 
     protected boolean deliveredDissertation(final ExecutionYear executionYear, final Registration registration) {

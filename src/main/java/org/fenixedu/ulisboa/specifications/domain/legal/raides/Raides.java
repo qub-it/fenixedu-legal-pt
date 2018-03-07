@@ -178,7 +178,7 @@ public class Raides {
     public static class NivelEscolaridade {
         public static final String NAO_DISPONIVEL = "22";
     }
-    
+
     public static class NivelEscolaridadeAluno {
         public static final String OUTRO = "19";
     }
@@ -362,7 +362,6 @@ public class Raides {
 
             final TblDiplomado diplomado = entry.getValue();
 
-            
             if (diplomado.getConclusaoMd() == null
                     || diplomado.getConclusaoMd().equals(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(false))) {
                 continue;
@@ -963,39 +962,6 @@ public class Raides {
         return LegalPTUtil.bundle(key, arguments);
     }
 
-    public static Set<Degree> getPrecedentDegreesUntilRoot(final Degree degree) {
-        final Set<Degree> result = Sets.newHashSet();
-        result.addAll(degree.getPrecedentDegreesSet());
-
-        for (final Degree it : degree.getPrecedentDegreesSet()) {
-            result.addAll(getPrecedentDegreesUntilRoot(it));
-        }
-
-        return result;
-    }
-
-    public static Collection<Registration> getPrecedentDegreeRegistrations(final Registration registration) {
-
-        final Set<Degree> precedentDegreesUntilRoot = getPrecedentDegreesUntilRoot(registration.getDegree());
-        final Set<Registration> result = Sets.newHashSet();
-        for (final Registration it : registration.getStudent().getRegistrationsSet()) {
-
-            if (registration == it) {
-                continue;
-            }
-
-            if (it.isCanceled() || it.isConcluded() || it.hasConcluded()) {
-                continue;
-            }
-
-            if (precedentDegreesUntilRoot.contains(it.getDegree())) {
-                result.add(it);
-            }
-        }
-
-        return result;
-    }
-
     public static Collection<CurriculumLine> getAllCurriculumLines(final Registration registration) {
         Set<CurriculumLine> curriculumLines = new HashSet<CurriculumLine>();
         Collection<StudentCurricularPlan> studentCurricularPlans = registration.getStudentCurricularPlansSet();
@@ -1004,48 +970,6 @@ public class Raides {
         }
 
         return curriculumLines;
-    }
-
-    public static Collection<ExecutionYear> getEnrolmentYearsIncludingPrecedentRegistrations(final Registration registration) {
-        return getEnrolmentYearsIncludingPrecedentRegistrations(registration, null);
-    }
-
-    /**
-     * 
-     * @param untilExecutionYear is inclusive. null does not apply any filtering
-     * 
-     * @return
-     */
-    public static Collection<ExecutionYear> getEnrolmentYearsIncludingPrecedentRegistrations(final Registration registration,
-            final ExecutionYear untilExecutionYear) {
-
-        final Set<Registration> registrations = Sets.newHashSet();
-        registrations.add(registration);
-        registrations.addAll(getPrecedentDegreeRegistrations(registration));
-
-        final Set<ExecutionYear> result = Sets.newHashSet();
-        for (final Registration it : registrations) {
-            result.addAll(RegistrationServices.getEnrolmentYears(it));
-        }
-
-        if (untilExecutionYear == null) {
-            return result;
-        }
-
-        return result.stream().filter(e -> e.isBeforeOrEquals(untilExecutionYear)).collect(Collectors.toSet());
-    }
-
-    /**
-     * Returns the root registration.
-     * 
-     * @return This registration if does not have precedent or the oldest precendent registration
-     */
-    public static Registration getRootRegistration(final Registration registration) {
-        final SortedSet<Registration> registrations = Sets.newTreeSet(Registration.COMPARATOR_BY_START_DATE);
-        registrations.add(registration);
-        registrations.addAll(getPrecedentDegreeRegistrations(registration));
-
-        return registrations.first();
     }
 
     public static LocalDate getEnrolmentDate(final Registration registration, final ExecutionYear executionYear) {

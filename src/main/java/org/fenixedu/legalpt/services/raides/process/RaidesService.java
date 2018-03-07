@@ -104,7 +104,7 @@ public class RaidesService {
     }
 
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
-        if (!Raides.getPrecedentDegreeRegistrations(registration).isEmpty()) {
+        if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty()) {
             return false;
         }
 
@@ -288,13 +288,14 @@ public class RaidesService {
                     .translate(lastCompletedQualification.getSchoolLevel()));
 
             if (bean.getEscolaridadeAnterior().equals(Raides.NivelEscolaridadeAluno.OUTRO)) {
-                
+
                 if (!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())) {
                     bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getOtherSchoolLevel().substring(0,
                             Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getOtherSchoolLevel().length())));
                 } else {
                     bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getSchoolLevel().getLocalizedName().substring(0,
-                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getSchoolLevel().getLocalizedName().length())));
+                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH,
+                                    lastCompletedQualification.getSchoolLevel().getLocalizedName().length())));
                 }
             }
         }
@@ -404,7 +405,7 @@ public class RaidesService {
                     formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
-        
+
         if (Strings.isNullOrEmpty(bean.getPaisEscolaridadeAnt())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.previous.complete.country.missing", formatArgs(registration, executionYear)));
