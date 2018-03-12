@@ -659,29 +659,53 @@ abstract public class A3esExportService {
         return result;
     }
 
-    static public Map<Person, Map<CompetenceCourse, Set<Professorship>>> readProfessorships(final DegreeCurricularPlan plan,
+    static public Map<Person, Map<CompetenceCourse, Set<Professorship>>> readPersonProfessorships(final DegreeCurricularPlan plan,
             final ExecutionYear year) {
 
         final Map<Person, Map<CompetenceCourse, Set<Professorship>>> result =
                 new TreeMap<>((x, y) -> Collator.getInstance().compare(x.getName(), y.getName()));
 
-        readCourses(plan, year).stream().forEach(course -> {
-            readCourseProfessorships(plan, year, course).entrySet().stream().forEach(entry -> {
+        // read from chosen plan
+        readCourses(plan, year).stream().forEach(competence -> {
+            readCourseProfessorships(plan, year, competence).entrySet().stream().forEach(entry -> {
 
                 final Person person = entry.getKey();
                 final Set<Professorship> courseProfessorships = entry.getValue();
 
-                Map<CompetenceCourse, Set<Professorship>> tempMap = result.get(person);
-                tempMap = tempMap != null ? tempMap : new HashMap<>();
+                Map<CompetenceCourse, Set<Professorship>> personProfessorships = result.get(person);
+                personProfessorships = personProfessorships != null ? personProfessorships : new HashMap<>();
 
-                Set<Professorship> tempSet = tempMap.get(course);
+                Set<Professorship> tempSet = personProfessorships.get(competence);
                 tempSet = tempSet != null ? tempSet : new HashSet<>();
 
                 tempSet.addAll(courseProfessorships.stream().filter(p -> p.getPerson() == person).collect(Collectors.toSet()));
-                tempMap.put(course, tempSet);
-                result.put(person, tempMap);
+                personProfessorships.put(competence, tempSet);
+                result.put(person, personProfessorships);
             });
         });
+
+        // read from other plans for persons previously found
+        /* WIP
+        result.entrySet().forEach(entry -> {
+            final Person person = entry.getKey();
+            final Map<CompetenceCourse, Set<Professorship>> personProfessorships = entry.getValue();
+        
+            person.getProfessorshipsSet().stream().filter(i -> i.getExecutionCourse().getExecutionYear() == year)
+                    .forEach(professorship -> {
+        
+                        final ExecutionCourse execution = professorship.getExecutionCourse();
+                        execution.getAssociatedCurricularCoursesSet().stream().filter(i -> i.getDegreeCurricularPlan() != plan)
+                                .map(i -> i.getCompetenceCourse()).filter(i -> i != null).distinct().forEach(competence -> {
+        
+                                    Set<Professorship> tempSet = personProfessorships.get(competence);
+                                    tempSet = tempSet != null ? tempSet : new HashSet<>();
+                                    personProfessorships.put(competence, tempSet);
+                                });
+                    });
+        
+            result.put(person, personProfessorships);
+        });
+         */
 
         return result;
     }
@@ -709,7 +733,7 @@ abstract public class A3esExportService {
         return result;
     }
 
-    static public Stream<ExecutionCourse> readExecutionCourses(final DegreeCurricularPlan plan, final ExecutionYear year,
+    static private Stream<ExecutionCourse> readExecutionCourses(final DegreeCurricularPlan plan, final ExecutionYear year,
             final CompetenceCourse competence) {
 
         return competence.getAssociatedCurricularCoursesSet().stream().filter(c -> c.getDegreeCurricularPlan() == plan)
@@ -720,18 +744,24 @@ abstract public class A3esExportService {
         return LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.SHIFT_TYPE).translate(t);
     }
 
-    static public String getTeachingHours(final ShiftProfessorship sp) {
+    static public BigDecimal getTeachingHours(final ShiftProfessorship sp) {
         final BigDecimal shiftTotalHours =
                 sp.getShift().getUnitHours().multiply(new BigDecimal(LegalSettings.getInstance().getNumberOfLessonWeeks()));
         final BigDecimal result = sp.getPercentage() != null ? shiftTotalHours.multiply(new BigDecimal(sp.getPercentage()))
                 .divide(BigDecimal.valueOf(100d)).setScale(2, RoundingMode.DOWN) : shiftTotalHours;
-        return result.stripTrailingZeros().toPlainString();
+        return result.stripTrailingZeros();
     }
 
-    static public String getTeachingHoursByShiftType(final Set<Professorship> professorships) {
-        return professorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - " + getTeachingHours(sp))
+    static public String getTeachingHoursByShiftType(final Stream<Professorship> professorships) {
+        return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
+                .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - "
+                        + getTeachingHours(sp).toPlainString() + "h")
                 .sorted().collect(Collectors.joining(SEMICOLON));
+    }
+
+    static public String getTeachingHoursByPerson(final Stream<Professorship> professorships) {
+        return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream()).map(sp -> getTeachingHours(sp))
+                .reduce(BigDecimal.ZERO, BigDecimal::add).toPlainString() + "h";
     }
 
     static public String getApaFormat(final String authors, final String date, final String title, final String aditionalInfo) {

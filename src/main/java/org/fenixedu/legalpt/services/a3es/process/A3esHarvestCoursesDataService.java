@@ -9,6 +9,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByPerson;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByShiftType;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourseProfessorships;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourses;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
@@ -32,6 +34,7 @@ import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.dml.DynamicField;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 
@@ -79,7 +82,14 @@ public class A3esHarvestCoursesDataService {
     }
 
     private void fillCourseName(final A3esCourseBean data, final CompetenceCourse course) {
-        data.addField("1", "curricularUnitName", course.getNameI18N(this.semester), _100);
+        final MultiLanguageString i18n = course.getNameI18N(this.semester);
+
+        String source = i18n.getContent(PT);
+        if (i18n.hasContent(EN)) {
+            source += " | " + i18n.getContent(EN);
+        }
+
+        data.addField("1", "curricularUnitName", source, _100);
     }
 
     private void fillAllTeachersInfo(final A3esCourseBean data, final Map<Person, Set<Professorship>> courseProfessorships) {
@@ -110,10 +120,20 @@ public class A3esHarvestCoursesDataService {
                 return "";
             }
 
-            return person.getName() + " ("
-                    + getTeachingHoursByShiftType(personProfessorships.stream().filter(p).collect(Collectors.toSet())) + ")";
+            return person.getName() + " (" + getTeachingHours(personProfessorships, p) + ")";
 
         }).sorted().filter(i -> !StringUtils.isBlank(i)).collect(Collectors.joining(PLUS));
+    }
+
+    static private String getTeachingHours(final Set<Professorship> personProfessorships, final Predicate<Professorship> p) {
+        final Stream<Professorship> filtered = personProfessorships.stream().filter(p);
+
+        if (A3esInstance.getInstance().getGroupCourseProfessorshipByPerson()) {
+            return getTeachingHoursByPerson(filtered);
+
+        } else {
+            return getTeachingHoursByShiftType(filtered);
+        }
     }
 
     private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {

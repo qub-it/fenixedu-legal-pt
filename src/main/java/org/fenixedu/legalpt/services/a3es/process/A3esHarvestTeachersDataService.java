@@ -12,7 +12,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getAp
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHours;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readProfessorships;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readPersonProfessorships;
 
 import java.text.Collator;
 import java.util.Collection;
@@ -76,7 +76,7 @@ public class A3esHarvestTeachersDataService {
         this.year = bean.getExecutionYear();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
-        readProfessorships(this.degreeCurricularPlan, this.year).entrySet().stream().map(entry -> {
+        readPersonProfessorships(this.degreeCurricularPlan, this.year).entrySet().stream().map(entry -> {
             final Map<CompetenceCourse, Set<Professorship>> personProfessorships = entry.getValue();
             final Person person = entry.getKey();
 
@@ -348,7 +348,8 @@ public class A3esHarvestTeachersDataService {
                                                 .collect(Collectors.joining(SEMICOLON)),
                                         _200);
                                 service.addField("type", "type", getShiftTypeAcronym(type), _30);
-                                service.addField("hoursPerWeek", "totalContactHours", getTeachingHours(sp), _UNLIMITED);
+                                service.addField("hoursPerWeek", "totalContactHours", getTeachingHours(sp).toPlainString(),
+                                        _UNLIMITED);
                             });
                 });
 
