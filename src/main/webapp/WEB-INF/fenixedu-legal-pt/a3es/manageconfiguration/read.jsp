@@ -71,7 +71,22 @@
 						<th scope="row" class="col-xs-3"><spring:message code="label.A3esInstance.mobilityAgreements" /></th>
 						<td><c:forEach var="each" items="${instance.mobilityAgreementsSet}">
 								<c:out escapeXml="false" value="${each.code} - ${each.description.content} <br/>" />
-							</c:forEach></td>
+							</c:forEach>
+						</td>
+					</tr>
+					
+					<tr>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esInstance.groupCourseProfessorshipByPerson" /></th>
+						<td>
+							<c:out value="${instance.groupCourseProfessorshipByPerson ? yesLabel : noLabel }"></c:out>
+						</td>
+					</tr>
+					
+					<tr>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esInstance.groupPersonProfessorshipByCourse" /></th>
+						<td>
+							<c:out value="${instance.groupPersonProfessorshipByCourse ? yesLabel : noLabel }"></c:out>
+						</td>
 					</tr>
 
 				</tbody>

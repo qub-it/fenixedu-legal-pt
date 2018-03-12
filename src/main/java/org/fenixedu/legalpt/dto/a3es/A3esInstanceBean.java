@@ -17,11 +17,15 @@ import com.google.common.collect.Sets;
 public class A3esInstanceBean implements IBean {
 
     private Set<RegistrationProtocol> mobilityAgreements;
-
     private List<TupleDataSourceBean> registrationProtocolsDataSource;
+
+    private boolean groupCourseProfessorshipByPerson;
+    private boolean groupPersonProfessorshipByCourse;
 
     public A3esInstanceBean(final A3esInstance instance) {
         setMobilityAgreements(Sets.newHashSet(instance.getMobilityAgreementsSet()));
+        setGroupCourseProfessorshipByPerson(instance.getGroupCourseProfessorshipByPerson());
+        setGroupPersonProfessorshipByCourse(instance.getGroupPersonProfessorshipByCourse());
 
         loadDataSources();
     }
@@ -42,6 +46,22 @@ public class A3esInstanceBean implements IBean {
 
     public void setMobilityAgreements(Set<RegistrationProtocol> mobilityAgreements) {
         this.mobilityAgreements = mobilityAgreements;
+    }
+
+    public boolean getGroupCourseProfessorshipByPerson() {
+        return groupCourseProfessorshipByPerson;
+    }
+
+    public void setGroupCourseProfessorshipByPerson(final boolean input) {
+        this.groupCourseProfessorshipByPerson = input;
+    }
+
+    public boolean getGroupPersonProfessorshipByCourse() {
+        return groupPersonProfessorshipByCourse;
+    }
+
+    public void setGroupPersonProfessorshipByCourse(final boolean input) {
+        this.groupPersonProfessorshipByCourse = input;
     }
 
 }

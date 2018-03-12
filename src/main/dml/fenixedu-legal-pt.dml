@@ -45,6 +45,8 @@ class a3es.A3esProcess {
 	}
 
 class a3es.A3esInstance extends .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport {
+	boolean groupPersonProfessorshipByCourse;
+	boolean groupCourseProfessorshipByPerson;
 }
 
 	relation A3esInstanceMobilityAgreement {

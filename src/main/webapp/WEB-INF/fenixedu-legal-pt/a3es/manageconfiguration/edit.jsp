@@ -101,6 +101,32 @@ angular.module('angularApp', ['ngSanitize', 'ui.select']).controller('angularCon
 				</div>
 			</div>
 			
+			<div class="form-group row">
+				<div class="col-sm-3 control-label">
+					<spring:message code="label.A3esInstance.groupCourseProfessorshipByPerson" />
+				</div>
+
+				<div class="col-sm-6">
+                    <select id="groupPersonProfessorshipByCourse" name="groupCourseProfessorshipByPerson"
+                        class="form-control" ng-model="object.groupCourseProfessorshipByPerson"
+                        ng-options="bvalue.value as bvalue.name for bvalue in booleanvalues">
+                    </select>
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<div class="col-sm-3 control-label">
+					<spring:message code="label.A3esInstance.groupPersonProfessorshipByCourse" />
+				</div>
+
+				<div class="col-sm-6">
+                    <select id="groupPersonProfessorshipByCourse" name="groupPersonProfessorshipByCourse"
+                        class="form-control" ng-model="object.groupPersonProfessorshipByCourse"
+                        ng-options="bvalue.value as bvalue.name for bvalue in booleanvalues">
+                    </select>
+				</div>
+			</div>
+			
 		</div>
 		
 		<div class="panel-footer">

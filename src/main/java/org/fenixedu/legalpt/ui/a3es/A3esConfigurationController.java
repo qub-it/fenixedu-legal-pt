@@ -54,7 +54,8 @@ public class A3esConfigurationController extends FenixeduLegalPTBaseController {
         try {
             A3esInstance instance = A3esInstance.getInstance();
             instance.edit(instance.getName(), instance.getGroup(), instance.getSynchronous(), instance.getHasMappings(),
-                    bean.getMobilityAgreements());
+                    bean.getMobilityAgreements(), bean.getGroupCourseProfessorshipByPerson(),
+                    bean.getGroupPersonProfessorshipByCourse());
 
             return "redirect:" + READ_URL;
         } catch (final DomainException e) {
