@@ -51,8 +51,8 @@ public class A3esBeanField implements IBean {
         final String label = i18n(labelKey) + language;
         result.setLabel(label);
 
-        String value = StringUtils
-                .isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject.escape(Jsoup.parse(source).text());
+        String value = StringUtils.isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject
+                .escape(Jsoup.parse(source).text()).replace("\\u2022", "-").replace("\\/", "|");
 
         if (StringUtils.isBlank(value)) {
             if (limit == _UNSUPPORTED) {
