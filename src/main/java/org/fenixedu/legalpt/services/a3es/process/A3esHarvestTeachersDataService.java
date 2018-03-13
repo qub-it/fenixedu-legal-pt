@@ -8,12 +8,13 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._30;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._500;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.calculateTeachingHours;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHours;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readPersonProfessorships;
 
+import java.math.BigDecimal;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Comparator;
@@ -21,21 +22,24 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
-import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Job;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Qualification;
+import org.fenixedu.academic.domain.ShiftProfessorship;
 import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.TeacherAuthorization;
@@ -317,43 +321,108 @@ public class A3esHarvestTeachersDataService {
 
         final Set<TeachingService> teachingServices = new LinkedHashSet<>();
 
-        personProfessorships.entrySet().stream()
-                .sorted((x, y) -> Collator.getInstance().compare(x.getKey().getName(), y.getKey().getName())).forEach(entry -> {
+        final Stream<Entry<CompetenceCourse, Set<Professorship>>> sorted = personProfessorships.entrySet().stream()
+                .sorted((x, y) -> Collator.getInstance().compare(x.getKey().getName(), y.getKey().getName()));
 
-                    final CompetenceCourse competence = entry.getKey();
-                    final Set<Professorship> competenceProfessorships = entry.getValue();
+        if (A3esInstance.getInstance().getGroupPersonProfessorshipByCourse()) {
+            fillTeachingServiceByCourse(teachingServices, sorted);
 
-                    competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                            .forEach(sp -> {
-
-                                if (teachingServices.size() == _TEACHING_SERVICES) {
-                                    return;
-                                }
-
-                                final List<ShiftType> types = sp.getShift().getTypes();
-                                if (types.size() != 1) {
-                                    return;
-                                }
-                                final ShiftType type = types.iterator().next();
-
-                                final TeachingService service = new TeachingService();
-                                teachingServices.add(service);
-
-                                final ExecutionCourse execution = sp.getProfessorship().getExecutionCourse();
-                                service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
-                                service.addField("studyCycle", "studyCycle",
-                                        execution.getAssociatedCurricularCoursesSet().stream()
-                                                .flatMap(c -> c.getDegree().getCycleTypes().stream())
-                                                .map(ct -> ct.getDescriptionI18N().getContent()).distinct().sorted()
-                                                .collect(Collectors.joining(SEMICOLON)),
-                                        _200);
-                                service.addField("type", "type", getShiftTypeAcronym(type), _30);
-                                service.addField("hoursPerWeek", "totalContactHours", getTeachingHours(sp).toPlainString(),
-                                        _UNLIMITED);
-                            });
-                });
+        } else {
+            fillTeachingServiceByShiftType(teachingServices, sorted);
+        }
 
         data.setTeachingServices(teachingServices);
+    }
+
+    static private void fillTeachingServiceByShiftType(final Set<TeachingService> teachingServices,
+            final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
+
+        personProfessorships.forEach(entry -> {
+
+            final CompetenceCourse competence = entry.getKey();
+            final Set<Professorship> competenceProfessorships = entry.getValue();
+
+            competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream()).forEach(sp -> {
+
+                if (teachingServices.size() == _TEACHING_SERVICES) {
+                    return;
+                }
+
+                final ShiftType type = getShiftType(sp);
+                if (type == null) {
+                    return;
+                }
+
+                final TeachingService service = new TeachingService();
+                teachingServices.add(service);
+                service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
+
+                final Stream<CurricularCourse> courses =
+                        sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
+                final String studyCycle = getStudyCycles(courses);
+                service.addField("studyCycle", "studyCycle", studyCycle, _200);
+
+                final String shiftType = getShiftTypeAcronym(type);
+                service.addField("type", "type", shiftType, _30);
+
+                final BigDecimal hours = calculateTeachingHours(sp);
+                service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
+            });
+
+        });
+    }
+
+    static private void fillTeachingServiceByCourse(final Set<TeachingService> teachingServices,
+            final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
+
+        personProfessorships.forEach(entry -> {
+
+            final CompetenceCourse competence = entry.getKey();
+            final Set<Professorship> competenceProfessorships = entry.getValue();
+
+            if (teachingServices.size() == _TEACHING_SERVICES) {
+                return;
+            }
+
+            final Set<ShiftProfessorship> shiftProfessorships =
+                    competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
+                            .filter(sp -> getShiftType(sp) != null).collect(Collectors.toSet());
+            if (shiftProfessorships.isEmpty()) {
+                return;
+            }
+
+            final TeachingService service = new TeachingService();
+            teachingServices.add(service);
+            service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
+
+            final Stream<CurricularCourse> courses = shiftProfessorships.stream()
+                    .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
+            final String studyCycle = getStudyCycles(courses);
+            service.addField("studyCycle", "studyCycle", studyCycle, _200);
+
+            final String shiftType = shiftProfessorships.stream().map(sp -> getShiftTypeAcronym(getShiftType(sp))).distinct()
+                    .sorted().collect(Collectors.joining(","));
+            service.addField("type", "type", shiftType, _30);
+
+            final BigDecimal hours =
+                    shiftProfessorships.stream().map(sp -> calculateTeachingHours(sp)).reduce(BigDecimal.ZERO, BigDecimal::add);
+            service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
+        });
+    }
+
+    static private ShiftType getShiftType(final ShiftProfessorship sp) {
+        final List<ShiftType> types = sp.getShift().getTypes();
+        if (types.size() != 1) {
+            return null;
+        }
+
+        return types.iterator().next();
+    }
+
+    static private String getStudyCycles(final Stream<CurricularCourse> courses) {
+        final String studyCycle = courses.flatMap(c -> c.getDegree().getCycleTypes().stream())
+                .map(ct -> ct.getDescriptionI18N().getContent()).distinct().sorted().collect(Collectors.joining(SEMICOLON));
+        return studyCycle;
     }
 
     static private String findSpecializationArea(final Person person) {

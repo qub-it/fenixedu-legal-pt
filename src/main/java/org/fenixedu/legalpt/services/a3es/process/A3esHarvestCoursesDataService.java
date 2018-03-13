@@ -3,17 +3,19 @@ package org.fenixedu.legalpt.services.a3es.process;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PLUS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEMICOLON;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.calculateTeachingHours;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByPerson;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getTeachingHoursByShiftType;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourseProfessorships;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourses;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -134,6 +136,18 @@ public class A3esHarvestCoursesDataService {
         } else {
             return getTeachingHoursByShiftType(filtered);
         }
+    }
+
+    static private String getTeachingHoursByPerson(final Stream<Professorship> professorships) {
+        return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream()).map(sp -> calculateTeachingHours(sp))
+                .reduce(BigDecimal.ZERO, BigDecimal::add).toPlainString() + "h";
+    }
+
+    static private String getTeachingHoursByShiftType(final Stream<Professorship> professorships) {
+        return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
+                .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - "
+                        + calculateTeachingHours(sp).toPlainString() + "h")
+                .sorted().collect(Collectors.joining(SEMICOLON));
     }
 
     private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {

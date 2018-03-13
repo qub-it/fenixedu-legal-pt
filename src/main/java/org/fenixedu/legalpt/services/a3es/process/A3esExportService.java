@@ -744,24 +744,12 @@ abstract public class A3esExportService {
         return LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.SHIFT_TYPE).translate(t);
     }
 
-    static public BigDecimal getTeachingHours(final ShiftProfessorship sp) {
+    static public BigDecimal calculateTeachingHours(final ShiftProfessorship sp) {
         final BigDecimal shiftTotalHours =
                 sp.getShift().getUnitHours().multiply(new BigDecimal(LegalSettings.getInstance().getNumberOfLessonWeeks()));
         final BigDecimal result = sp.getPercentage() != null ? shiftTotalHours.multiply(new BigDecimal(sp.getPercentage()))
                 .divide(BigDecimal.valueOf(100d)).setScale(2, RoundingMode.DOWN) : shiftTotalHours;
         return result.stripTrailingZeros();
-    }
-
-    static public String getTeachingHoursByShiftType(final Stream<Professorship> professorships) {
-        return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - "
-                        + getTeachingHours(sp).toPlainString() + "h")
-                .sorted().collect(Collectors.joining(SEMICOLON));
-    }
-
-    static public String getTeachingHoursByPerson(final Stream<Professorship> professorships) {
-        return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream()).map(sp -> getTeachingHours(sp))
-                .reduce(BigDecimal.ZERO, BigDecimal::add).toPlainString() + "h";
     }
 
     static public String getApaFormat(final String authors, final String date, final String title, final String aditionalInfo) {
