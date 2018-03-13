@@ -19,11 +19,13 @@ public class A3esInstanceBean implements IBean {
     private Set<RegistrationProtocol> mobilityAgreements;
     private List<TupleDataSourceBean> registrationProtocolsDataSource;
 
+    private boolean studyCycleByDegree;
     private boolean groupCourseProfessorshipByPerson;
     private boolean groupPersonProfessorshipByCourse;
 
     public A3esInstanceBean(final A3esInstance instance) {
         setMobilityAgreements(Sets.newHashSet(instance.getMobilityAgreementsSet()));
+        setStudyCycleByDegree(instance.getStudyCycleByDegree());
         setGroupCourseProfessorshipByPerson(instance.getGroupCourseProfessorshipByPerson());
         setGroupPersonProfessorshipByCourse(instance.getGroupPersonProfessorshipByCourse());
 
@@ -46,6 +48,14 @@ public class A3esInstanceBean implements IBean {
 
     public void setMobilityAgreements(Set<RegistrationProtocol> mobilityAgreements) {
         this.mobilityAgreements = mobilityAgreements;
+    }
+
+    public boolean getStudyCycleByDegree() {
+        return studyCycleByDegree;
+    }
+
+    public void setStudyCycleByDegree(final boolean input) {
+        this.studyCycleByDegree = input;
     }
 
     public boolean getGroupCourseProfessorshipByPerson() {

@@ -80,6 +80,13 @@
 					</tr>
 					
 					<tr>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esInstance.studyCycleByDegree" /></th>
+						<td>
+							<c:out value="${instance.studyCycleByDegree ? yesLabel : noLabel }"></c:out>
+						</td>
+					</tr>
+										
+					<tr>
 						<th scope="row" class="col-xs-4"><spring:message code="label.A3esInstance.groupCourseProfessorshipByPerson" /></th>
 						<td>
 							<c:out value="${instance.groupCourseProfessorshipByPerson ? yesLabel : noLabel }"></c:out>

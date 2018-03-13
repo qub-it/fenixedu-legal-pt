@@ -334,7 +334,7 @@ public class A3esHarvestTeachersDataService {
         data.setTeachingServices(teachingServices);
     }
 
-    static private void fillTeachingServiceByShiftType(final Set<TeachingService> teachingServices,
+    private void fillTeachingServiceByShiftType(final Set<TeachingService> teachingServices,
             final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
 
         personProfessorships.forEach(entry -> {
@@ -372,7 +372,7 @@ public class A3esHarvestTeachersDataService {
         });
     }
 
-    static private void fillTeachingServiceByCourse(final Set<TeachingService> teachingServices,
+    private void fillTeachingServiceByCourse(final Set<TeachingService> teachingServices,
             final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
 
         personProfessorships.forEach(entry -> {
@@ -419,10 +419,26 @@ public class A3esHarvestTeachersDataService {
         return types.iterator().next();
     }
 
-    static private String getStudyCycles(final Stream<CurricularCourse> courses) {
+    private String getStudyCycles(final Stream<CurricularCourse> courses) {
+        if (A3esInstance.getInstance().getStudyCycleByDegree()) {
+            return getStudyCyclesByDegree(courses);
+
+        } else {
+            return getStudyCyclesByName(courses);
+        }
+    }
+
+    private String getStudyCyclesByName(final Stream<CurricularCourse> courses) {
         final String studyCycle = courses.flatMap(c -> c.getDegree().getCycleTypes().stream())
                 .map(ct -> ct.getDescriptionI18N().getContent()).distinct().sorted().collect(Collectors.joining(SEMICOLON));
         return studyCycle;
+    }
+
+    private String getStudyCyclesByDegree(final Stream<CurricularCourse> courses) {
+        return courses
+                .map(c -> c.getDegree()).map(d -> d.getNameFor(this.year).getContent() + " ("
+                        + d.getDegreeType().getName().getContent().substring(0, 1) + ")")
+                .distinct().sorted().collect(Collectors.joining(SEMICOLON));
     }
 
     static private String findSpecializationArea(final Person person) {
