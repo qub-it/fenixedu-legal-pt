@@ -17,9 +17,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readP
 
 import java.math.BigDecimal;
 import java.text.Collator;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +46,7 @@ import org.fenixedu.academic.domain.TeacherAuthorization;
 import org.fenixedu.academic.domain.TeacherCategory;
 import org.fenixedu.academic.domain.academicStructure.AcademicArea;
 import org.fenixedu.academic.domain.academicStructure.AcademicAreaType;
-import org.fenixedu.academic.domain.organizationalStructure.Accountability;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
+import org.fenixedu.academic.domain.dml.DynamicField;
 import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
 import org.fenixedu.academic.domain.person.JobType;
 import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
@@ -57,6 +54,7 @@ import org.fenixedu.academic.domain.researchPublication.ResearchPublication;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublicationType;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
@@ -66,8 +64,6 @@ import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.joda.time.LocalDate;
-
-import com.google.common.collect.Sets;
 
 public class A3esHarvestTeachersDataService {
 
@@ -141,31 +137,11 @@ public class A3esHarvestTeachersDataService {
     }
 
     private void fillAssociatedResearchCentre(final A3esTeacherBean data, final Person person) {
-        Collection<Unit> allResearchUnits = new HashSet<>(); // Bennu.getInstance().getInstitutionUnit().getAllSubUnits(PartyTypeEnum.RESEARCH_UNIT);
-
-        Set<Unit> activeResearchUnits = Sets.newHashSet();
-
-        for (Unit unit : allResearchUnits) {
-            for (final Accountability accountability : unit.getChildsSet()) {
-                if (!(accountability.getBeginDate().isAfter(this.year.getEndDateYearMonthDay())
-                        && accountability.getEndDate().isBefore(this.year.getBeginDateYearMonthDay()))
-                        && accountability.getChildParty().isPerson() && ((Person) accountability.getChildParty()) == person) {
-                    activeResearchUnits.add(unit);
-                }
-            }
-        }
-
-        final StringBuilder researchUnitsString = new StringBuilder();
-        for (final Unit unit : activeResearchUnits) {
-            researchUnitsString.append(unit.getName()).append(SEMICOLON);
-        }
-
-        if (researchUnitsString.toString().endsWith(SEMICOLON)) {
-            researchUnitsString.delete(researchUnitsString.length() - SEMICOLON.length(), researchUnitsString.length());
-        }
-
-        final String source = researchUnitsString.toString();
-        data.addField("research_center", "researchUnitFiliation", source, _UNSUPPORTED /* _200 */);
+        final String code = "teacherResearchCenterMembership";
+        final DynamicField field = DynamicField.findField(person, code);
+        final LocalizedString i18n = field == null ? null : field.getValue(LocalizedString.class);
+        final String source = i18n == null ? null : i18n.getContent();
+        data.addField("research_center", "researchUnitFiliation", source, _100 /* _200 */);
     }
 
     private void fillCategory(final A3esTeacherBean data, final Teacher teacher) {
@@ -178,7 +154,12 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private void fillSpecialty(final A3esTeacherBean data, final Person person) {
-        data.addField("spec", "specialist", (String) null, _UNSUPPORTED);
+        final String code = "teacherSpecialistTitle";
+        final DynamicField field = DynamicField.findField(person, code);
+        final LocalizedString i18n = field == null ? null : field.getValue(LocalizedString.class);
+        final String source = i18n == null ? null : i18n.getContent();
+        data.addField("spec", "specialist", source, _100);
+
         data.addField("spec_area", "specialistArea", findSpecializationArea(person), _200);
     }
 
