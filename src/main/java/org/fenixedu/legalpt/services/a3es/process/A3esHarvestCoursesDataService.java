@@ -12,11 +12,14 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.calcu
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourseProfessorships;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readCourses;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -33,6 +36,8 @@ import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
+import org.fenixedu.academic.domain.degreeStructure.Context;
+import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.dml.DynamicField;
 import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -80,7 +85,46 @@ public class A3esHarvestCoursesDataService {
 
     private void fillBasics(final A3esCourseBean data, final CompetenceCourseInformation info) {
         data.addField("currentInfo", "currentInfo", info.getExecutionInterval().getQualifiedName(), _UNSUPPORTED);
-        data.addField("code", "code", info.getCompetenceCourse().getCode(), _UNSUPPORTED);
+
+        final CompetenceCourse course = info.getCompetenceCourse();
+        data.addField("code", "code", course.getCode(), _UNSUPPORTED);
+
+        final String source = course.getAssociatedCurricularCoursesSet().stream()
+                .filter(c -> c.getDegreeCurricularPlan() == this.degreeCurricularPlan
+                        && c.getAssociatedExecutionCoursesSet().stream().anyMatch(ec -> ec.getExecutionYear() == year))
+                .flatMap(c -> {
+                    final List<String> notes = new ArrayList<>();
+
+                    if (c.isOptionalCurricularCourse()) {
+                        notes.add(label("optional"));
+                    }
+
+                    collectFullPath(c.getParentContextsByExecutionYear(this.year)).forEach(cg -> {
+                        if (cg.isBranchCourseGroup()) {
+                            notes.add(cg.getName());
+                        }
+
+                        if (cg.isOptionalCourseGroup()) {
+                            notes.add(label("optional"));
+                        }
+                    });
+
+                    return notes.stream();
+                }).sorted().distinct().collect(Collectors.joining(SEMICOLON));
+        data.addField("notes", "notes", source, _UNSUPPORTED);
+    }
+
+    private List<CourseGroup> collectFullPath(final List<Context> input) {
+        final List<CourseGroup> result = new ArrayList<>();
+
+        if (!input.isEmpty()) {
+            final List<CourseGroup> parents = input.stream().map(c -> c.getParentCourseGroup()).collect(Collectors.toList());
+            result.addAll(parents);
+            result.addAll(collectFullPath(parents.stream().flatMap(c -> c.getParentContextsByExecutionYear(this.year).stream())
+                    .collect(Collectors.toList())));
+        }
+
+        return result;
     }
 
     private void fillCourseName(final A3esCourseBean data, final CompetenceCourse course) {
