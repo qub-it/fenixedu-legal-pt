@@ -1,5 +1,6 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.SEMICOLON;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._100;
@@ -34,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
+import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Job;
 import org.fenixedu.academic.domain.Person;
@@ -53,6 +55,7 @@ import org.fenixedu.academic.domain.person.JobType;
 import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublication;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublicationType;
+import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
@@ -74,10 +77,12 @@ public class A3esHarvestTeachersDataService {
     static private final int _TEACHING_SERVICES = 10;
 
     private final ExecutionYear year;
+    private final ExecutionSemester semester;
     private final DegreeCurricularPlan degreeCurricularPlan;
 
     public A3esHarvestTeachersDataService(final A3esProcessBean bean) {
         this.year = bean.getExecutionYear();
+        this.semester = this.year.getFirstExecutionPeriod();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
         readPersonProfessorships(this.degreeCurricularPlan, this.year).entrySet().stream().map(entry -> {
@@ -355,7 +360,7 @@ public class A3esHarvestTeachersDataService {
 
                 final TeachingService service = new TeachingService();
                 teachingServices.add(service);
-                service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
+                service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
 
                 final Stream<CurricularCourse> courses =
                         sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
@@ -393,7 +398,7 @@ public class A3esHarvestTeachersDataService {
 
             final TeachingService service = new TeachingService();
             teachingServices.add(service);
-            service.addField("curricularUnit", "curricularUnit", competence.getName(), _100);
+            service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
 
             final Stream<CurricularCourse> courses = shiftProfessorships.stream()
                     .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
@@ -408,6 +413,17 @@ public class A3esHarvestTeachersDataService {
                     shiftProfessorships.stream().map(sp -> calculateTeachingHours(sp)).reduce(BigDecimal.ZERO, BigDecimal::add);
             service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
         });
+    }
+
+    private String getCourseName(final CompetenceCourse course) {
+        final MultiLanguageString i18n = course.getNameI18N(this.semester);
+
+        String result = i18n.getContent(PT);
+        if (i18n.hasContent(EN)) {
+            result += " | " + i18n.getContent(EN);
+        }
+
+        return result;
     }
 
     static private ShiftType getShiftType(final ShiftProfessorship sp) {

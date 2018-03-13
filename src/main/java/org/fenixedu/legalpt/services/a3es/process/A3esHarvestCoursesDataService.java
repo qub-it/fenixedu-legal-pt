@@ -84,14 +84,19 @@ public class A3esHarvestCoursesDataService {
     }
 
     private void fillCourseName(final A3esCourseBean data, final CompetenceCourse course) {
+        final String source = getCourseName(course);
+        data.addField("1", "curricularUnitName", source, _100);
+    }
+
+    private String getCourseName(final CompetenceCourse course) {
         final MultiLanguageString i18n = course.getNameI18N(this.semester);
 
-        String source = i18n.getContent(PT);
+        String result = i18n.getContent(PT);
         if (i18n.hasContent(EN)) {
-            source += " | " + i18n.getContent(EN);
+            result += " | " + i18n.getContent(EN);
         }
 
-        data.addField("1", "curricularUnitName", source, _100);
+        return result;
     }
 
     private void fillAllTeachersInfo(final A3esCourseBean data, final Map<Person, Set<Professorship>> courseProfessorships) {
