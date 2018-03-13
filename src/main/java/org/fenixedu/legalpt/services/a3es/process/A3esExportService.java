@@ -684,28 +684,26 @@ abstract public class A3esExportService {
             });
         });
 
-        // read from other plans for persons previously found
-        /* WIP
         result.entrySet().forEach(entry -> {
             final Person person = entry.getKey();
             final Map<CompetenceCourse, Set<Professorship>> personProfessorships = entry.getValue();
-        
+
             person.getProfessorshipsSet().stream().filter(i -> i.getExecutionCourse().getExecutionYear() == year)
                     .forEach(professorship -> {
-        
+
                         final ExecutionCourse execution = professorship.getExecutionCourse();
                         execution.getAssociatedCurricularCoursesSet().stream().filter(i -> i.getDegreeCurricularPlan() != plan)
                                 .map(i -> i.getCompetenceCourse()).filter(i -> i != null).distinct().forEach(competence -> {
-        
+
                                     Set<Professorship> tempSet = personProfessorships.get(competence);
                                     tempSet = tempSet != null ? tempSet : new HashSet<>();
+                                    tempSet.add(professorship);
                                     personProfessorships.put(competence, tempSet);
                                 });
                     });
-        
+
             result.put(person, personProfessorships);
         });
-         */
 
         return result;
     }
