@@ -63,6 +63,10 @@
 		</h3>
 	</div>
 	<div class="panel-body">
+
+		<spring:message code="label.yes" var="yesLabel" />
+		<spring:message code="label.no" var="noLabel" />
+	
 		<form method="post" class="form-horizontal">
 			<table class="table">
 				<tbody>
