@@ -418,20 +418,20 @@ public class A3esHarvestTeachersDataService {
 
     private String getStudyCycles(final Stream<CurricularCourse> courses) {
         if (A3esInstance.getInstance().getStudyCycleByDegree()) {
-            return getStudyCyclesByDegree(courses);
+            return getStudyCycleByDegree(courses);
 
         } else {
-            return getStudyCyclesByName(courses);
+            return getStudyCycleByName(courses);
         }
     }
 
-    private String getStudyCyclesByName(final Stream<CurricularCourse> courses) {
+    private String getStudyCycleByName(final Stream<CurricularCourse> courses) {
         final String studyCycle = courses.flatMap(c -> c.getDegree().getCycleTypes().stream())
                 .map(ct -> ct.getDescriptionI18N().getContent()).distinct().sorted().collect(Collectors.joining(SEMICOLON));
         return studyCycle;
     }
 
-    private String getStudyCyclesByDegree(final Stream<CurricularCourse> courses) {
+    private String getStudyCycleByDegree(final Stream<CurricularCourse> courses) {
         return courses
                 .map(c -> c.getDegree()).map(d -> d.getNameFor(this.year).getContent() + " ("
                         + d.getDegreeType().getName().getContent().substring(0, 1) + ")")
