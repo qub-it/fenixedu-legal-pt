@@ -92,14 +92,15 @@ public class A3esHarvestTeachersDataService {
 
             final A3esTeacherBean data = new A3esTeacherBean();
 
+            final TeacherAuthorization auth = getTeacherAuthorization(person);
             fillBasics(data, person);
             fillName(data, person);
             fillInstitutionName(data);
             fillSchoolName(data);
             fillAssociatedResearchCentre(data, person);
-            fillCategory(data, person.getTeacher());
+            fillCategory(data, auth);
             fillSpecialty(data, person);
-            fillTimeAllocation(data, person);
+            fillTimeAllocation(data, auth);
 
             fillAttainedDegree(data, person);
             fillOtherAttainedDegrees(data, person);
@@ -144,13 +145,17 @@ public class A3esHarvestTeachersDataService {
         data.addField("research_center", "researchUnitFiliation", source, _100 /* _200 */);
     }
 
-    private void fillCategory(final A3esTeacherBean data, final Teacher teacher) {
-        final TeacherAuthorization auth = teacher == null ? null : teacher
-                .getLatestTeacherAuthorizationInInterval(this.year.getAcademicInterval().toInterval()).orElse(null);
+    private void fillCategory(final A3esTeacherBean data, final TeacherAuthorization auth) {
         final TeacherCategory category = auth == null ? null : auth.getTeacherCategory();
         final String source =
                 LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.CONTRACT_CATEGORY).translate(category);
         data.addField("cat", "category", source, _UNLIMITED);
+    }
+
+    private TeacherAuthorization getTeacherAuthorization(final Person person) {
+        final Teacher teacher = person == null ? null : person.getTeacher();
+        return teacher == null ? null : teacher
+                .getLatestTeacherAuthorizationInInterval(this.year.getAcademicInterval().toInterval()).orElse(null);
     }
 
     static private void fillSpecialty(final A3esTeacherBean data, final Person person) {
@@ -163,8 +168,10 @@ public class A3esHarvestTeachersDataService {
         data.addField("spec_area", "specialistArea", findSpecializationArea(person), _200);
     }
 
-    static private void fillTimeAllocation(final A3esTeacherBean data, final Person person) {
-        data.addField("time", "regime", (String) null, _UNSUPPORTED);
+    static private void fillTimeAllocation(final A3esTeacherBean data, final TeacherAuthorization auth) {
+        final Double allocation = auth == null ? null : auth.getWorkPercentageInInstitution();
+        final String source = allocation == null ? null : BigDecimal.valueOf(allocation).stripTrailingZeros().toPlainString();
+        data.addField("time", "regime", source, _30);
     }
 
     static private void fillAttainedDegree(final A3esTeacherBean data, final Person person) {
