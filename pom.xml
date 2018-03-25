@@ -78,7 +78,8 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${basedir}/target/generated-sources/xsd/</source>
+								<source>${basedir}/target/generated-sources/xsd/raides/</source>
+                                <source>${basedir}/target/generated-sources/xsd/rebides/</source>
 							</sources>
 						</configuration>
 					</execution>
