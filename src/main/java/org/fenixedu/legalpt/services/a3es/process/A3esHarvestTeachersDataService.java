@@ -9,6 +9,9 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._30;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._500;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.calculateTeachingHours;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readPersonProfessorships;
 
@@ -403,7 +406,7 @@ public class A3esHarvestTeachersDataService {
         final LocalizedString i18n = course.getNameI18N(this.semester);
 
         String result = i18n.getContent(PT);
-        if (i18n.hasContent(EN)) {
+        if (i18n.getContent(EN) != null) {
             result += " | " + i18n.getContent(EN);
         }
 

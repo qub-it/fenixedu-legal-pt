@@ -9,12 +9,14 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._200;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.DegreeInfo;
 import org.fenixedu.academic.domain.ExecutionDegree;
@@ -25,7 +27,6 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.a3es.A3esDegreeBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
-import org.fenixedu.legalpt.services.rebides.process.QualificationService.Degree;
 
 public class A3esHarvestDegreeDataService {
 
