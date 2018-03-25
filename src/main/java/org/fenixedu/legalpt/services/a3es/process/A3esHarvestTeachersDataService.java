@@ -9,9 +9,6 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._30;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._500;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.calculateTeachingHours;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readPersonProfessorships;
 
@@ -52,7 +49,6 @@ import org.fenixedu.academic.domain.person.JobType;
 import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublication;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublicationType;
-import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
@@ -404,7 +400,7 @@ public class A3esHarvestTeachersDataService {
     }
 
     private String getCourseName(final CompetenceCourse course) {
-        final MultiLanguageString i18n = course.getNameI18N(this.semester);
+        final LocalizedString i18n = course.getNameI18N(this.semester);
 
         String result = i18n.getContent(PT);
         if (i18n.hasContent(EN)) {

@@ -9,25 +9,23 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._200;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.DegreeInfo;
 import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
-import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.a3es.A3esDegreeBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
+import org.fenixedu.legalpt.services.rebides.process.QualificationService.Degree;
 
 public class A3esHarvestDegreeDataService {
 
@@ -140,7 +138,7 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillDegreeName(final A3esDegreeBean data) {
-        final MultiLanguageString source = this.degree.getNameI18N();
+        final LocalizedString source = this.degree.getNameI18N();
         data.addField("q-II.1.3_pt", "plan", PT, source, _UNLIMITED);
         data.addField("q-II.1.3_en", "plan", EN, source, _UNLIMITED);
     }
@@ -151,7 +149,7 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillMainScientificArea(final A3esDegreeBean data) {
-        final MultiLanguageString source = this.info.getPrevailingScientificArea();
+        final LocalizedString source = this.info.getPrevailingScientificArea();
         data.addField("q-II.1.6_pt", "mainScientificArea", PT, source, _UNLIMITED);
         data.addField("q-II.1.6_en", "mainScientificArea", EN, source, _UNLIMITED);
     }
@@ -174,7 +172,7 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillIngressionSpecificConditions(final A3esDegreeBean data) {
-        final MultiLanguageString source = this.info.getClassifications();
+        final LocalizedString source = this.info.getClassifications();
         data.addField("q-II.1.11_pt", "ingressionSpecificConditions", PT, source, _1000);
         data.addField("q-II.1.11_en", "ingressionSpecificConditions", EN, source, _1000);
     }
@@ -186,9 +184,9 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillBranches(final A3esDegreeBean data) {
-        final Set<MultiLanguageString> majors = this.degreeCurricularPlan.getMajorBranches().stream()
+        final Set<LocalizedString> majors = this.degreeCurricularPlan.getMajorBranches().stream()
                 .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
-        final Set<MultiLanguageString> minors = this.degreeCurricularPlan.getMinorBranches().stream()
+        final Set<LocalizedString> minors = this.degreeCurricularPlan.getMinorBranches().stream()
                 .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
 
         final Stream<String> ptStream =
@@ -199,7 +197,7 @@ public class A3esHarvestDegreeDataService {
         final String pt = ptStream.collect(Collectors.joining(SEMICOLON));
         final String en = enStream.collect(Collectors.joining(SEMICOLON));
 
-        final MultiLanguageString source = createMLS(pt, en);
+        final LocalizedString source = createMLS(pt, en);
         data.addField("branches", "branches", PT, source, _200);
         data.addField("branches", "branches", EN, source, _200);
     }

@@ -80,7 +80,7 @@ public enum RebidesMappingType implements ILegalMappingType {
     }
 
     @Override
-    public LegalMapping createMapping(LegalReport report) {
+    public LegalMapping createMapping(final LegalReport report) {
         switch (this) {
 
         case CONTRACT_CATEGORY:
@@ -129,7 +129,7 @@ public enum RebidesMappingType implements ILegalMappingType {
             return new LocalizedString(I18N.getLocale(), "TODO_CONTRACT_WAGE_LEVEL");// ((ContractWageLevel) FenixFramework.getDomainObject(key)).getName();
 
         case SCIENTIFIC_AREA:
-            return ((ScientificAreaUnit) FenixFramework.getDomainObject(key)).getPartyName().toLocalizedString();
+            return ((ScientificAreaUnit) FenixFramework.getDomainObject(key)).getPartyName();
 
         case SCHOOL_LEVEL:
             final SchoolLevelType schoolLevel = SchoolLevelType.valueOf(key);
@@ -139,7 +139,7 @@ public enum RebidesMappingType implements ILegalMappingType {
             return new LocalizedString(I18N.getLocale(), "TODO_SCHOOL_LEVEL_ORIGIN");// ((SchoolLevelOrigin) FenixFramework.getDomainObject(key)).getName());
 
         case DEPARTMENT:
-            return ((Unit) FenixFramework.getDomainObject(key)).getPartyName().toLocalizedString();
+            return ((Unit) FenixFramework.getDomainObject(key)).getPartyName();
 
         default:
             return new LocalizedString();
