@@ -12,7 +12,7 @@
 
 	<groupId>org.fenixedu</groupId>
 	<artifactId>fenixedu-legal-pt</artifactId>
-	<version>1.2.11</version>
+	<version>2.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>FenixEdu Legal PT</name>
