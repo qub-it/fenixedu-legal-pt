@@ -1,8 +1,6 @@
 package org.fenixedu.legalpt.dto.a3es;
 
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.EN;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.PT;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -12,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
-import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.i18n.LocalizedString;
 
 import com.google.common.collect.Lists;
@@ -25,14 +22,14 @@ public abstract class A3esAbstractBean implements Serializable {
     public static Comparator<A3esAbstractBean> COMPARE_BY_ID = new Comparator<A3esAbstractBean>() {
 
         @Override
-        public int compare(A3esAbstractBean bean1, A3esAbstractBean bean2) {
+        public int compare(final A3esAbstractBean bean1, final A3esAbstractBean bean2) {
             return bean1.getId().compareTo(bean2.getId());
         }
 
     };
 
     private final Long beanId;
-    private List<A3esBeanField> fields = Lists.newArrayList();
+    private final List<A3esBeanField> fields = Lists.newArrayList();
 
     public A3esAbstractBean() {
         beanId = generateId();
@@ -64,20 +61,12 @@ public abstract class A3esAbstractBean implements Serializable {
 
     public A3esBeanField addField(final String id, final String fieldName, final Locale locale, final LocalizedString source,
             final int limit) {
-        final MultiLanguageString mls = source == null ? null : createMLS(source.getContent(PT), source.getContent(EN));
-        final A3esBeanField result = A3esBeanField.create(id, fieldName, locale, mls, limit);
-        getFields().add(result);
-        return result;
-    }
-
-    public A3esBeanField addField(final String id, final String fieldName, final Locale locale, final MultiLanguageString source,
-            final int limit) {
         final A3esBeanField result = A3esBeanField.create(id, fieldName, locale, source, limit);
         getFields().add(result);
         return result;
     }
 
-    public A3esBeanField addField(final String id, final String fieldName, final MultiLanguageString source, final int limit) {
+    public A3esBeanField addField(final String id, final String fieldName, final LocalizedString source, final int limit) {
         return addField(id, fieldName, source == null ? null : source.getContent(PT), limit);
     }
 

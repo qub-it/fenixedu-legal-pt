@@ -7,8 +7,8 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
-import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.IBean;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 
@@ -29,7 +29,7 @@ public class A3esBeanField implements IBean {
     }
 
     static protected A3esBeanField create(final String id, final String fieldName, final Locale locale,
-            final MultiLanguageString source, int size) {
+            final LocalizedString source, final int size) {
 
         final String value = source == null ? null : source.getContent(locale);
         return create(id, fieldName, locale, value, size);
@@ -92,7 +92,7 @@ public class A3esBeanField implements IBean {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -100,7 +100,7 @@ public class A3esBeanField implements IBean {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(final String label) {
         this.label = label;
     }
 
@@ -108,7 +108,7 @@ public class A3esBeanField implements IBean {
         return locale;
     }
 
-    public void setLocale(Locale locale) {
+    public void setLocale(final Locale locale) {
         this.locale = locale;
     }
 
@@ -120,7 +120,7 @@ public class A3esBeanField implements IBean {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(final String value) {
         this.value = value;
     }
 
@@ -128,7 +128,7 @@ public class A3esBeanField implements IBean {
         return limit;
     }
 
-    public void setLimit(Integer limit) {
+    public void setLimit(final Integer limit) {
         this.limit = limit;
     }
 
@@ -136,7 +136,7 @@ public class A3esBeanField implements IBean {
         return report;
     }
 
-    public void setReport(String report) {
+    public void setReport(final String report) {
         this.report = report;
     }
 
@@ -144,7 +144,7 @@ public class A3esBeanField implements IBean {
         return reportType;
     }
 
-    public void setReportType(String reportType) {
+    public void setReportType(final String reportType) {
         this.reportType = reportType;
     }
 

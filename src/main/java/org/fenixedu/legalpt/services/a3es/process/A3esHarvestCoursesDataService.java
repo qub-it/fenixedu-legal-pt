@@ -39,7 +39,6 @@ import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.dml.DynamicField;
-import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
@@ -133,10 +132,10 @@ public class A3esHarvestCoursesDataService {
     }
 
     private String getCourseName(final CompetenceCourse course) {
-        final MultiLanguageString i18n = course.getNameI18N(this.semester);
+        final LocalizedString i18n = course.getNameI18N(this.semester);
 
         String result = i18n.getContent(PT);
-        if (i18n.hasContent(EN)) {
+        if (i18n.getContent(EN) != null) {
             result += " | " + i18n.getContent(EN);
         }
 
@@ -200,13 +199,13 @@ public class A3esHarvestCoursesDataService {
     }
 
     private void fillLearningObjectives(final A3esCourseBean data, final CompetenceCourse course) {
-        final MultiLanguageString source = course.getObjectivesI18N(this.semester);
+        final LocalizedString source = course.getObjectivesI18N(this.semester);
         data.addField("4", "learningOutcomes", PT, source, _1000);
         data.addField("4", "learningOutcomes", EN, source, _1000);
     }
 
     private void fillCourseProgram(final A3esCourseBean data, final CompetenceCourse course) {
-        final MultiLanguageString source = course.getProgramI18N(this.semester);
+        final LocalizedString source = course.getProgramI18N(this.semester);
         data.addField("5", "program", PT, source, _1000);
         data.addField("5", "program", EN, source, _1000);
     }
@@ -220,7 +219,7 @@ public class A3esHarvestCoursesDataService {
     }
 
     private void fillTeachingMethodology(final A3esCourseBean data, final CompetenceCourse course) {
-        final MultiLanguageString source =
+        final LocalizedString source =
                 createMLS(course.getEvaluationMethod(this.semester), course.getEvaluationMethodEn(this.semester));
         data.addField("7", "evaluationMethod", PT, source, _1000);
         data.addField("7", "evaluationMethod", EN, source, _1000);

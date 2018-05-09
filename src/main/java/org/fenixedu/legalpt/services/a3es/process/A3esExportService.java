@@ -44,7 +44,7 @@ import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.ShiftProfessorship;
 import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.domain.executionPlanning.services.OccupationPeriodServices;
-import org.fenixedu.academic.util.MultiLanguageString;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
@@ -638,16 +638,16 @@ abstract public class A3esExportService {
         return i18n("label." + input);
     }
 
-    static public String i18n(final String code, String... args) {
+    static public String i18n(final String code, final String... args) {
         return LegalPTUtil.bundleI18N(code, args).getContent(PT);
     }
 
-    static protected MultiLanguageString createEmptyMLS() {
+    static protected LocalizedString createEmptyMLS() {
         return createMLS(null, null);
     }
 
-    static public MultiLanguageString createMLS(final String pt, final String en) {
-        MultiLanguageString result = new MultiLanguageString();
+    static public LocalizedString createMLS(final String pt, final String en) {
+        LocalizedString result = new LocalizedString();
 
         if (!StringUtils.isBlank(pt)) {
             result = result.with(PT, pt);
