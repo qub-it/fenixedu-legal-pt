@@ -143,24 +143,6 @@
 		
 					</div>
 				</div>
-	            <div class="form-group row">
-	                <div class="col-sm-2 control-label">
-	                    <spring:message code="label.A3esPeriod.fillInDateBegin" />
-	                </div>
-	
-	                <div class="col-sm-2">
-	                	<input class="form-control" type="text" bennu-date="object.fillInDateBegin" required="true"/>
-	                </div>
-	            </div>
-	            <div class="form-group row">
-	                <div class="col-sm-2 control-label">
-	                    <spring:message code="label.A3esPeriod.fillInDateEnd" />
-	                </div>
-	
-	                <div class="col-sm-2">
-	                	<input class="form-control" type="text" bennu-date="object.fillInDateEnd" required="true"/>
-	                </div>
-	            </div>
 			</div>
 			<div class="panel-footer">
 				<button type="button" class="btn btn-primary" ng-click="search()"><spring:message code="label.search" /></button> 

@@ -185,6 +185,14 @@
 							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.degreeCurricularPlan" /></th>
 							<td><c:out value="${process.planDescription}"/></td>
 						</tr>
+						<tr>
+							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.fillInDateBegin" /></th>
+							<td><joda:format value="${process.period.fillInDateBegin}" pattern="yyyy-MM-dd HH:mm" /></td>
+						</tr>
+						<tr>
+							<th scope="row" class="col-xs-2"><spring:message code="label.A3esPeriod.fillInDateEnd" /></th>
+							<td><joda:format value="${process.period.fillInDateEnd}" pattern="yyyy-MM-dd HH:mm" /></td>
+						</tr>
 					</tbody>
 				</table>
 			</form>
