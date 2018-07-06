@@ -139,9 +139,7 @@ public class A3esHarvestTeachersDataService {
     private void fillAssociatedResearchCentre(final A3esTeacherBean data, final Person person) {
         final String code = "teacherResearchCenterMembership";
         final DynamicField field = DynamicField.findField(person, code);
-        final LocalizedString i18n = field == null ? null : field.getValue(LocalizedString.class);
-        final String source = i18n == null ? null : i18n.getContent();
-        data.addField("research_center", "researchUnitFiliation", source, _100 /* _200 */);
+        data.addField("research_center", "researchUnitFiliation", field == null ? null : field.getValue(String.class), _100 /* _200 */);
     }
 
     private void fillCategory(final A3esTeacherBean data, final TeacherAuthorization auth) {
@@ -160,9 +158,7 @@ public class A3esHarvestTeachersDataService {
     static private void fillSpecialty(final A3esTeacherBean data, final Person person) {
         final String code = "teacherSpecialistTitle";
         final DynamicField field = DynamicField.findField(person, code);
-        final LocalizedString i18n = field == null ? null : field.getValue(LocalizedString.class);
-        final String source = i18n == null ? null : i18n.getContent();
-        data.addField("spec", "specialist", source, _100);
+        data.addField("spec", "specialist", field == null ? null : field.getValue(String.class), _100);
 
         data.addField("spec_area", "specialistArea", findSpecializationArea(person), _200);
     }
