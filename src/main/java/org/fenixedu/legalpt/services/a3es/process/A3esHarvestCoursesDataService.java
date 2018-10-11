@@ -39,6 +39,7 @@ import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.dml.DynamicField;
+import org.fenixedu.academic.util.CurricularPeriodLabelFormatter;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
@@ -69,7 +70,6 @@ public class A3esHarvestCoursesDataService {
 
             final CompetenceCourseInformation info = course.findCompetenceCourseInformationForExecutionPeriod(this.semester);
             fillBasics(data, info);
-            fillCourseName(data, course);
             fillAllTeachersInfo(data, courseProfessorships);
             fillLearningObjectives(data, course);
             fillCourseProgram(data, course);
@@ -87,6 +87,15 @@ public class A3esHarvestCoursesDataService {
 
         final CompetenceCourse course = info.getCompetenceCourse();
         data.addField("code", "code", course.getCode(), _UNSUPPORTED);
+
+        data.addField("1", "curricularUnitName", getCourseName(course), _100);
+
+        final String curricularPeriods = course.getAssociatedCurricularCoursesSet().stream()
+                .filter(c -> c.getDegreeCurricularPlan() == degreeCurricularPlan)
+                .flatMap(c -> c.getParentContextsByExecutionYear(year).stream())
+                .map(ctx -> CurricularPeriodLabelFormatter.getFullLabel(ctx.getCurricularPeriod(), true)).distinct()
+                .collect(Collectors.joining("; "));
+        data.addField("curricularPeriod", "curricularPeriod", curricularPeriods, _UNSUPPORTED);
 
         final String source = course.getAssociatedCurricularCoursesSet().stream()
                 .filter(c -> c.getDegreeCurricularPlan() == this.degreeCurricularPlan
@@ -110,7 +119,8 @@ public class A3esHarvestCoursesDataService {
 
                     return notes.stream();
                 }).sorted().distinct().collect(Collectors.joining(SEMICOLON));
-        data.addField("notes", "notes", source, _UNSUPPORTED);
+        data.addField("notes", "notes", StringUtils.isBlank(source) ? "-" : source, _UNSUPPORTED);
+
     }
 
     private List<CourseGroup> collectFullPath(final List<Context> input) {
@@ -124,11 +134,6 @@ public class A3esHarvestCoursesDataService {
         }
 
         return result;
-    }
-
-    private void fillCourseName(final A3esCourseBean data, final CompetenceCourse course) {
-        final String source = getCourseName(course);
-        data.addField("1", "curricularUnitName", source, _100);
     }
 
     private String getCourseName(final CompetenceCourse course) {

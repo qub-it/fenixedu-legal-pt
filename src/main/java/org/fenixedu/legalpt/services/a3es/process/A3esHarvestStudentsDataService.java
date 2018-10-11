@@ -1,5 +1,6 @@
 package org.fenixedu.legalpt.services.a3es.process;
 
+import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNLIMITED;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
@@ -16,10 +18,12 @@ import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esStudentsBean;
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 import org.fenixedu.ulisboa.specifications.domain.services.student.RegistrationDataServices;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class A3esHarvestStudentsDataService {
@@ -38,6 +42,8 @@ public class A3esHarvestStudentsDataService {
         fillStudentsEnroled(data, registrations);
         fillStudentsByGender(data, registrations);
         fillStudentsByCurricularYear(data, registrations);
+        fillStudentsByForeignNationality(data, registrations);
+        fillStudentsByBranch(data, registrations);
 //        fillDemandAmongStudents(data);
 //        fillStudentsExtraInformation(data);
 //        fillStudentsSupport(data);
@@ -104,6 +110,44 @@ public class A3esHarvestStudentsDataService {
         }
 
         return registrationsByYear.asMap();
+    }
+
+    static private void fillStudentsByForeignNationality(final A3esStudentsBean data,
+            final Collection<Registration> registrations) {
+        data.addField("studentsByForeignNationality", "studentsByForeignNationality",
+                getPercentOfStudentsByForeignNationality(registrations), _UNLIMITED);
+    }
+
+    static private String getPercentOfStudentsByForeignNationality(final Collection<Registration> registrations) {
+        final int total = registrations.size();
+        if (total == 0) {
+            return "0 %";
+        }
+
+        final long filtered = registrations.stream()
+                .filter(r -> r.getPerson().getCountry() != null && !r.getPerson().getCountry().isDefaultCountry()).count();
+        return new BigDecimal(filtered).divide(new BigDecimal(total), 2, RoundingMode.HALF_EVEN).multiply(new BigDecimal(100))
+                .stripTrailingZeros().toPlainString() + " %";
+    }
+
+    private void fillStudentsByBranch(final A3esStudentsBean data, final Collection<Registration> registrations) {
+
+        final Multimap<String, Registration> registrationsByBranch = HashMultimap.create();
+
+        registrations.forEach(r -> {
+            final String branch = r.getLastStudentCurricularPlan().getMajorBranchNames();
+            if (StringUtils.isEmpty(branch)) {
+                registrationsByBranch.put(LegalPTUtil.bundle("label.noBranch"), r);
+            } else {
+                registrationsByBranch.put(branch, r);
+            }
+        });
+
+        data.addField("studentsByBranch", "studentsByBranch",
+                registrationsByBranch.asMap().entrySet().stream().sorted((x, y) -> x.getKey().compareTo(y.getKey()))
+                        .map(e -> e.getKey() + "=" + e.getValue().size()).collect(Collectors.joining(";")),
+                _3000);
+
     }
 
 }

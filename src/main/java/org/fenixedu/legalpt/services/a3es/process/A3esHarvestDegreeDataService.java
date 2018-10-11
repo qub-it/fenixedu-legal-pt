@@ -173,6 +173,13 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillIngressionSpecificConditions(final A3esDegreeBean data) {
+
+        data.addField("testIngression_pt", "testIngression", PT, this.info.getTestIngression(), _1000);
+        data.addField("testIngression_en", "testIngression", EN, this.info.getTestIngression(), _1000);
+
+        data.addField("accessRequisites_pt", "accessRequisites", PT, this.info.getAccessRequisites(), _1000);
+        data.addField("accessRequisites_en", "accessRequisites", EN, this.info.getAccessRequisites(), _1000);
+
         final LocalizedString source = this.info.getClassifications();
         data.addField("q-II.1.11_pt", "ingressionSpecificConditions", PT, source, _1000);
         data.addField("q-II.1.11_en", "ingressionSpecificConditions", EN, source, _1000);

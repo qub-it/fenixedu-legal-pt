@@ -220,6 +220,7 @@
 						<th><spring:message code="label.currentInfo" /></th>
 						<th><spring:message code="label.code" /></th>
 						<th><spring:message code="label.name" /></th>
+						<th><spring:message code="label.curricularPeriod" /></th>
 						<th width="40%"><spring:message code="label.notes" /></th>
 						<%-- Operations Column --%>
 						<th></th>
@@ -232,6 +233,7 @@
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("1").getValue()%>"></c:out></td>
+							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularPeriod").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("notes").getValue()%>"></c:out></td>
 							<td>
 								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()"><spring:message code='label.view'/></a>
