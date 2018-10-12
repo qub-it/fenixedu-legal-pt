@@ -248,11 +248,16 @@ public class A3esHarvestCoursesDataService {
         final BibliographicReferences data = course.getBibliographicReferences(this.semester);
         if (data != null) {
             data.getBibliographicReferencesSortedByOrder().stream().forEach(r -> {
-                result.add(getApaFormat(r.getAuthors(), r.getYear(), r.getTitle(), r.getReference()));
+                result.add(getApaFormat(removeNonPrintableChars(r.getAuthors()), removeNonPrintableChars(r.getYear()),
+                        removeNonPrintableChars(r.getTitle()), removeNonPrintableChars(r.getReference())));
             });
         }
 
         return result.stream().collect(Collectors.joining(PLUS));
+    }
+
+    private String removeNonPrintableChars(String value) {
+        return value == null ? null : value.replaceAll("\\P{Print}", "");
     }
 
 }
