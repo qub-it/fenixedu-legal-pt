@@ -62,10 +62,12 @@ import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 public class A3esHarvestTeachersDataService {
 
+    private static final int _PRIME_PUBLICATIONS_MIN_YEAR = 5;
     static private final int _QUALIFICATIONS = 3;
     static private final int _PUBLICATIONS = 5;
     static private final int _ACTIVITIES = 5;
@@ -139,7 +141,8 @@ public class A3esHarvestTeachersDataService {
     private void fillAssociatedResearchCentre(final A3esTeacherBean data, final Person person) {
         final String code = "teacherResearchCenterMembership";
         final DynamicField field = DynamicField.findField(person, code);
-        data.addField("research_center", "researchUnitFiliation", field == null ? null : field.getValue(String.class), _100 /* _200 */);
+        data.addField("research_center", "researchUnitFiliation", field == null ? null : field.getValue(String.class),
+                _100 /* _200 */);
     }
 
     private void fillCategory(final A3esTeacherBean data, final TeacherAuthorization auth) {
@@ -248,7 +251,8 @@ public class A3esHarvestTeachersDataService {
         final TeacherActivity result = new TeacherActivity();
         final String id = "investigation";
 
-        for (final String source : findPublications(person, ResearchPublicationType.findByCode("AC"))) {
+        for (final String source : findPublications(person, ResearchPublicationType.findByCode("AC"),
+                new DateTime().getYear() - _PRIME_PUBLICATIONS_MIN_YEAR)) {
             if (result.getField(id).size() == _PUBLICATIONS) {
                 break;
             }
@@ -278,7 +282,7 @@ public class A3esHarvestTeachersDataService {
         final TeacherActivity result = new TeacherActivity();
         final String id = "otherpublications";
 
-        for (final String source : findPublications(person, ResearchPublicationType.findByCode("PP"))) {
+        for (final String source : findPublications(person, ResearchPublicationType.findByCode("PP"), null)) {
             if (result.getField(id).size() == _PUBLICATIONS) {
                 break;
             }
@@ -463,13 +467,16 @@ public class A3esHarvestTeachersDataService {
         return person.getAssociatedQualificationsSet().stream().filter(q -> q.getMainQualification()).findAny().orElse(null);
     }
 
-    static private Set<String> findPublications(final Person person, final Optional<ResearchPublicationType> type) {
+    static private Set<String> findPublications(final Person person, final Optional<ResearchPublicationType> type,
+            final Integer minYear) {
         final Set<String> result = new LinkedHashSet<String>();
 
-        ResearchPublication.findPublicationsSortedByRelevance(person, type.orElse(null)).forEach(r -> {
-            result.add(getApaFormat(r.getAuthors(), r.getYear() == null ? null : r.getYear().toString(),
-                    r.getTitle() == null ? null : r.getTitle().toString(), r.getPublicationData()));
-        });
+        ResearchPublication.findPublicationsSortedByRelevance(person, type.orElse(null)).stream()
+                .filter(r -> minYear == null || (r.getYear() != null && r.getYear().intValue() >= minYear.intValue()))
+                .forEach(r -> {
+                    result.add(getApaFormat(r.getAuthors(), r.getYear() == null ? null : r.getYear().toString(),
+                            r.getTitle() == null ? null : r.getTitle().toString(), r.getPublicationData()));
+                });
 
         return result;
     }
