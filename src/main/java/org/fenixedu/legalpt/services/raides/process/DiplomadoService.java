@@ -9,6 +9,7 @@ import java.util.Set;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.mobility.MobilityRegistrationInformation;
 import org.fenixedu.academic.dto.student.RegistrationConclusionBean;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
@@ -22,7 +23,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionServices;
-import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityRegistrationInformation;
 
 import com.google.common.base.Strings;
 

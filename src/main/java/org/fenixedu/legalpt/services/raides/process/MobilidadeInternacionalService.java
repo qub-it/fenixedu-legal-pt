@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.mobility.MobilityRegistrationInformation;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
@@ -17,7 +18,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMapp
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
-import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityRegistrationInformation;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;

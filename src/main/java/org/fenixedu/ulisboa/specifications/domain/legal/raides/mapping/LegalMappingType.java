@@ -19,6 +19,8 @@ import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.academic.domain.person.MaritalStatus;
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.academic.domain.student.RegistrationRegimeType;
+import org.fenixedu.academic.domain.student.mobility.MobilityActivityType;
+import org.fenixedu.academic.domain.student.mobility.MobilityProgramType;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.I18N;
@@ -31,8 +33,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.StringLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityActivityType;
-import org.fenixedu.ulisboa.specifications.domain.student.mobility.MobilityProgramType;
 import org.fenixedu.ulisboa.specifications.util.ULisboaConstants;
 
 import com.google.common.collect.Sets;
