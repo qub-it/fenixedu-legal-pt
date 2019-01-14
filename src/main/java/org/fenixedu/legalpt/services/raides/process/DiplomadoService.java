@@ -45,7 +45,9 @@ public class DiplomadoService extends RaidesService {
 
         preencheInformacaoMatricula(report, bean, institutionUnit, executionYear, registration);
 
-        bean.setAreaInvestigacao(registration.getResearchArea() != null ? registration.getResearchArea().getCode() : "");
+        if (Raides.isDoctoralDegree(registration)) {
+            bean.setAreaInvestigacao(registration.getResearchArea() != null ? registration.getResearchArea().getCode() : "");
+        }
 
         final RegistrationConclusionInformation terminalConclusionInfo =
                 terminalConclusionInformation(registration, graduatedPeriod, executionYear);
@@ -132,8 +134,6 @@ public class DiplomadoService extends RaidesService {
         bean.setRegistration(registration);
 
         preencheInformacaoMatricula(report, bean, raidesRequestParameter.getInstitution(), executionYear, registration);
-
-        bean.setAreaInvestigacao(registration.getResearchArea() != null ? registration.getResearchArea().getCode() : "");
 
         final RegistrationConclusionInformation scholarPartConclusionInfo =
                 scholarPartConclusionInformation(registration, graduatedPeriod, executionYear);
