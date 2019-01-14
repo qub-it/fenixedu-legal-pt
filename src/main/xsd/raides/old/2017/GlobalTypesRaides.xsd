@@ -59,7 +59,9 @@
 
     <xs:simpleType name="NumeroIdentificacao">
         <xs:restriction base="xs:string">
-          <xs:pattern value="^[^\s]{1,30}$" />
+            <xs:pattern value="[^\s]+"/>
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
         </xs:restriction>
     </xs:simpleType>
     
@@ -110,7 +112,7 @@
     </xs:simpleType>  
 
     <xs:simpleType name="Paises">
-        <xs:restriction base="xs:string">
+        <xs:restriction base="xs:string">            
             <xs:maxLength value="2" />
         </xs:restriction>
     </xs:simpleType>
@@ -128,11 +130,6 @@
         <xs:restriction base="xs:string">
             <xs:pattern value="[^\s]+"/>
             <xs:length value="7" />
-        </xs:restriction>
-    </xs:simpleType>
-	
-    <xs:simpleType name="AreaInvestigacao">	
-        <xs:restriction base="xs:int">
         </xs:restriction>
     </xs:simpleType>
 	
@@ -202,29 +199,10 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="FormaIngresso"> <!--alterado-->
+    <xs:simpleType name="FormaIngresso"> 
         <xs:restriction base="xs:integer">
-			<xs:enumeration value="10"/>
-			<xs:enumeration value="13"/>
-			<xs:enumeration value="15"/>
-			<xs:enumeration value="16"/>
-			<xs:enumeration value="17"/>
-			<xs:enumeration value="18"/>
-			<xs:enumeration value="19"/>
-			<xs:enumeration value="20"/>
-			<xs:enumeration value="21"/>
-			<xs:enumeration value="22"/>
-			<xs:enumeration value="23"/>
-			<xs:enumeration value="24"/>
-			<xs:enumeration value="25"/>
-			<xs:enumeration value="26"/>
-			<xs:enumeration value="29"/>
-			<xs:enumeration value="30"/>
-			<xs:enumeration value="31"/>
-			<xs:enumeration value="33"/>
-			<xs:enumeration value="34"/>
-			<xs:enumeration value="35"/>
-			<xs:enumeration value="36"/>
+            <xs:minInclusive value="10"/>
+            <xs:maxInclusive value="35"/><!--Alterado-->
         </xs:restriction>     
     </xs:simpleType>
 
@@ -258,7 +236,6 @@
 
     <xs:simpleType  name="Concelho">
         <xs:restriction base="xs:string">
-          <!--  <xs:pattern value="[^\s]+"/> -->
             <xs:maxLength value="4"/>
         </xs:restriction>
     </xs:simpleType>
@@ -266,7 +243,7 @@
     <xs:simpleType name="Escolaridade">
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="10"/>
-            <xs:maxInclusive value="31"/>
+            <xs:maxInclusive value="30"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -343,6 +320,11 @@
 
     <!--  DIPLOMADOS-->
 
+	<xs:simpleType name="AreaInvestigacao">	
+        <xs:restriction base="xs:int">
+        </xs:restriction>
+    </xs:simpleType>
+	
     <xs:simpleType  name="NumInscConclusao">
         <xs:restriction base="xs:integer">          
             <xs:totalDigits value="2"/>
