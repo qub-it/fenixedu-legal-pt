@@ -45,10 +45,6 @@ public class DiplomadoService extends RaidesService {
 
         preencheInformacaoMatricula(report, bean, institutionUnit, executionYear, registration);
 
-        if (Raides.isDoctoralDegree(registration)) {
-            bean.setAreaInvestigacao(registration.getResearchArea() != null ? registration.getResearchArea().getCode() : "");
-        }
-
         final RegistrationConclusionInformation terminalConclusionInfo =
                 terminalConclusionInformation(registration, graduatedPeriod, executionYear);
         if (terminalConclusionInfo != null && (RaidesInstance.getInstance().isReportGraduatedWithoutConclusionProcess()
@@ -83,6 +79,10 @@ public class DiplomadoService extends RaidesService {
             }
 
             bean.setDataDiploma(registrationConclusionBean.getConclusionDate().toLocalDate());
+            
+            if (Raides.isDoctoralDegree(registration)) {
+                bean.setAreaInvestigacao(registration.getResearchArea() != null ? registration.getResearchArea().getCode() : "");
+            }
 
         } else {
             bean.setConcluiGrau(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(false));
