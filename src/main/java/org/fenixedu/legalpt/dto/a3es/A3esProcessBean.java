@@ -16,6 +16,7 @@ import org.fenixedu.legalpt.services.a3es.process.A3esHarvestCoursesDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestDegreeDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestStudentsDataService;
 import org.fenixedu.legalpt.services.a3es.process.A3esHarvestTeachersDataService;
+import org.fenixedu.treasury.services.integration.FenixEDUTreasuryPlatformDependentServices;
 import org.joda.time.DateTime;
 
 public class A3esProcessBean extends A3esPeriodBean implements IBean {
@@ -118,9 +119,10 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
     }
 
     public DateTime getVersioningCreationDate() {
-        return getProcess().getVersioningCreationDate();
+        // TODO: Extract logic from treasury service to some other place
+        return FenixEDUTreasuryPlatformDependentServices.readVersioningCreationDate(getProcess());
     }
-    
+
     public String getPlanDescription() {
         return A3esProcess.getPlanDescription(getDegreeCurricularPlan());
     }
