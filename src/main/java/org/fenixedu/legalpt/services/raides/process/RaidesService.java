@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourseType;
 import org.fenixedu.academic.domain.Country;
@@ -530,9 +531,9 @@ public class RaidesService {
         }
 
         if (isPortuguesePostHighSchool(lastCompletedQualification) && Raides.Cursos.OUTRO.equals(bean.getCursoEscolarAnt())) {
-            LegalReportContext.addError("", i18n(
-                    "error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
+                            formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
     }
@@ -772,7 +773,8 @@ public class RaidesService {
         final StudentCurricularPlan studentCurricularPlan = registration.getStudentCurricularPlan(executionYear);
 
         Collection<CurricularCourse> allDissertationCurricularCourses =
-                studentCurricularPlan.getDegreeCurricularPlan().getDissertationCurricularCourses(executionYear);
+                studentCurricularPlan.getDegreeCurricularPlan().getDcpDegreeModules(CurricularCourse.class, executionYear)
+                        .stream().map(CurricularCourse.class::cast).filter(cc -> cc.isDissertation()).collect(Collectors.toSet());
 
         for (final CurricularCourse dissertation : allDissertationCurricularCourses) {
 

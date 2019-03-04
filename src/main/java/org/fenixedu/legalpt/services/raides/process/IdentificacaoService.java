@@ -168,7 +168,7 @@ public class IdentificacaoService extends RaidesService {
 
         if (bean.getDataNasc() != null) {
 
-            LocalDate december31BeginExecYear = new LocalDate(executionYear.getBeginCivilYear(), DateTimeConstants.DECEMBER, 31);
+            LocalDate december31BeginExecYear = new LocalDate(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31);
             long age = Years.yearsBetween(bean.getDataNasc(), december31BeginExecYear).getYears();
 
             if (age < Idade.MIN || age > Idade.MAX) {

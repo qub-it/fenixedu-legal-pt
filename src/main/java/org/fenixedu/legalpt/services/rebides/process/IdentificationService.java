@@ -136,7 +136,7 @@ public class IdentificationService {
     }
 
     private Boolean validateDateOfBirth(String field, LocalDate dateOfBirth) {
-        LocalDate now = new LocalDate(executionYear.getBeginCivilYear(), DateTimeConstants.DECEMBER, 31); // last day of the begin civil year
+        LocalDate now = new LocalDate(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31); // last day of the begin civil year
         Period period = new Period(dateOfBirth, now, PeriodType.yearMonthDay());
 
         if (period.getYears() < RebidesService.MIN_AGE || period.getYears() > RebidesService.MAX_AGE) {
