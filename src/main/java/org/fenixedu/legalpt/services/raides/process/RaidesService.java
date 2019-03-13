@@ -132,7 +132,7 @@ public class RaidesService {
         if (oficialDegreeMapping != null && oficialDegreeMapping.isKeyDefined(degreeCurricularPlan)) {
             bean.setCurso(oficialDegreeMapping.translate(degreeCurricularPlan));
         } else {
-            bean.setCurso(degree(registration).getMinistryCode());
+            bean.setCurso(registration.getDegree().getMinistryCode());
         }
 
         preencheRamo(report, bean, executionYear, registration, false);
@@ -242,36 +242,6 @@ public class RaidesService {
 
             return o1.getExternalId().compareTo(o2.getExternalId());
         }
-
-    }
-
-    protected Degree degree(final Registration registration) {
-        if (!registration.getDegree().isEmpty()) {
-            return registration.getDegree();
-        }
-
-        final Map<Degree, Integer> enrolmentsByDegreeCountMap = new HashMap<Degree, Integer>();
-        Collection<CurriculumLine> allCurriculumLines = Raides.getAllCurriculumLines(registration);
-
-        for (final CurriculumLine curriculumLine : allCurriculumLines) {
-            if (!curriculumLine.isEnrolment()) {
-                continue;
-            }
-
-            Degree degree = ((Enrolment) curriculumLine).getDegreeModule().getDegree();
-
-            if (!enrolmentsByDegreeCountMap.containsKey(degree)) {
-                enrolmentsByDegreeCountMap.put(degree, 0);
-            }
-
-            enrolmentsByDegreeCountMap.put(degree, enrolmentsByDegreeCountMap.get(degree) + 1);
-        }
-
-        final Map<Degree, Integer> enrolmentsByDegreeCountMapSorted =
-                new TreeMap<Degree, Integer>(new DEGREE_VALUE_COMPARATOR(enrolmentsByDegreeCountMap));
-        enrolmentsByDegreeCountMapSorted.putAll(enrolmentsByDegreeCountMap);
-
-        return enrolmentsByDegreeCountMapSorted.entrySet().iterator().next().getKey();
 
     }
 
