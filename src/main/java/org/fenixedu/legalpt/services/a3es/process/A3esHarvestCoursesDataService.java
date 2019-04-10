@@ -68,7 +68,7 @@ public class A3esHarvestCoursesDataService {
 
             final A3esCourseBean data = new A3esCourseBean();
 
-            final CompetenceCourseInformation info = course.findCompetenceCourseInformationForExecutionPeriod(this.semester);
+            final CompetenceCourseInformation info = course.findInformationMostRecentUntil(this.semester);
             fillBasics(data, info);
             fillAllTeachersInfo(data, courseProfessorships);
             fillLearningObjectives(data, course);
