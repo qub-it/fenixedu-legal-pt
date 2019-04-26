@@ -36,7 +36,8 @@ public enum A3esMappingType implements ILegalMappingType {
         @Override
         public LocalizedString getLocalizedNameKey(final String key) {
             final TeacherCategory object = (TeacherCategory) FenixFramework.getDomainObject(key);
-            return new LocalizedString(I18N.getLocale(), "[" + object.getCode() + "] ").append(object.getName());
+            return FenixFramework.isDomainObjectValid(object) ? new LocalizedString(I18N.getLocale(),
+                    "[" + object.getCode() + "] ").append(object.getName()) : new LocalizedString(I18N.getLocale(), "-----");
         }
     },
 
@@ -55,7 +56,8 @@ public enum A3esMappingType implements ILegalMappingType {
         @Override
         public LocalizedString getLocalizedNameKey(final String key) {
             final QualificationLevel object = (QualificationLevel) FenixFramework.getDomainObject(key);
-            return new LocalizedString(I18N.getLocale(), "[" + object.getCode() + "] ").append(object.getName());
+            return FenixFramework.isDomainObjectValid(object) ? new LocalizedString(I18N.getLocale(),
+                    "[" + object.getCode() + "] ").append(object.getName()) : new LocalizedString(I18N.getLocale(), "-----");
         }
     },
 
