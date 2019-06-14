@@ -6,11 +6,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourseType;
@@ -34,8 +32,10 @@ import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationServices;
+import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
+import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
-import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
@@ -49,9 +49,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.BranchMap
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestPeriodParameter;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
-import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
-import org.fenixedu.ulisboa.specifications.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;

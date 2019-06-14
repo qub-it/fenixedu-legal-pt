@@ -15,7 +15,9 @@ import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
+import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
@@ -24,8 +26,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblInscrito;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
-import org.fenixedu.ulisboa.specifications.domain.services.statute.StatuteServices;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;

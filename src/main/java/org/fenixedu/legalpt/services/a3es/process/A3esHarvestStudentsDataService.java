@@ -15,12 +15,12 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.person.Gender;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationDataServices;
+import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esStudentsBean;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
-import org.fenixedu.ulisboa.specifications.domain.services.student.RegistrationDataServices;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
