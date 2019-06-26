@@ -38,6 +38,11 @@
 	
 					// Begin here of Custom Screen business JS - code
 					
+					$scope.download = function(){
+						$('#exportForm').attr('action', '${pageContext.request.contextPath}<%= A3esProcessTeacherController.COURSESDOWNLOAD_URL %>');
+						$('#exportForm').submit();
+					}					
+					
 			    } ]);
 </script>
 
@@ -157,6 +162,9 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="panel panel-footer">
+			<button type="button" class="btn btn-primary" role="button" ng-click="download()"><spring:message code="label.export" /></button>
 		</div>
 	</div>
 

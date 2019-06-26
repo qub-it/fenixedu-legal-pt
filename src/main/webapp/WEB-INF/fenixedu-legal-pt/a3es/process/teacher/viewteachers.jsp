@@ -38,6 +38,11 @@
 	
 					// Begin here of Custom Screen business JS - code
 					
+					$scope.download = function(){
+						$('#exportForm').attr('action', '${pageContext.request.contextPath}<%= A3esProcessTeacherController.TEACHERSDOWNLOAD_URL %>');
+						$('#exportForm').submit();
+					}					
+					
 			    } ]);
 </script>
 
@@ -158,6 +163,9 @@
 				</tbody>
 			</table>
 		</div>
+		<div class="panel panel-footer">
+			<button type="button" class="btn btn-primary" role="button" ng-click="download()"><spring:message code="label.export" /></button>
+		</div>
 	</div>
 
 	<c:choose>
@@ -168,7 +176,7 @@
 			<table id="searchTable" class="table table-bordered table-hover" width="100%">
 				<thead>
 					<tr>
-						<th><spring:message code="label.firstTeacherService" /></th>
+<%-- 						<th><spring:message code="label.firstTeacherService" /></th> --%>
 						<th><spring:message code="label.name" /></th>
 						<%-- Operations Column --%>
 						<th></th>
@@ -177,7 +185,7 @@
 				<tbody>
 					<c:forEach var="iter" items="${processBean.teachersData}" varStatus="loop">
 						<tr>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("firstTeacherService").getValue()%>"></c:out></td>
+<%-- 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("firstTeacherService").getValue()%>"></c:out></td> --%>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("name").getValue()%>"/></td>
 							<td>
 								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()"><spring:message code='label.view'/></a>

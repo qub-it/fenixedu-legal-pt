@@ -1,18 +1,27 @@
 package org.fenixedu.legalpt.ui.a3es;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Teacher;
+import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.spring.portal.SpringFunctionality;
+import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
+import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.domain.a3es.A3esProcess;
 import org.fenixedu.legalpt.domain.a3es.A3esProcessType;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
+import org.fenixedu.legalpt.services.a3es.process.A3esExportService;
 import org.fenixedu.legalpt.ui.FenixeduLegalPTBaseController;
 import org.fenixedu.legalpt.ui.FenixeduLegalPTController;
+import org.fenixedu.legalpt.util.LegalPTUtil;
+import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -25,6 +34,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Sets;
+
+import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 
 @Component("org.fenixedu.legalpt.ui.a3es.process.teacher")
 @SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.searchA3esProcess", accessGroup = "#managers")
@@ -139,6 +150,41 @@ public class A3esProcessTeacherController extends FenixeduLegalPTBaseController 
         return redirect(VIEWCOURSES_URL + getA3esProcess(model).getExternalId(), model, redirectAttributes);
     }
 
+    private static final String _VIEWINFO_URI = "/viewinfo/";
+
+    @RequestMapping(value = _READ_URI + "{oid}" + _VIEWINFO_URI)
+    public String processReadToViewInfoData(@PathVariable("oid") final A3esProcess process, final Model model,
+            final RedirectAttributes redirectAttributes) {
+
+        setA3esProcess(process, model);
+        return redirect(VIEWINFO_URL + getA3esProcess(model).getExternalId(), model, redirectAttributes);
+    }
+
+    public static final String VIEWINFO_URL = CONTROLLER_URL + _VIEWINFO_URI;
+
+    @RequestMapping(value = _VIEWINFO_URI + "{oid}", method = RequestMethod.GET)
+    public String viewinfo(@PathVariable("oid") final A3esProcess process, final Model model) {
+        setA3esProcess(process, model);
+
+        final A3esProcessBean bean = new A3esProcessBean(process);
+        bean.updateInfoData();
+
+        this.setBean(bean, model);
+        return jspPage("viewinfo");
+    }
+
+    private static final String _VIEWINFOPOSTBACK_URI = "/viewinfopostback/";
+    public static final String VIEWINFOPOSTBACK_URL = CONTROLLER_URL + _VIEWINFOPOSTBACK_URI;
+
+    @RequestMapping(value = _VIEWINFOPOSTBACK_URI + "{oid}", method = RequestMethod.POST,
+            produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseEntity<String> viewinfopostback(@PathVariable("oid") final A3esProcess process,
+            @RequestParam(value = "bean", required = false) final A3esProcessBean bean, final Model model) {
+
+        this.setBean(bean, model);
+        return new ResponseEntity<String>(getBeanJson(bean), HttpStatus.OK);
+    }
+
     public static final String VIEWCOURSES_URL = CONTROLLER_URL + _VIEWCOURSES_URI;
 
     @RequestMapping(value = _VIEWCOURSES_URI + "{oid}", method = RequestMethod.GET)
@@ -162,6 +208,23 @@ public class A3esProcessTeacherController extends FenixeduLegalPTBaseController 
 
         this.setBean(bean, model);
         return new ResponseEntity<String>(getBeanJson(bean), HttpStatus.OK);
+    }
+
+    private static final String _COURSESDOWNLOAD_URI = "/coursesdownload/";
+    public static final String COURSESDOWNLOAD_URL = CONTROLLER_URL + _COURSESDOWNLOAD_URI;
+
+    @RequestMapping(value = _COURSESDOWNLOAD_URI, method = RequestMethod.POST)
+    public void coursesdownload(@RequestParam(value = "bean", required = false) final A3esProcessBean bean, final Model model,
+            final RedirectAttributes redirectAttributes, final HttpServletResponse response) throws IOException {
+
+        if (bean != null) {
+            final SpreadsheetBuilder builder = new SpreadsheetBuilder();
+            final ByteArrayOutputStream result = new ByteArrayOutputStream();
+            A3esExportService.coursesDownload(builder, bean);
+            builder.build(WorkbookExportFormat.EXCEL, result);
+            writeFile(response, getFileName(bean, LegalPTUtil.bundle("label.courseFiles")), "application/vnd.ms-excel",
+                    result.toByteArray());
+        }
     }
 
     private static final String _VIEWTEACHERS_URI = "/viewteachers/";
@@ -197,6 +260,32 @@ public class A3esProcessTeacherController extends FenixeduLegalPTBaseController 
 
         this.setBean(bean, model);
         return new ResponseEntity<String>(getBeanJson(bean), HttpStatus.OK);
+    }
+
+    private static final String _TEACHERSDOWNLOAD_URI = "/teachersdownload/";
+    public static final String TEACHERSDOWNLOAD_URL = CONTROLLER_URL + _TEACHERSDOWNLOAD_URI;
+
+    @RequestMapping(value = _TEACHERSDOWNLOAD_URI, method = RequestMethod.POST)
+    public void teachersdownload(@RequestParam(value = "bean", required = false) final A3esProcessBean bean, final Model model,
+            final RedirectAttributes redirectAttributes, final HttpServletResponse response) throws IOException {
+
+        if (bean != null) {
+            final SpreadsheetBuilder builder = new SpreadsheetBuilder();
+            final ByteArrayOutputStream result = new ByteArrayOutputStream();
+            A3esExportService.teachersDownload(builder, bean);
+            builder.build(WorkbookExportFormat.EXCEL, result);
+            writeFile(response, getFileName(bean, LegalPTUtil.bundle("label.teacherFiles")), "application/vnd.ms-excel",
+                    result.toByteArray());
+        }
+    }
+
+    static private String getFileName(final A3esProcessBean input, final String suffix) {
+        final org.fenixedu.academic.domain.organizationalStructure.Unit institutionUnit =
+                Bennu.getInstance().getInstitutionUnit();
+        final String acronym = institutionUnit.getAcronym();
+        final String title =
+                acronym + "_" + suffix.replace(" ", "-") + "_" + input.getName().replace(" ", "-").replace("/", "-") + "_";
+        return title + new DateTime().toString("yyyy-MM-dd_HH-mm-ss") + ".xls";
     }
 
 }

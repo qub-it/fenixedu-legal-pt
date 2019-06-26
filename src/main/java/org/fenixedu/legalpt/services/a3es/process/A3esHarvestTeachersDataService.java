@@ -82,19 +82,23 @@ public class A3esHarvestTeachersDataService {
         this.semester = this.year.getFirstExecutionPeriod();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
 
+        final Set<Person> coordinators =
+                this.degreeCurricularPlan.getExecutionDegreesSet().stream().filter(ed -> ed.getExecutionYear() == this.year)
+                        .flatMap(ed -> ed.getCoordinatorsListSet().stream()).map(c -> c.getPerson()).collect(Collectors.toSet());
+
         readPersonProfessorships(this.degreeCurricularPlan, this.year).entrySet().stream().map(entry -> {
             final Map<CompetenceCourse, Set<Professorship>> personProfessorships = entry.getValue();
             final Person person = entry.getKey();
 
             final Teacher teacher = bean.getTeacher();
-            if (teacher != null && person != teacher.getPerson()) {
+            if (teacher != null && person != teacher.getPerson() && !coordinators.contains(teacher.getPerson())) {
                 return null;
             }
 
             final A3esTeacherBean data = new A3esTeacherBean();
 
             final TeacherAuthorization auth = getTeacherAuthorization(person);
-            fillBasics(data, person);
+//            fillBasics(data, person);
             fillName(data, person);
             fillInstitutionName(data);
             fillSchoolName(data);

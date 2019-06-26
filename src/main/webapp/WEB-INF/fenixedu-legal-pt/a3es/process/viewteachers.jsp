@@ -217,7 +217,7 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th><spring:message code="label.firstTeacherService" /></th>
+<%-- 						<th><spring:message code="label.firstTeacherService" /></th> --%>
 						<th><spring:message code="label.name" /></th>
 						<%-- Operations Column --%>
 						<th></th>
@@ -227,7 +227,7 @@
 					<c:forEach var="iter" items="${processBean.teachersData}" varStatus="loop">
 						<tr>
 							<td><c:out value="${iter.id}" /></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("firstTeacherService").getValue()%>"></c:out></td>
+<%-- 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("firstTeacherService").getValue()%>"></c:out></td> --%>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("name").getValue()%>"/></td>
 							<td>
 								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()"><spring:message code='label.view'/></a>

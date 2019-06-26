@@ -93,6 +93,10 @@
 		<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;<a class=""
 			href="${pageContext.request.contextPath}<%=A3esProcessTeacherController.CONTROLLER_URL%>"><spring:message
 				code="label.event.back" /></a>
+				
+		&nbsp;|&nbsp; <span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp;<a class=""
+			href="${pageContext.request.contextPath}<%=A3esProcessTeacherController.READ_URL%>${process.externalId}/viewinfo/"><spring:message
+				code="label.infoFiles" /></a>
 
 		&nbsp;|&nbsp; <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;<a class=""
 			href="${pageContext.request.contextPath}<%=A3esProcessTeacherController.READ_URL%>${process.externalId}/viewteachers/"><spring:message
