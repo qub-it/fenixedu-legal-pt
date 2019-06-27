@@ -26,12 +26,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.CurricularCourse;
+import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -442,10 +444,13 @@ public class A3esHarvestTeachersDataService {
     }
 
     private String getStudyCycleByDegree(final Stream<CurricularCourse> courses) {
-        return courses
-                .map(c -> c.getDegree()).map(d -> d.getNameFor(this.year).getContent() + " ("
-                        + d.getDegreeType().getName().getContent().substring(0, 1) + ")")
-                .distinct().sorted().collect(Collectors.joining(SEMICOLON));
+        final Set<Degree> otherDegrees =
+                courses.map(c -> c.getDegree()).filter(d -> d != degreeCurricularPlan.getDegree()).collect(Collectors.toSet());
+        final Function<Degree, String> degreeFormatter =
+                d -> d.getNameFor(this.year).getContent() + " (" + d.getDegreeType().getName().getContent().substring(0, 1) + ")";
+
+        return degreeFormatter.apply(degreeCurricularPlan.getDegree()) + SEMICOLON
+                + otherDegrees.stream().map(degreeFormatter).distinct().sorted().collect(Collectors.joining(SEMICOLON));
     }
 
     static private String findSpecializationArea(final Person person) {
