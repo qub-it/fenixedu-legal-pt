@@ -93,7 +93,10 @@ public class A3esHarvestCoursesDataService {
         final CompetenceCourse course = info.getCompetenceCourse();
         data.addField("code", "code", course.getCode(), _UNSUPPORTED);
 
-        data.addField("1", "curricularUnitName", getCourseName(course), _100);
+        final LocalizedString curricularUnitName = course.getNameI18N(this.semester);
+        data.addField("curricularUnitPresentationName", "curricularUnitPresentationName", getCourseName(course), _UNSUPPORTED);
+        data.addField("1.1", "curricularUnitName", PT, curricularUnitName, _100);
+        data.addField("1.1", "curricularUnitName", EN, curricularUnitName, _100);
 
         final String curricularPeriods = course.getAssociatedCurricularCoursesSet().stream()
                 .filter(c -> c.getDegreeCurricularPlan() == degreeCurricularPlan)

@@ -190,7 +190,7 @@
 						<tr>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>"></c:out></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("1").getValue()%>"></c:out></td>
+							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularUnitPresentationName").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularPeriod").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("notes").getValue()%>"></c:out></td>
 							<td>

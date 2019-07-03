@@ -1,3 +1,4 @@
+<%@page import="java.util.Collection"%>
 <%@page import="org.fenixedu.legalpt.dto.a3es.A3esAbstractBean"%>
 <%@page import="org.fenixedu.legalpt.dto.a3es.A3esProcessBean"%>
 <%@page import="org.fenixedu.legalpt.domain.a3es.A3esProcess"%>
@@ -232,7 +233,7 @@
 							<td><c:out value="${iter.id}" /></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>"></c:out></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("1").getValue()%>"></c:out></td>
+							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularUnitPresentationName").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularPeriod").getValue()%>"></c:out></td>
 							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("notes").getValue()%>"></c:out></td>
 							<td>

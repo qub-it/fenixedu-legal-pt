@@ -276,15 +276,16 @@ abstract public class A3esExportService {
                 final Map<String, String> attachExisting = existingAttachments(attachTarget);
 
                 for (final JSONObject json : buildCoursesJson(bean)) {
-                    final String name = (String) json.get(getCoursesFieldKey("1"));
+                    final JSONObject name = (JSONObject) json.get(getCoursesFieldKey("1.1"));
+                    final String namePt = (String) name.get(PT.getLanguage());
 
-                    result.addAll(deleteAttachmentsWithSameName(attachPath, folderId, attachExisting, name));
+                    result.addAll(deleteAttachmentsWithSameName(attachPath, folderId, attachExisting, namePt));
 
                     // try to create
-                    result.add(create(attachTarget, json, name));
+                    result.add(create(attachTarget, json, namePt));
                 }
 
-                result.add(deleteAttachmentsWithInvalidName(attachTarget, attachPath, folderId));
+                // result.add(deleteAttachmentsWithInvalidName(attachTarget, attachPath, folderId));
 
                 // should be only one relevant folder
                 break;
@@ -320,7 +321,7 @@ abstract public class A3esExportService {
                     result.add(create(attachTarget, json, name));
                 }
 
-                result.add(deleteAttachmentsWithInvalidName(attachTarget, attachPath, folderId));
+                // result.add(deleteAttachmentsWithInvalidName(attachTarget, attachPath, folderId));
 
                 // should be only one relevant folder
                 break;
@@ -417,7 +418,10 @@ abstract public class A3esExportService {
 
             final JSONObject root = new JSONObject();
 
-            root.put(getCoursesFieldKey("1"), data.getFieldUnique("1").getValue());
+            final JSONObject q11 = new JSONObject();
+            data.getField("1.1").stream().forEach(i -> q11.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey("1.1"), q11);
+
             root.put(getCoursesFieldKey("2"), data.getFieldUnique("2").getValue());
             root.put(getCoursesFieldKey("3"), data.getFieldUnique("3").getValue());
 
