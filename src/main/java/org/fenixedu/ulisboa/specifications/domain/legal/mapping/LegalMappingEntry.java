@@ -2,7 +2,6 @@ package org.fenixedu.ulisboa.specifications.domain.legal.mapping;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 
 import com.google.common.base.Strings;
 
@@ -29,11 +28,11 @@ public class LegalMappingEntry extends LegalMappingEntry_Base {
 
     protected void checkRules() {
         if(Strings.isNullOrEmpty(getMappingKey())) {
-            throw new ULisboaSpecificationsDomainException("error.MappingEntry.key.must.not.be.blank.or.null");
+            throw new IllegalArgumentException("error.MappingEntry.key.must.not.be.blank.or.null");
         }
         
         if(Strings.isNullOrEmpty(getMappingValue())) {
-            throw new ULisboaSpecificationsDomainException("error.MappingEntry.value.must.not.be.blank.or.null");
+            throw new IllegalArgumentException("error.MappingEntry.value.must.not.be.blank.or.null");
         }
     }
 

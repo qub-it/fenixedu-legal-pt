@@ -13,7 +13,6 @@ import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.IntegratedMasterFirstCycleGraduatedReportOption;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
-import org.fenixedu.ulisboa.specifications.util.ULisboaConstants;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -72,14 +71,14 @@ public class RaidesInstanceBean implements IBean {
 
     private void loadDataSources() {
         this.ingressionTypesDataSource = Lists.newArrayList();
-        this.ingressionTypesDataSource.add(ULisboaConstants.SELECT_OPTION);
+        this.ingressionTypesDataSource.add(new TupleDataSourceBean("", "-"));
 
         this.ingressionTypesDataSource.addAll(Bennu.getInstance().getIngressionTypesSet().stream()
                 .map(i -> new TupleDataSourceBean(i.getExternalId(), i.getDescription().getContent()))
                 .collect(Collectors.toList()));
 
         this.registrationProtocolsDataSource = Lists.newArrayList();
-        this.registrationProtocolsDataSource.add(ULisboaConstants.SELECT_OPTION);
+        this.registrationProtocolsDataSource.add(new TupleDataSourceBean("", "-"));
 
         this.registrationProtocolsDataSource.addAll(Bennu.getInstance().getRegistrationProtocolsSet().stream()
                 .map(r -> new TupleDataSourceBean(r.getExternalId(), r.getDescription().getContent()))

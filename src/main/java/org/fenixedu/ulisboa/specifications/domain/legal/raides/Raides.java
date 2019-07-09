@@ -36,8 +36,10 @@ import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationCo
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateType;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
+import org.fenixedu.academic.util.Bundle;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.LegalReportContext;
@@ -50,7 +52,6 @@ import org.fenixedu.legalpt.services.raides.process.InscritoService;
 import org.fenixedu.legalpt.services.raides.process.MobilidadeInternacionalService;
 import org.fenixedu.legalpt.services.report.log.XlsExporterLog;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
@@ -1006,8 +1007,9 @@ public class Raides {
             for (final DistrictSubdivision iter : Bennu.getInstance().getDistrictSubdivisionsSet()) {
                 if (iter.getDistrict().equals(district) && n.toLowerCase().equals(iter.getName().toLowerCase())) {
                     if (result != null) {
-                        throw new ULisboaSpecificationsDomainException("error.DistrictSubdivision.found.duplicate",
-                                district.getCode(), name, result.toString(), iter.toString());
+                        throw new IllegalStateException(
+                                BundleUtil.getString(Bundle.APPLICATION, "error.DistrictSubdivision.found.duplicate",
+                                        district.getCode(), name, result.toString(), iter.toString()));
                     }
                     result = iter;
                 }

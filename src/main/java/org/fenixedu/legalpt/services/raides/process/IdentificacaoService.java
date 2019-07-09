@@ -49,7 +49,7 @@ public class IdentificacaoService extends RaidesService {
         }
 
         if (student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD) {
-            String digitControlPerson = IdentityCardUtils.getDigitControlFromPerson(student.getPerson());
+            String digitControlPerson = student.getPerson().getIdentificationDocumentSeriesNumber();
             bean.setCheckDigitId(digitControlPerson);
 
             if (Strings.isNullOrEmpty(bean.getCheckDigitId())

@@ -11,7 +11,6 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.LegalReportContext;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
 
 import com.google.common.collect.Sets;
@@ -115,10 +114,10 @@ public abstract class LegalReport extends LegalReport_Base {
     @Atomic
     public void delete() {
         if (this.getLegalMappingsSet().size() > 0) {
-            throw new ULisboaSpecificationsDomainException("error.report.delete.not.empty.mappings");
+            throw new IllegalStateException("error.report.delete.not.empty.mappings");
         }
         if (this.getLegalRequestsSet().size() > 0) {
-            throw new ULisboaSpecificationsDomainException("error.report.delete.not.empty.requests");
+            throw new IllegalStateException("error.report.delete.not.empty.requests");
         }
         super.setGroup(null);
         super.setBennu(null);

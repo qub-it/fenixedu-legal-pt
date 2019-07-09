@@ -1,7 +1,6 @@
 package org.fenixedu.ulisboa.specifications.domain.legal.mapping;
 
 import org.fenixedu.legalpt.dto.mapping.LegalMappingEntryBean;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 
 import pt.ist.fenixframework.Atomic;
@@ -22,7 +21,7 @@ public class DomainObjectLegalMapping extends DomainObjectLegalMapping_Base {
     public void addEntry(final DomainObject instance, final String value) {
         for (LegalMappingEntry entry : this.getLegalMappingEntriesSet()) {
             if(entry.getMappingKey().equalsIgnoreCase(instance.getExternalId())){
-                throw new ULisboaSpecificationsDomainException("error.mapping.key.already.exists");
+                throw new IllegalArgumentException("error.mapping.key.already.exists");
             }
         }
         
@@ -34,7 +33,7 @@ public class DomainObjectLegalMapping extends DomainObjectLegalMapping_Base {
     public void addEntry(final LegalMappingEntryBean bean) {
         for (LegalMappingEntry entry : this.getLegalMappingEntriesSet()) {
             if(entry.getMappingKey().equalsIgnoreCase(bean.getKeyAsDomainObject().getExternalId())){
-                throw new ULisboaSpecificationsDomainException("error.mapping.key.already.exists");
+                throw new IllegalArgumentException("error.mapping.key.already.exists");
             }
         }
         addEntry(bean.getKeyAsDomainObject(), bean.getValue());

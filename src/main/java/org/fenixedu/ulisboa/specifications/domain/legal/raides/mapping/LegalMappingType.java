@@ -33,7 +33,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.StringLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.util.ULisboaConstants;
 
 import com.google.common.collect.Sets;
 
@@ -215,7 +214,7 @@ public enum LegalMappingType implements ILegalMappingType {
         case INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT:
             return ((RegistrationProtocol) FenixFramework.getDomainObject(key)).getDescription();
         case GRADE:
-            return new LocalizedString(ULisboaConstants.DEFAULT_LOCALE, key);
+            return new LocalizedString(new Locale("PT"), key);
         case INTEGRATED_MASTER_FIRST_CYCLE_CODES:
             final Degree degree = (Degree) FenixFramework.getDomainObject(key);
             return new LocalizedString(I18N.getLocale(), "[" + degree.getCode() + "] " + degree.getPresentationName());

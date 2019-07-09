@@ -15,7 +15,6 @@ import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblDiplomado;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblIdentificacao;
@@ -266,20 +265,18 @@ public class XlsxExporter {
                             addCell(pidLabel("motherProfessionType"),
                                     personalIngressionData.getMotherProfessionType() != null ? professionTypeLocalizedName(
                                             personalIngressionData.getMotherProfessionType()) : "");
-                            addCell(pidLabel("motherProfessionalCondition"),
-                                    personalIngressionData
-                                            .getMotherProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
-                                                    personalIngressionData.getMotherProfessionalCondition()) : "");
+                            addCell(pidLabel("motherProfessionalCondition"), personalIngressionData
+                                    .getMotherProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
+                                            personalIngressionData.getMotherProfessionalCondition()) : "");
                             addCell(pidLabel("fatherSchoolLevel"),
                                     personalIngressionData.getFatherSchoolLevel() != null ? schoolLevelLocalizedName(
                                             personalIngressionData.getFatherSchoolLevel()) : "");
                             addCell(pidLabel("fatherProfessionType"),
                                     personalIngressionData.getFatherProfessionType() != null ? professionTypeLocalizedName(
                                             personalIngressionData.getFatherProfessionType()) : "");
-                            addCell(pidLabel("fatherProfessionalCondition"),
-                                    personalIngressionData
-                                            .getFatherProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
-                                                    personalIngressionData.getFatherProfessionalCondition()) : "");
+                            addCell(pidLabel("fatherProfessionalCondition"), personalIngressionData
+                                    .getFatherProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
+                                            personalIngressionData.getFatherProfessionalCondition()) : "");
                         }
 
                     }
@@ -303,13 +300,13 @@ public class XlsxExporter {
             return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, content);
         } catch (final Exception e) {
             e.printStackTrace();
-            throw new ULisboaSpecificationsDomainException(e, "error.XlsxExporter.spreadsheet.generation.failed");
+            throw new IllegalArgumentException("error.XlsxExporter.spreadsheet.generation.failed", e);
         } finally {
             try {
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new ULisboaSpecificationsDomainException(e, "error.XlsxExporter.spreadsheet.generation.failed");
+                throw new IllegalArgumentException("error.XlsxExporter.spreadsheet.generation.failed", e);
             }
         }
 

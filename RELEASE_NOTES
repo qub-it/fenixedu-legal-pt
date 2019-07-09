@@ -1,4 +1,5 @@
 - Fix: A3es courses upload fixed due to API changes regarding the curricular unit name
+- Refactor: prepare to remove ulisboa-specifications dependency
 
 2.4.1 (27-06-2019)
 - Improvement: A3es teaching services degrees sort order changed

@@ -14,7 +14,6 @@ import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequestParameters;
 import org.joda.time.LocalDate;
 
@@ -117,11 +116,11 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
 
     public void checkRules() {
         if (getDegrees().isEmpty()) {
-            throw new ULisboaSpecificationsDomainException("error.RaidesReportRequest.degrees.required");
+            throw new IllegalArgumentException("error.RaidesReportRequest.degrees.required");
         }
 
         if (getInstitution() != null) {
-            throw new ULisboaSpecificationsDomainException("error.RaidesReportRequest.unit.required");
+            throw new IllegalArgumentException("error.RaidesReportRequest.unit.required");
         }
     }
 

@@ -8,7 +8,6 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.mapping.LegalMappingBean;
 import org.fenixedu.legalpt.dto.mapping.LegalMappingEntryBean;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 
 import com.google.common.base.Strings;
@@ -105,7 +104,7 @@ public abstract class LegalMapping extends LegalMapping_Base {
             if (mapping.getType().equals(type) && mapping.getLegalReport() == report) {
 
                 if (result != null) {
-                    throw new ULisboaSpecificationsDomainException("error.Mapping.found.more.than.one.in.report");
+                    throw new IllegalArgumentException("error.Mapping.found.more.than.one.in.report");
                 }
 
                 result = mapping;
@@ -118,7 +117,7 @@ public abstract class LegalMapping extends LegalMapping_Base {
     @Atomic
     public void delete() {
         if (this.getLegalMappingEntriesSet().size() > 0) {
-            throw new ULisboaSpecificationsDomainException("error.mapping.delete.not.empty.entries");
+            throw new IllegalStateException("error.mapping.delete.not.empty.entries");
         }
         super.setLegalReport(null);
         super.setBennu(null);
@@ -150,11 +149,11 @@ public abstract class LegalMapping extends LegalMapping_Base {
 
     private void checkRules() {
         if (Strings.isNullOrEmpty(getType())) {
-            throw new ULisboaSpecificationsDomainException("error.Mapping.type.required");
+            throw new IllegalArgumentException("error.Mapping.type.required");
         }
 
         if (getLegalReport() == null) {
-            throw new ULisboaSpecificationsDomainException("error.Mapping.report.required");
+            throw new IllegalArgumentException("error.Mapping.report.required");
         }
 
         find(getLegalReport(), getType());

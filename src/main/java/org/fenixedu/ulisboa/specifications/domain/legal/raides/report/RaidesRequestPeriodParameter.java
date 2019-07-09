@@ -6,7 +6,6 @@ import java.util.Comparator;
 
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.bennu.IBean;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
@@ -67,16 +66,16 @@ public class RaidesRequestPeriodParameter implements Serializable, IBean {
 
     private void checkRules() {
         if (getAcademicPeriod() == null) {
-            throw new ULisboaSpecificationsDomainException("error.RaidesReportPeriodInput.academicPeriod.required");
+            throw new IllegalArgumentException("error.RaidesReportPeriodInput.academicPeriod.required");
         }
         if (getBegin() == null) {
-            throw new ULisboaSpecificationsDomainException("error.RaidesReportPeriodInput.begin.required");
+            throw new IllegalArgumentException("error.RaidesReportPeriodInput.begin.required");
         }
         if (getEnd() == null) {
-            throw new ULisboaSpecificationsDomainException("error.RaidesReportPeriodInput.end.required");
+            throw new IllegalArgumentException("error.RaidesReportPeriodInput.end.required");
         }
         if (getPeriodInputType() == null) {
-            throw new ULisboaSpecificationsDomainException("error.RaidesReportPeriodInput.periodInputType.required");
+            throw new IllegalArgumentException("error.RaidesReportPeriodInput.periodInputType.required");
         }
     }
 

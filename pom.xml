@@ -134,8 +134,14 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>21.2.2</version>
+			<version>21.2.7</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.fenixedu</groupId>
+			<artifactId>fenixedu-academic-extensions</artifactId>
+			<version>3.1.2</version>
+		</dependency>		
         
         <!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
 		<dependency>
@@ -149,11 +155,19 @@
             <artifactId>fenixedu-commons</artifactId>
             <version>1.1.2</version>
         </dependency>
-        
+                
+        <!-- Need for jaxb plugin execution due to error:  not allowed due to restriction set by the accessExternalSchema property. -->
         <dependency>
+			<groupId>org.fenixedu</groupId>
+			<artifactId>fenixedu-academic-treasury</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+		
+		<!-- TO REMOVE after cleaning dependency in IdentificacaoService--> 
+		<dependency>
         	<groupId>org.fenixedu.ulisboa</groupId>
 			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>3.0.0</version>
+			<version>4.0.7</version>
         </dependency>
 		
 	</dependencies>

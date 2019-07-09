@@ -6,7 +6,6 @@ import java.util.Comparator;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Predicate;
@@ -41,11 +40,11 @@ public class LegalReportRequest extends LegalReportRequest_Base {
     }
 
     private void checkRules() {
-        if(getRequestor() == null) { throw new ULisboaSpecificationsDomainException("error.ReportRequest.requestor.required"); }
+        if(getRequestor() == null) { throw new IllegalArgumentException("error.ReportRequest.requestor.required"); }
         
-        if(getWhenRequested() == null) { throw new ULisboaSpecificationsDomainException("error.ReportRequest.whenRequested.required"); }
+        if(getWhenRequested() == null) { throw new IllegalArgumentException("error.ReportRequest.whenRequested.required"); }
         
-        if(getLegalReport() == null) { throw new ULisboaSpecificationsDomainException("error.ReportRequest.report.required"); }
+        if(getLegalReport() == null) { throw new IllegalArgumentException("error.ReportRequest.report.required"); }
     }
 
     public boolean isPending() {
@@ -92,7 +91,7 @@ public class LegalReportRequest extends LegalReportRequest_Base {
     }
 
     public String getParameters() {
-        throw new ULisboaSpecificationsDomainException("error.ReportRequest.report.use.method.getParametersAs");
+        throw new IllegalArgumentException("error.ReportRequest.report.use.method.getParametersAs");
     }
 
     public <T extends LegalReportRequestParameters> T getParametersAs(Class<T> type) {

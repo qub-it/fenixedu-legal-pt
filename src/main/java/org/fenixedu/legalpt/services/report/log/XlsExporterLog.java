@@ -15,7 +15,6 @@ import org.fenixedu.legalpt.domain.LegalReportContext.LegalReportEntryData;
 import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntry;
 import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntryType;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.exceptions.ULisboaSpecificationsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
@@ -79,13 +78,13 @@ public class XlsExporterLog {
             return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, fileName, content);
         } catch (final Exception e) {
             e.printStackTrace();
-            throw new ULisboaSpecificationsDomainException(e, "error.XlsxExporter.spreadsheet.generation.failed");
+            throw new RuntimeException("error.XlsxExporter.spreadsheet.generation.failed", e);
         } finally {
             try {
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new ULisboaSpecificationsDomainException(e, "error.XlsxExporter.spreadsheet.generation.failed");
+                throw new RuntimeException("error.XlsxExporter.spreadsheet.generation.failed", e);
             }
         }
     }
