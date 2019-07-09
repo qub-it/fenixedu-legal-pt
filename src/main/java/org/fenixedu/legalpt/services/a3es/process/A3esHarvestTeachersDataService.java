@@ -169,7 +169,11 @@ public class A3esHarvestTeachersDataService {
         final DynamicField field = DynamicField.findField(person, code);
         data.addField("spec", "specialist", field == null ? null : field.getValue(String.class), _100);
 
-        data.addField("spec_area", "specialistArea", findSpecializationArea(person), _200);
+        final DynamicField specialistAreaField = DynamicField.findField(person, "teacherSpecialistArea");
+        data.addField("spec_area", "specialistArea",
+                specialistAreaField == null ? null : specialistAreaField.getValue(String.class), _200);
+
+//        data.addField("spec_area", "specialistArea", findSpecializationArea(person), _200);
     }
 
     static private void fillTimeAllocation(final A3esTeacherBean data, final TeacherAuthorization auth) {
