@@ -443,13 +443,18 @@ public class A3esHarvestTeachersDataService {
         return studyCycle;
     }
 
-    private String getStudyCycleByDegree(final Stream<CurricularCourse> courses) {
-        final Set<Degree> otherDegrees =
-                courses.map(c -> c.getDegree()).filter(d -> d != degreeCurricularPlan.getDegree()).collect(Collectors.toSet());
+    private String getStudyCycleByDegree(final Stream<CurricularCourse> coursesStream) {
+
+        final Set<CurricularCourse> courses = coursesStream.collect(Collectors.toSet());
+
+        boolean containsDcp = courses.stream().anyMatch(c -> c.getDegreeCurricularPlan() == degreeCurricularPlan);
+
+        final Set<Degree> otherDegrees = courses.stream().map(c -> c.getDegree())
+                .filter(d -> d != degreeCurricularPlan.getDegree()).collect(Collectors.toSet());
         final Function<Degree, String> degreeFormatter =
                 d -> d.getNameFor(this.year).getContent() + " (" + d.getDegreeType().getName().getContent().substring(0, 1) + ")";
 
-        return degreeFormatter.apply(degreeCurricularPlan.getDegree()) + SEMICOLON
+        return (containsDcp ? degreeFormatter.apply(degreeCurricularPlan.getDegree()) + SEMICOLON : "")
                 + otherDegrees.stream().map(degreeFormatter).distinct().sorted().collect(Collectors.joining(SEMICOLON));
     }
 
