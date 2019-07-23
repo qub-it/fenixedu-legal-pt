@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>21.2.7</version>
+			<version>21.4.0</version>
 		</dependency>
 		
 		<dependency>
@@ -162,14 +162,7 @@
 			<artifactId>fenixedu-academic-treasury</artifactId>
 			<version>2.3.2</version>
 		</dependency>
-		
-		<!-- TO REMOVE after cleaning dependency in IdentificacaoService--> 
-		<dependency>
-        	<groupId>org.fenixedu.ulisboa</groupId>
-			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>4.0.7</version>
-        </dependency>
-		
+				
 	</dependencies>
 
 	<repositories>

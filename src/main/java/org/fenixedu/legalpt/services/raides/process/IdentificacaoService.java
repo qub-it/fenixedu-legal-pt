@@ -2,6 +2,8 @@ package org.fenixedu.legalpt.services.raides.process;
 
 import static org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.formatArgs;
 
+import java.util.function.Function;
+
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.SchoolLevelType;
@@ -17,7 +19,6 @@ import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.Idade;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblIdentificacao;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.util.IdentityCardUtils;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
@@ -56,8 +57,7 @@ public class IdentificacaoService extends RaidesService {
                     && student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD) {
                 // Try to generate digitControl from identity card
                 try {
-                    int digitControl =
-                            IdentityCardUtils.generateBilheteIdentidadeDigitControl(student.getPerson().getDocumentIdNumber());
+                    int digitControl = generatePortugueseIdentityCardControlDigit(student.getPerson().getDocumentIdNumber());
                     bean.setCheckDigitId(String.valueOf(digitControl));
 
                     LegalReportContext.addWarn("",
@@ -80,7 +80,7 @@ public class IdentificacaoService extends RaidesService {
         }
 
         preencheNacionalidade(student, bean);
-        
+
         final Country countryOfResidence = Raides.countryOfResidence(registration, executionYear);
         if (countryOfResidence != null) {
             bean.setResidePais(countryOfResidence.getCode());
@@ -95,39 +95,61 @@ public class IdentificacaoService extends RaidesService {
         return bean;
     }
 
+    private static int generatePortugueseIdentityCardControlDigit(final String idDocumentNumber) throws NumberFormatException {
+
+        //force number validation
+        Integer.valueOf(idDocumentNumber);
+
+        int mult = 2;
+        int controlSum = 0;
+        for (int i = 0; i < idDocumentNumber.length(); i++) {
+            controlSum += Integer.valueOf(idDocumentNumber.charAt(idDocumentNumber.length() - i - 1)) * mult;
+
+            mult++;
+        }
+
+        int result = controlSum % 11;
+
+        int checkDigit;
+
+        if (result < 2) {
+            checkDigit = 0;
+        } else {
+            checkDigit = 11 - result;
+        }
+
+        return checkDigit;
+    }
+
     private void preencheNacionalidade(final Student student, final TblIdentificacao bean) {
         final Country firstNationality = student.getPerson().getCountry();
-        Country secondNationality = null;
-        
-        if(student.getPerson().getPersonUlisboaSpecifications() != null) {
-            secondNationality = student.getPerson().getPersonUlisboaSpecifications().getSecondNationality();
+        Country secondNationality = student.getPerson().getSecondNationality();
+
+        if (firstNationality == null && secondNationality == null) {
+            return;
         }
-        
-        if(firstNationality == null && secondNationality == null) {
-           return; 
-        }
-        
-        if(firstNationality != null && secondNationality == null) {
+
+        if (firstNationality != null && secondNationality == null) {
             bean.setNacionalidade(firstNationality.getCode());
             bean.setOutroPaisDeNacionalidade(null);
             return;
-        } 
+        }
 
-        if(firstNationality == null && secondNationality != null) {
+        if (firstNationality == null && secondNationality != null) {
             bean.setNacionalidade(secondNationality.getCode());
             bean.setOutroPaisDeNacionalidade(null);
             return;
         }
-        
+
         // The two nationalities are not null
 
-        if(firstNationality != null && firstNationality == secondNationality) {
+        if (firstNationality != null && firstNationality == secondNationality) {
             bean.setNacionalidade(firstNationality.getCode());
             bean.setOutroPaisDeNacionalidade(null);
             return;
-        } 
-        
-        if(secondNationality.isDefaultCountry()) {
+        }
+
+        if (secondNationality.isDefaultCountry()) {
             bean.setNacionalidade(secondNationality.getCode());
             bean.setOutroPaisDeNacionalidade(firstNationality.getCode());
         } else {
@@ -136,15 +158,12 @@ public class IdentificacaoService extends RaidesService {
         }
     }
 
-    protected String countryHighSchool(final Registration registration) {
+    public static Function<Registration, String> COUNTRY_OF_HIGH_SCHOOL_PROVIDER = registration -> {
+
         final PrecedentDegreeInformation pid = registration.getStudentCandidacy().getPrecedentDegreeInformation();
 
         if (pid != null && pid.getSchoolLevel() == SchoolLevelType.HIGH_SCHOOL_OR_EQUIVALENT && pid.getCountry() != null) {
             return pid.getCountry().getCode();
-        }
-
-        if (registration.getPerson().getCountryHighSchool() != null) {
-            return registration.getPerson().getCountryHighSchool().getCode();
         }
 
         if (pid.getCountryHighSchool() != null) {
@@ -156,6 +175,14 @@ public class IdentificacaoService extends RaidesService {
         }
 
         return null;
+    };
+
+    static public void setCountryOfHighSchoolProvider(final Function<Registration, String> provider) {
+        COUNTRY_OF_HIGH_SCHOOL_PROVIDER = provider;
+    }
+
+    protected String countryHighSchool(final Registration registration) {
+        return COUNTRY_OF_HIGH_SCHOOL_PROVIDER.apply(registration);
     }
 
     protected void validaDataNascimento(final TblIdentificacao bean, final Unit institution, final Student student,
@@ -168,7 +195,8 @@ public class IdentificacaoService extends RaidesService {
 
         if (bean.getDataNasc() != null) {
 
-            LocalDate december31BeginExecYear = new LocalDate(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31);
+            LocalDate december31BeginExecYear =
+                    new LocalDate(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31);
             long age = Years.yearsBetween(bean.getDataNasc(), december31BeginExecYear).getYears();
 
             if (age < Idade.MIN || age > Idade.MAX) {
