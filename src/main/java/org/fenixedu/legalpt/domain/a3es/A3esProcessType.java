@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.services.a3es.process.A3esExportService;
 import org.fenixedu.legalpt.services.a3es.process.A3esExportServiceForEvaluationOfActiveProgram;
+import org.fenixedu.legalpt.services.a3es.process.A3esExportServiceForNewProgram;
 import org.fenixedu.legalpt.services.a3es.process.A3esExportServiceForRenewalOfUnalignedProgram;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 
@@ -16,7 +17,7 @@ public enum A3esProcessType {
 
         @Override
         public A3esExportService getExportService() {
-            return null;
+            return new A3esExportServiceForNewProgram();
         }
     },
 

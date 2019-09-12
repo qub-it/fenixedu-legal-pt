@@ -58,6 +58,7 @@ import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
+import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.settings.LegalSettings;
@@ -141,14 +142,17 @@ abstract public class A3esExportService {
             final JSONObject process = (JSONObject) processes.iterator().next();
 
             final String processName = (String) process.get(API_NAME);
-            if (!bean.getName().equals(processName)) {
+
+            //TODO: replace bean.getIdentifier with bean.getName when the name prefix is removed
+            if (!bean.getIdentifier().equals(processName)) {
                 throw new LegalPTDomainException("error.A3es.process.unauthorized", processName);
             }
 
-            final String processPlan = (String) process.get("study_cycle");
-            if (!A3esProcess.getPlanDescription(bean.getDegreeCurricularPlan()).contains(processPlan)) {
-                throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
-            }
+            //TODO: uncomment this exception
+//            final String processPlan = (String) process.get("study_cycle");
+//            if (!A3esProcess.getPlanDescription(bean.getDegreeCurricularPlan()).contains(processPlan)) {
+//                throw new LegalPTDomainException("error.A3es.process.different.plan", processPlan);
+//            }
 
             final String processState = (String) process.get("state");
             final String processActions = (String) process.get("actions");
@@ -236,7 +240,7 @@ abstract public class A3esExportService {
     }
 
     private JSONArray getCourseFolders(final WebTarget target) {
-        return (JSONArray) invokeToArray(target.path(API_FOLDER).queryParam(FORM_ID, this.formId));
+        return invokeToArray(target.path(API_FOLDER).queryParam(FORM_ID, this.formId));
     }
 
     abstract protected String getTeachersFolderSectionName();
@@ -460,31 +464,38 @@ abstract public class A3esExportService {
             bean.updateTeachersData();
         }
 
-        bean.getTeachersData().forEach(data -> {
+        //TODO: replace enhanced for with the previous lambda for
+
+//        bean.getTeachersData().forEach(data -> {
+
+        for (A3esTeacherBean data : bean.getTeachersData()) {
 
             if (!bean.getSelectedIds().isEmpty() && !bean.getSelectedIds().contains(data.getFormattedId())) {
-                return;
+                break;
             }
 
             final JSONObject root = new JSONObject();
 
             root.put("q-cf-name", data.getFieldUnique(API_NAME).getValue());
-            root.put("q-cf-ies", data.getFieldUnique("ies").getValue());
-            root.put("q-cf-uo", data.getFieldUnique("uo").getValue());
-            root.put("q-cf-cat", data.getFieldUnique("cat").getValue());
-            root.put("q-cf-time", data.getFieldUnique("time").getValue());
+            //        root.put("q-cf-ies", data.getFieldUnique("ies").getValue());
+            //        root.put("q-cf-uo", data.getFieldUnique("uo").getValue());
+            //        root.put("q-cf-cat", data.getFieldUnique("cat").getValue());
+            //        root.put("q-cf-time", data.getFieldUnique("time").getValue());
 
             final JSONObject file = new JSONObject();
+            final AttainedDegree attainedDegree = data.getAttainedDegree();
+
             file.put(API_NAME, data.getFieldUnique(API_NAME).getValue());
             file.put("ies", data.getFieldUnique("ies").getValue());
             file.put("uo", data.getFieldUnique("uo").getValue());
             file.put("research_center", data.getFieldUnique("research_center").getValue());
             file.put("cat", data.getFieldUnique("cat").getValue());
+
+            file.put("deg", attainedDegree.getFieldUnique("deg").getValue());
+
             file.put("spec", data.getFieldUnique("spec").getValue());
             file.put("spec_area", data.getFieldUnique("spec_area").getValue());
 
-            final AttainedDegree attainedDegree = data.getAttainedDegree();
-            file.put("deg", attainedDegree.getFieldUnique("deg").getValue());
             file.put("degarea", attainedDegree.getFieldUnique("degarea").getValue());
             file.put("ano_grau", attainedDegree.getFieldUnique("ano_grau").getValue());
             file.put("instituicao_conferente", attainedDegree.getFieldUnique("instituicao_conferente").getValue());
@@ -504,12 +515,16 @@ abstract public class A3esExportService {
 
                 academicArray.add(academic);
             });
+
             file.put("form-academic", academicArray);
 
             file.put("form-investigation", getJsonActivitiesArray(data.getPrimePublishedWork(), "investigation"));
+
             file.put("form-highlevelactivities",
                     getJsonActivitiesArray(data.getPrimeProfessionalActivities(), "highlevelactivities"));
+
             file.put("form-otherpublications", getJsonActivitiesArray(data.getOtherPublishedWork(), "otherpublications"));
+
             file.put("form-professional", getJsonActivitiesArray(data.getOtherProfessionalActivities(), "profession"));
 
             final JSONArray insideLectures = new JSONArray();
@@ -518,17 +533,43 @@ abstract public class A3esExportService {
                 final JSONObject lecture = new JSONObject();
 
                 lecture.put("curricularUnit", x.getFieldUnique("curricularUnit").getValue());
-                lecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
+                //          lecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
                 lecture.put("type", x.getFieldUnique("type").getValue());
                 lecture.put("hoursPerWeek", x.getFieldUnique("hoursPerWeek").getValue());
 
                 insideLectures.add(lecture);
             });
+
             file.put("form-unit", insideLectures);
+
+            final JSONArray insideOtherLectures = new JSONArray();
+            /*     data.getTeachingServices().forEach(x -> {
+            
+                final JSONObject otherLecture = new JSONObject();
+            
+                otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
+                otherLecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
+                otherLecture.put("contactHours", x.getFieldUnique("contactHours").getValue());
+            
+                insideOtherLectures.add(otherLecture);
+            });*/
+
+            for (TeachingService x : data.getTeachingServices()) {
+                final JSONObject otherLecture = new JSONObject();
+                //           otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
+                otherLecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
+//                otherLecture.put("contactHours", x.getFieldUnique("contactHours").getValue());
+                insideOtherLectures.add(otherLecture);
+            }
+
+            file.put("form-otherunit", insideOtherLectures);
+
             root.put("q-cf-cfile", file);
 
             result.add(root);
-        });
+        }
+
+        //);
 
         return result;
     }
