@@ -470,103 +470,106 @@ abstract public class A3esExportService {
 
         for (A3esTeacherBean data : bean.getTeachersData()) {
 
-            if (!bean.getSelectedIds().isEmpty() && !bean.getSelectedIds().contains(data.getFormattedId())) {
-                break;
-            }
+//            if (!bean.getSelectedIds().isEmpty() && !bean.getSelectedIds().contains(data.getFormattedId())) {
+//                return;
+//            }
 
-            final JSONObject root = new JSONObject();
+            if (!bean.getSelectedIds().isEmpty() && bean.getSelectedIds().contains(data.getFormattedId())) {
 
-            root.put("q-cf-name", data.getFieldUnique(API_NAME).getValue());
-            //        root.put("q-cf-ies", data.getFieldUnique("ies").getValue());
-            //        root.put("q-cf-uo", data.getFieldUnique("uo").getValue());
-            //        root.put("q-cf-cat", data.getFieldUnique("cat").getValue());
-            //        root.put("q-cf-time", data.getFieldUnique("time").getValue());
+                final JSONObject root = new JSONObject();
 
-            final JSONObject file = new JSONObject();
-            final AttainedDegree attainedDegree = data.getAttainedDegree();
+                root.put("q-cf-name", data.getFieldUnique(API_NAME).getValue());
+                //        root.put("q-cf-ies", data.getFieldUnique("ies").getValue());
+                //        root.put("q-cf-uo", data.getFieldUnique("uo").getValue());
+                //        root.put("q-cf-cat", data.getFieldUnique("cat").getValue());
+                //        root.put("q-cf-time", data.getFieldUnique("time").getValue());
 
-            file.put(API_NAME, data.getFieldUnique(API_NAME).getValue());
-            file.put("ies", data.getFieldUnique("ies").getValue());
-            file.put("uo", data.getFieldUnique("uo").getValue());
-            file.put("research_center", data.getFieldUnique("research_center").getValue());
-            file.put("cat", data.getFieldUnique("cat").getValue());
+                final JSONObject file = new JSONObject();
+                final AttainedDegree attainedDegree = data.getAttainedDegree();
 
-            file.put("deg", attainedDegree.getFieldUnique("deg").getValue());
+                file.put(API_NAME, data.getFieldUnique(API_NAME).getValue());
+                file.put("ies", data.getFieldUnique("ies").getValue());
+                file.put("uo", data.getFieldUnique("uo").getValue());
+                file.put("research_center", data.getFieldUnique("research_center").getValue());
+                file.put("cat", data.getFieldUnique("cat").getValue());
 
-            file.put("spec", data.getFieldUnique("spec").getValue());
-            file.put("spec_area", data.getFieldUnique("spec_area").getValue());
+                file.put("deg", attainedDegree.getFieldUnique("deg").getValue());
 
-            file.put("degarea", attainedDegree.getFieldUnique("degarea").getValue());
-            file.put("ano_grau", attainedDegree.getFieldUnique("ano_grau").getValue());
-            file.put("instituicao_conferente", attainedDegree.getFieldUnique("instituicao_conferente").getValue());
+                file.put("spec", data.getFieldUnique("spec").getValue());
+                file.put("spec_area", data.getFieldUnique("spec_area").getValue());
 
-            file.put("regime", data.getFieldUnique("time").getValue());
+                file.put("degarea", attainedDegree.getFieldUnique("degarea").getValue());
+                file.put("ano_grau", attainedDegree.getFieldUnique("ano_grau").getValue());
+                file.put("instituicao_conferente", attainedDegree.getFieldUnique("instituicao_conferente").getValue());
 
-            final JSONArray academicArray = new JSONArray();
-            data.getOtherAttainedDegrees().forEach(x -> {
+                file.put("regime", data.getFieldUnique("time").getValue());
 
-                final JSONObject academic = new JSONObject();
+                final JSONArray academicArray = new JSONArray();
+                data.getOtherAttainedDegrees().forEach(x -> {
 
-                academic.put("year", x.getFieldUnique("year").getValue());
-                academic.put("degree", x.getFieldUnique("degree").getValue());
-                academic.put("area", x.getFieldUnique("area").getValue());
-                academic.put("ies", x.getFieldUnique("ies").getValue());
-                academic.put("rank", x.getFieldUnique("rank").getValue());
+                    final JSONObject academic = new JSONObject();
 
-                academicArray.add(academic);
-            });
+                    academic.put("year", x.getFieldUnique("year").getValue());
+                    academic.put("degree", x.getFieldUnique("degree").getValue());
+                    academic.put("area", x.getFieldUnique("area").getValue());
+                    academic.put("ies", x.getFieldUnique("ies").getValue());
+                    academic.put("rank", x.getFieldUnique("rank").getValue());
 
-            file.put("form-academic", academicArray);
+                    academicArray.add(academic);
+                });
 
-            file.put("form-investigation", getJsonActivitiesArray(data.getPrimePublishedWork(), "investigation"));
+                file.put("form-academic", academicArray);
 
-            file.put("form-highlevelactivities",
-                    getJsonActivitiesArray(data.getPrimeProfessionalActivities(), "highlevelactivities"));
+                file.put("form-investigation", getJsonActivitiesArray(data.getPrimePublishedWork(), "investigation"));
 
-            file.put("form-otherpublications", getJsonActivitiesArray(data.getOtherPublishedWork(), "otherpublications"));
+                file.put("form-highlevelactivities",
+                        getJsonActivitiesArray(data.getPrimeProfessionalActivities(), "highlevelactivities"));
 
-            file.put("form-professional", getJsonActivitiesArray(data.getOtherProfessionalActivities(), "profession"));
+                file.put("form-otherpublications", getJsonActivitiesArray(data.getOtherPublishedWork(), "otherpublications"));
 
-            final JSONArray insideLectures = new JSONArray();
-            data.getTeachingServices().forEach(x -> {
+                file.put("form-professional", getJsonActivitiesArray(data.getOtherProfessionalActivities(), "profession"));
 
-                final JSONObject lecture = new JSONObject();
+                final JSONArray insideLectures = new JSONArray();
+                data.getTeachingServices().forEach(x -> {
 
-                lecture.put("curricularUnit", x.getFieldUnique("curricularUnit").getValue());
-                //          lecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
-                lecture.put("type", x.getFieldUnique("type").getValue());
-                lecture.put("hoursPerWeek", x.getFieldUnique("hoursPerWeek").getValue());
+                    final JSONObject lecture = new JSONObject();
 
-                insideLectures.add(lecture);
-            });
+                    lecture.put("curricularUnit", x.getFieldUnique("curricularUnit").getValue());
+                    //          lecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
+                    lecture.put("type", x.getFieldUnique("type").getValue());
+                    lecture.put("hoursPerWeek", x.getFieldUnique("hoursPerWeek").getValue());
 
-            file.put("form-unit", insideLectures);
+                    insideLectures.add(lecture);
+                });
 
-            final JSONArray insideOtherLectures = new JSONArray();
-            /*     data.getTeachingServices().forEach(x -> {
-            
+                file.put("form-unit", insideLectures);
+
+                final JSONArray insideOtherLectures = new JSONArray();
+                /*     data.getTeachingServices().forEach(x -> {
+                
                 final JSONObject otherLecture = new JSONObject();
-            
+                
                 otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
                 otherLecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
                 otherLecture.put("contactHours", x.getFieldUnique("contactHours").getValue());
-            
+                
                 insideOtherLectures.add(otherLecture);
-            });*/
+                });*/
 
-            for (TeachingService x : data.getTeachingServices()) {
-                final JSONObject otherLecture = new JSONObject();
-                //           otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
-                otherLecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
+                for (TeachingService x : data.getTeachingServices()) {
+                    final JSONObject otherLecture = new JSONObject();
+                    //           otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
+                    otherLecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
 //                otherLecture.put("contactHours", x.getFieldUnique("contactHours").getValue());
-                insideOtherLectures.add(otherLecture);
+                    insideOtherLectures.add(otherLecture);
+                }
+
+                file.put("form-otherunit", insideOtherLectures);
+
+                root.put("q-cf-cfile", file);
+
+                result.add(root);
             }
-
-            file.put("form-otherunit", insideOtherLectures);
-
-            root.put("q-cf-cfile", file);
-
-            result.add(root);
         }
 
         //);
