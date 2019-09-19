@@ -83,7 +83,7 @@ abstract public class A3esExportService {
     static protected int _100 = 100;
     static protected int _200 = 200;
     static protected int _360 = 360;
-    static protected int _500 = 200;
+    static protected int _500 = 500;
     static protected int _1000 = 1000;
     static protected int _3000 = 3000;
     static protected String SEMICOLON = "; ";
