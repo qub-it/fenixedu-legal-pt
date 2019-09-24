@@ -57,6 +57,7 @@ import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
+import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.OtherTeachingService;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
 import org.fenixedu.legalpt.util.LegalPTUtil;
@@ -556,11 +557,11 @@ abstract public class A3esExportService {
                 insideOtherLectures.add(otherLecture);
                 });*/
 
-                for (TeachingService x : data.getTeachingServices()) {
+                for (OtherTeachingService x : data.getOtherTeachingServices()) {
                     final JSONObject otherLecture = new JSONObject();
-                    //           otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
+                    otherLecture.put("curricularUnit", x.getFieldUnique("otherCurricularUnit").getValue());
                     otherLecture.put("studyCycle", x.getFieldUnique("studyCycle").getValue());
-//                otherLecture.put("contactHours", x.getFieldUnique("contactHours").getValue());
+                    otherLecture.put("contactHours", x.getFieldUnique("contactHours").getValue());
                     insideOtherLectures.add(otherLecture);
                 }
 
