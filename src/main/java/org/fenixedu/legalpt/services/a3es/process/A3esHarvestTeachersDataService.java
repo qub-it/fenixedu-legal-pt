@@ -147,8 +147,7 @@ public class A3esHarvestTeachersDataService {
     private void fillAssociatedResearchCentre(final A3esTeacherBean data, final Person person) {
         final String code = "teacherResearchCenterMembership";
         final DynamicField field = DynamicField.findField(person, code);
-        data.addField("research_center", "researchUnitFiliation", field == null ? null : field.getValue(String.class),
-                _100 /* _200 */);
+        data.addField("research_center", "researchUnitFiliation", field == null ? null : field.getValue(String.class), _200);
     }
 
     private void fillCategory(final A3esTeacherBean data, final TeacherAuthorization auth) {
