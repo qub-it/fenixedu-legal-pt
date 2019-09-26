@@ -134,13 +134,13 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>22.0.0</version>
+			<version>25.1.0</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-extensions</artifactId>
-			<version>3.2.0</version>
+			<version>3.6.0</version>
 		</dependency>		
         
         <!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
