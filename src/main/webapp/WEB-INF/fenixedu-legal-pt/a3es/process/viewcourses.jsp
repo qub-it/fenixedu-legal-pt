@@ -231,11 +231,13 @@
 					<c:forEach var="iter" items="${processBean.coursesData}" varStatus="loop">
 						<tr>
 							<td><c:out value="${iter.id}" /></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>"></c:out></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>"></c:out></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularUnitPresentationName").getValue()%>"></c:out></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularPeriod").getValue()%>"></c:out></td>
-							<td><c:out value="<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("notes").getValue()%>"></c:out></td>
+							
+							<!-- TODO: repalce ' ' with " " -->
+							<td><c:out value='<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("currentInfo").getValue()%>'></c:out></td>
+							<td><c:out value='<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("code").getValue()%>'></c:out></td>
+							<td><c:out value='<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularUnitPresentationName").getValue()%>'></c:out></td>
+							<td><c:out value='<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("curricularPeriod").getValue()%>'></c:out></td>
+							<td><c:out value='<%=((A3esAbstractBean)pageContext.getAttribute("iter")).getFieldUnique("notes").getValue()%>'></c:out></td>
 							<td>
 								<a class="btn btn-default btn-xs" onclick="function inline(){$('#detailsModal${loop.index}').modal('toggle')}; inline()"><spring:message code='label.view'/></a>
 								
@@ -359,6 +361,7 @@
 	</div>
 	<!-- /.modal -->
 	
-	<jsp:include page="<%= "/layout/pleasewait.jsp"%>"/>
+	<!-- TODO: repalce ' ' with " " -->
+	<jsp:include page='<%= "/layout/pleasewait.jsp"%>'/>
 	
 </form>

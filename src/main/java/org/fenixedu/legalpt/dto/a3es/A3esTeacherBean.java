@@ -12,12 +12,13 @@ public class A3esTeacherBean extends A3esAbstractBean {
     private TeacherActivity otherPublishedWork;
     private TeacherActivity otherProfessionalActivities;
     private Set<TeachingService> teachingServices;
+    private Set<OtherTeachingService> otherTeachingServices;
 
     public AttainedDegree getAttainedDegree() {
         return attainedDegree;
     }
 
-    public void setAttainedDegree(AttainedDegree attainedDegree) {
+    public void setAttainedDegree(final AttainedDegree attainedDegree) {
         this.attainedDegree = attainedDegree;
     }
 
@@ -25,7 +26,7 @@ public class A3esTeacherBean extends A3esAbstractBean {
         return otherAttainedDegrees;
     }
 
-    public void setOtherAttainedDegrees(Set<AttainedDegree> otherAttainedDegrees) {
+    public void setOtherAttainedDegrees(final Set<AttainedDegree> otherAttainedDegrees) {
         this.otherAttainedDegrees = otherAttainedDegrees;
     }
 
@@ -33,7 +34,7 @@ public class A3esTeacherBean extends A3esAbstractBean {
         return primePublishedWork;
     }
 
-    public void setPrimePublishedWork(TeacherActivity primePublishedWork) {
+    public void setPrimePublishedWork(final TeacherActivity primePublishedWork) {
         this.primePublishedWork = primePublishedWork;
     }
 
@@ -41,7 +42,7 @@ public class A3esTeacherBean extends A3esAbstractBean {
         return primeProfessionalActivities;
     }
 
-    public void setPrimeProfessionalActivities(TeacherActivity primeProfessionalActivities) {
+    public void setPrimeProfessionalActivities(final TeacherActivity primeProfessionalActivities) {
         this.primeProfessionalActivities = primeProfessionalActivities;
     }
 
@@ -49,7 +50,7 @@ public class A3esTeacherBean extends A3esAbstractBean {
         return otherPublishedWork;
     }
 
-    public void setOtherPublishedWork(TeacherActivity otherPublishedWork) {
+    public void setOtherPublishedWork(final TeacherActivity otherPublishedWork) {
         this.otherPublishedWork = otherPublishedWork;
     }
 
@@ -57,7 +58,7 @@ public class A3esTeacherBean extends A3esAbstractBean {
         return otherProfessionalActivities;
     }
 
-    public void setOtherProfessionalActivities(TeacherActivity otherProfessionalActivities) {
+    public void setOtherProfessionalActivities(final TeacherActivity otherProfessionalActivities) {
         this.otherProfessionalActivities = otherProfessionalActivities;
     }
 
@@ -65,8 +66,16 @@ public class A3esTeacherBean extends A3esAbstractBean {
         return teachingServices;
     }
 
-    public void setTeachingServices(Set<TeachingService> teachingServices) {
+    public void setTeachingServices(final Set<TeachingService> teachingServices) {
         this.teachingServices = teachingServices;
+    }
+
+    public Set<OtherTeachingService> getOtherTeachingServices() {
+        return otherTeachingServices;
+    }
+
+    public void setOtherTeachingServices(final Set<OtherTeachingService> otherTeachingServices) {
+        this.otherTeachingServices = otherTeachingServices;
     }
 
     static public class AttainedDegree extends A3esAbstractBean {
@@ -76,6 +85,9 @@ public class A3esTeacherBean extends A3esAbstractBean {
     }
 
     static public class TeachingService extends A3esAbstractBean {
+    }
+
+    static public class OtherTeachingService extends A3esAbstractBean {
     }
 
 }
