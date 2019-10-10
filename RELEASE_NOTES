@@ -1,4 +1,7 @@
 2.7.0 (10-10-2019)
+- New Feature: Added A3es PAPNCE process support
+- Fix: Changed A3es ACEF process integration to comply with new API
+
 2.6.4 (26-09-2019)
 - Refactor: upgraded fenixedu-academic-core dependency
 
