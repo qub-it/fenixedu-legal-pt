@@ -1,3 +1,5 @@
+- Fix: Calculation of teaching hours for A3es process
+
 2.7.0 (10-10-2019)
 - New Feature: Added A3es PAPNCE process support
 - Fix: Changed A3es ACEF process integration to comply with new API
