@@ -625,9 +625,8 @@ abstract public class A3esExportService {
 
                     // avoid report on basic fields
                     final String report = i.getReport();
-                    if (!StringUtils.isBlank(report)) {
-                        addCell(reportLabel(i.getLabel()), report);
-                    }
+                    addCell(reportLabel(i.getLabel()), report);
+
                 });
 
                 data.getAttainedDegree().getFields().forEach(i -> {
