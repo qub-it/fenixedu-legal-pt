@@ -1,13 +1,17 @@
 package org.fenixedu.legalpt.domain.a3es;
 
+import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
+import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 
 import com.google.common.collect.Sets;
@@ -46,7 +50,18 @@ public class A3esInstance extends A3esInstance_Base {
     }
 
     public static A3esInstance getInstance() {
-        return find(A3esInstance.class);
+        return Optional.of(find(A3esInstance.class)).orElseGet(() -> createInstance());
+    }
+
+    private static synchronized A3esInstance createInstance() {
+        A3esInstance instance = find(A3esInstance.class);
+        if (instance == null) {
+            instance = LegalReport.createReport(A3esInstance.class);
+            instance.edit(new LocalizedString(Locale.getDefault(), "A3ES"), Group.parse("#academicAdmOffice").toPersistentGroup(),
+                    /* synchronous */ true, /* hasMappings */ true);
+        }
+
+        return instance;
     }
 
     @Override
