@@ -45,6 +45,7 @@ class a3es.A3esProcess {
 	}
 
 class a3es.A3esInstance extends .org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport {
+	String a3esUrl;
 	boolean studyCycleByDegree;
 	boolean groupPersonProfessorshipByCourse;
 	boolean groupCourseProfessorshipByPerson;

@@ -84,13 +84,23 @@ angular.module('angularApp', ['ngSanitize', 'ui.select']).controller('angularCon
 	
 	<div class="panel panel-default">
 		<div class="panel-body">
+		
+			<div class="form-group row">
+				<div class="col-sm-3 control-label">
+					<spring:message code="label.A3esInstance.a3esUrl" />
+				</div>
+
+				<div class="col-sm-6">
+					<input class="form-control" type="text" ng-model="object.a3esUrl" name="a3esUrl" />
+				</div>
+			</div>
 
 			<div class="form-group row">
-				<div class="col-sm-2 control-label">
+				<div class="col-sm-3 control-label">
 					<spring:message code="label.A3esInstance.mobilityAgreements" />
 				</div>
 
-				<div class="col-sm-10">
+				<div class="col-sm-6">
 					<ui-select id="mobilityAgreementsSelect" name="mobilityAgreements"
 						ng-model="$parent.object.mobilityAgreements" theme="bootstrap" multiple="true">
 						<ui-select-match>{{$item.text}}</ui-select-match> 

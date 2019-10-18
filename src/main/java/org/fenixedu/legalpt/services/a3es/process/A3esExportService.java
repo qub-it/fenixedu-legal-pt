@@ -49,7 +49,6 @@ import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.A3esPeriod;
-import org.fenixedu.legalpt.domain.a3es.A3esProcess;
 import org.fenixedu.legalpt.domain.a3es.A3esProcessType;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.domain.exceptions.LegalPTDomainException;
@@ -58,12 +57,9 @@ import org.fenixedu.legalpt.dto.a3es.A3esCourseBean;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
-import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.OtherTeachingService;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
-import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.settings.LegalSettings;
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -179,7 +175,7 @@ abstract public class A3esExportService {
 
     protected WebTarget getClientTarget() {
         final Client client = ClientBuilder.newClient();
-        return client.target(LegalSettings.getInstance().getA3esURL());
+        return client.target(A3esInstance.getInstance().getA3esUrl());
     }
 
     private Builder getClientBuilder(final WebTarget target) {

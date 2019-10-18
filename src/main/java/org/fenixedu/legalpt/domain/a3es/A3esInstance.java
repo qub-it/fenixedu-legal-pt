@@ -55,10 +55,13 @@ public class A3esInstance extends A3esInstance_Base {
 
     @Atomic
     public void edit(final LocalizedString name, final PersistentGroup group, final Boolean synchronous,
-            final Boolean hasMappings, final Set<RegistrationProtocol> mobilityAgreements, final boolean studyCycleByDegree,
-            final boolean groupCourseProfessorshipByPerson, final boolean groupPersonProfessorshipByCourse) {
+            final Boolean hasMappings, final String a3esUrl, final Set<RegistrationProtocol> mobilityAgreements,
+            final boolean studyCycleByDegree, final boolean groupCourseProfessorshipByPerson,
+            final boolean groupPersonProfessorshipByCourse) {
 
         super.edit(name, group, synchronous, hasMappings);
+
+        setA3esUrl(a3esUrl);
 
         getMobilityAgreementsSet().clear();
         getMobilityAgreementsSet().addAll(mobilityAgreements);

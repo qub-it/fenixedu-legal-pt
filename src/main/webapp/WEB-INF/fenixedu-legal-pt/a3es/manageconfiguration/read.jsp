@@ -72,7 +72,14 @@
 				<tbody>
 
 					<tr>
-						<th scope="row" class="col-xs-3"><spring:message code="label.A3esInstance.mobilityAgreements" /></th>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esInstance.a3esUrl" /></th>
+						<td>
+							<c:out value="${instance.a3esUrl}"></c:out>
+						</td>
+					</tr>
+					
+					<tr>
+						<th scope="row" class="col-xs-4"><spring:message code="label.A3esInstance.mobilityAgreements" /></th>
 						<td><c:forEach var="each" items="${instance.mobilityAgreementsSet}">
 								<c:out escapeXml="false" value="${each.code} - ${each.description.content} <br/>" />
 							</c:forEach>
