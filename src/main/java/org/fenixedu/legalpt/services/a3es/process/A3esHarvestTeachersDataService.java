@@ -253,7 +253,7 @@ public class A3esHarvestTeachersDataService {
                     otherAttainedDegrees.add(attainedDegree);
 
                     final String year = q == null ? null : q.getYear();
-                    final String level = getDegreeLevel(q);
+                    final String level = StringUtils.isNotBlank(q.getOtherLevel()) ? q.getOtherLevel() : getDegreeLevel(q);
                     final String area = getDegreeArea(q);
                     final String institution = getDegreeInstitution(q);
                     final String classification = q.getMark();

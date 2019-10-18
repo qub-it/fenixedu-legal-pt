@@ -1,3 +1,4 @@
+- Improvement: added support for other level on qualitification
 - Improvement: added a3es instance automatic initialization
 - Fix: Calculation of teaching hours for A3es process is now based on competence course load
 - Fix: unaligned coluns when exporting A3es teacher processes to excel 
