@@ -794,7 +794,7 @@ abstract public class A3esExportService {
         final ExecutionCourse executionCourse = sp.getShift().getExecutionCourse();
 
         if (types.size() != 1) {
-            return new BigDecimal(-1); // unable to calculate correct hour
+            return BigDecimal.ZERO; // unable to calculate correct hour
         }
 
         final Set<BigDecimal> allExecutionCourseTotalHoursForType =
@@ -803,7 +803,7 @@ abstract public class A3esExportService {
                         .filter(Objects::nonNull).distinct().collect(Collectors.toSet());
 
         if (allExecutionCourseTotalHoursForType.size() != 1) {
-            return new BigDecimal(-1); // unable to calculate correct hour
+            return BigDecimal.ZERO; // unable to calculate correct hour
         }
 
         final BigDecimal typeTotalHours = allExecutionCourseTotalHoursForType.iterator().next();
