@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -790,9 +791,25 @@ abstract public class A3esExportService {
     }
 
     static public BigDecimal calculateTeachingHours(final ShiftProfessorship sp) {
-        final BigDecimal shiftTotalHours = sp.getShift().getTotalHours();
-        final BigDecimal result = sp.getPercentage() != null ? shiftTotalHours.multiply(new BigDecimal(sp.getPercentage()))
-                .divide(BigDecimal.valueOf(100d)).setScale(2, RoundingMode.DOWN) : shiftTotalHours;
+        final List<ShiftType> types = sp.getShift().getTypes();
+        final ExecutionCourse executionCourse = sp.getShift().getExecutionCourse();
+
+        if (types.size() != 1) {
+            return new BigDecimal(-1); // unable to calculate correct hour
+        }
+
+        final Set<BigDecimal> allExecutionCourseTotalHoursForType =
+                sp.getShift().getExecutionCourse().getAssociatedCurricularCoursesSet().stream()
+                        .map(cc -> cc.getTotalHoursByShiftType(types.iterator().next(), executionCourse.getExecutionInterval()))
+                        .filter(Objects::nonNull).distinct().collect(Collectors.toSet());
+
+        if (allExecutionCourseTotalHoursForType.size() != 1) {
+            return new BigDecimal(-1); // unable to calculate correct hour
+        }
+
+        final BigDecimal typeTotalHours = allExecutionCourseTotalHoursForType.iterator().next();
+        final BigDecimal result = sp.getPercentage() != null ? typeTotalHours.multiply(new BigDecimal(sp.getPercentage()))
+                .divide(BigDecimal.valueOf(100d)).setScale(2, RoundingMode.DOWN) : typeTotalHours;
         return result.stripTrailingZeros();
     }
 

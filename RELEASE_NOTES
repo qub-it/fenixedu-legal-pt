@@ -1,4 +1,5 @@
-- Improvement: added a3es instance automatic initialization 
+- Improvement: added a3es instance automatic initialization
+- Fix: Calculation of teaching hours for A3es process is now based on competence course load 
 - Refactor: moved legal settings a3es url to a3es specific configuration 
 
 2.7.1 (16-10-2019)
