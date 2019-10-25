@@ -59,6 +59,7 @@ import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.A3esProcessType;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
+import org.fenixedu.legalpt.domain.teacher.SpecialistTitle;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
@@ -178,7 +179,11 @@ public class A3esHarvestTeachersDataService {
     static private void fillSpecialty(final A3esTeacherBean data, final Person person) {
         final String code = "teacherSpecialistTitle";
         final DynamicField field = DynamicField.findField(person, code);
-        data.addField("spec", "specialist", field == null ? null : field.getValue(String.class), _100);
+        data.addField("spec", "specialist",
+                field == null || field.getValue(String.class) == null ? null : LegalMapping
+                        .find(A3esInstance.getInstance(), A3esMappingType.SPECIALIST_TITLE)
+                        .translate(SpecialistTitle.valueOf(field.getValue(String.class))),
+                _100);
 
         final DynamicField specialistAreaField = DynamicField.findField(person, "teacherSpecialistArea");
         data.addField("spec_area", "specialistArea",

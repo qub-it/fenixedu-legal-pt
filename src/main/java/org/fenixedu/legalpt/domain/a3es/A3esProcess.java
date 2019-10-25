@@ -108,7 +108,7 @@ public class A3esProcess extends A3esProcess_Base {
     }
 
     public String getName() {
-        return String.format("%s/%s", getPeriod().getDescription(), getIdentifier());
+        return getIdentifier();
     }
 
     public String getPlanDescription() {

@@ -8,6 +8,7 @@ import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.legalpt.domain.teacher.SpecialistTitle;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.DomainObjectLegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.EnumerationLegalMapping;
@@ -78,6 +79,25 @@ public enum A3esMappingType implements ILegalMappingType {
             final ShiftType object = ShiftType.valueOf(key);
             return new LocalizedString(I18N.getLocale(), "[" + object.getSiglaTipoAula() + "] ")
                     .append(object.getFullNameTipoAula());
+        }
+    },
+
+    SPECIALIST_TITLE {
+
+        @Override
+        public Set<?> getValues() {
+            return Sets.newHashSet(SpecialistTitle.values());
+        }
+
+        @Override
+        public LegalMapping createMapping(final LegalReport report) {
+            return new EnumerationLegalMapping(report, this);
+        }
+
+        @Override
+        public LocalizedString getLocalizedNameKey(final String key) {
+            final SpecialistTitle title = SpecialistTitle.valueOf(key);
+            return new LocalizedString(I18N.getLocale(), title.getPresentationName());
         }
     }
 
