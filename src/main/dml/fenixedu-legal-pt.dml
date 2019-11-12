@@ -40,7 +40,7 @@ class a3es.A3esProcess {
 	}
 	
 	relation A3esProcessDegreeCurricularPlan {
-	    a3es.A3esProcess playsRole a3esProcess { multiplicity 0..1; }
+	    a3es.A3esProcess playsRole a3esProcess { multiplicity *; }
 	    .org.fenixedu.academic.domain.DegreeCurricularPlan playsRole degreeCurricularPlan { multiplicity 1..1; }
 	}
 
