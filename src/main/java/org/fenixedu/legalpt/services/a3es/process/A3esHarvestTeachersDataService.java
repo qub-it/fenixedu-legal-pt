@@ -469,7 +469,7 @@ public class A3esHarvestTeachersDataService {
                         sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
                 final String studyCycle = getStudyCycles(courses);
 
-                if (processStudyCycle.equals(studyCycle)) {
+                if (studyCycle.contains(processStudyCycle)) {
                     final TeachingService service = new TeachingService();
                     teachingServices.add(service);
                     service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
@@ -509,7 +509,7 @@ public class A3esHarvestTeachersDataService {
                     .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
             final String studyCycle = getStudyCycles(courses);
 
-            if (processStudyCycle.equals(studyCycle)) {
+            if (studyCycle.contains(processStudyCycle)) {
                 final TeachingService service = new TeachingService();
                 teachingServices.add(service);
                 service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
@@ -567,7 +567,7 @@ public class A3esHarvestTeachersDataService {
                         sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
                 final String studyCycle = getStudyCycles(courses);
 
-                if (!processStudyCycle.equals(studyCycle)) {
+                if (!studyCycle.contains(processStudyCycle)) {
                     final OtherTeachingService service = new OtherTeachingService();
                     otherTeachingServices.add(service);
                     service.addField("otherCurricularUnit", "otherCurricularUnit", getCourseName(competence), _100);
@@ -606,7 +606,7 @@ public class A3esHarvestTeachersDataService {
                     .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
             final String studyCycle = getStudyCycles(courses);
 
-            if (!processStudyCycle.equals(studyCycle)) {
+            if (!studyCycle.contains(processStudyCycle)) {
                 final OtherTeachingService service = new OtherTeachingService();
                 otherTeachingServices.add(service);
                 service.addField("otherCurricularUnit", "otherCurricularUnit", getCourseName(competence), _100);
