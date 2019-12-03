@@ -1,3 +1,5 @@
+- Fix: A3es teachers upload bean materialization fix when submitted json object too large
+
 2.7.5 (26-11-2019)
 - Fix: teachers competence courses are now correctly displayed
 

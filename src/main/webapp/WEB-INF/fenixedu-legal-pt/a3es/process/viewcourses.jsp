@@ -97,7 +97,7 @@
 <!-- /.modal -->
 
 
-<form id="exportForm" name='form' method="post" class="form-horizontal" ng-app="angularAppA3esProcess"
+<form id="exportForm" name='form' method="post" enctype="multipart/form-data" class="form-horizontal" ng-app="angularAppA3esProcess"
 	ng-controller="A3esProcessController"
 	action='#'>
 
