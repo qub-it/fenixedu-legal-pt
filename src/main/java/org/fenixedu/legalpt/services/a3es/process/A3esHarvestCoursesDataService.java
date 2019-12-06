@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
@@ -49,7 +49,7 @@ import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 public class A3esHarvestCoursesDataService {
 
     private final ExecutionYear year;
-    private final ExecutionSemester semester;
+    private final ExecutionInterval semester;
     private final DegreeCurricularPlan degreeCurricularPlan;
 
     public A3esHarvestCoursesDataService(final A3esProcessBean bean) {
