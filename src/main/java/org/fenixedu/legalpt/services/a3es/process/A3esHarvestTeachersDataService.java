@@ -35,7 +35,7 @@ import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Job;
 import org.fenixedu.academic.domain.Person;
@@ -63,9 +63,9 @@ import org.fenixedu.legalpt.domain.teacher.SpecialistTitle;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
+import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.OtherTeachingService;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
-import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.OtherTeachingService;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -80,7 +80,7 @@ public class A3esHarvestTeachersDataService {
     static private final int _OTHER_TEACHING_SERVICES = 10;
 
     private final ExecutionYear year;
-    private final ExecutionSemester semester;
+    private final ExecutionInterval semester;
     private final DegreeCurricularPlan degreeCurricularPlan;
     private final String processStudyCycle;
 

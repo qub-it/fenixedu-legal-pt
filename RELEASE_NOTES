@@ -1,3 +1,5 @@
+- Refactor: upgraded fenixedu-academic-core dependency
+
 2.7.6 (03-12-2019)
 - Fix: A3es teachers upload bean materialization fix when submitted json object too large
 
