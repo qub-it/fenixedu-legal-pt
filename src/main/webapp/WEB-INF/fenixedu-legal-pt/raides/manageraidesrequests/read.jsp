@@ -105,7 +105,8 @@ request.setAttribute("parameter", parameter);
                         <td>
                             <c:out value='${ parameter.moment }' />
                         </td>
-                    </tr>                    
+                    </tr>
+                    <%--
                     <tr>
                         <th scope="row" class="col-xs-3">
                             <spring:message code="label.RaidesRequests.interlocutorName" />
@@ -122,6 +123,7 @@ request.setAttribute("parameter", parameter);
                             <c:out value='${ parameter.interlocutorEmail }' />
                         </td>
                     </tr>
+                    --%>
                     <% if (RoleType.MANAGER.isMember(Authenticate.getUser())) {%>
                     <tr>
                         <th scope="row" class="col-xs-3">

@@ -16,6 +16,7 @@ public class TblMobilidadeInternacional extends RaidesData implements IMatricula
     protected String duracaoPrograma;
     protected String nivelCursoOrigem;
     protected String outroNivelCurOrigem;
+    protected String paisOrigemMobilidadeCredito;
 
     protected String areaCientifica;
     protected String nivelCursoDestino;
@@ -147,6 +148,14 @@ public class TblMobilidadeInternacional extends RaidesData implements IMatricula
 
     public void setOutroNivelCurOrigem(String outroNivelCurOrigem) {
         this.outroNivelCurOrigem = outroNivelCurOrigem;
+    }
+
+    public String getPaisOrigemMobilidadeCredito() {
+        return paisOrigemMobilidadeCredito;
+    }
+
+    public void setPaisOrigemMobilidadeCredito(String paisOrigemMobilidadeCredito) {
+        this.paisOrigemMobilidadeCredito = paisOrigemMobilidadeCredito;
     }
 
     public String getAreaCientifica() {

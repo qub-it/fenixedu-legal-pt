@@ -147,6 +147,10 @@ public class MobilidadeInternacionalService extends RaidesService {
             }
         }
 
+        if (mobility.hasCountry()) {
+            bean.setPaisOrigemMobilidadeCredito(mobility.getCountry().getCode());
+        }
+
         validaProgramaMobilidade(executionYear, registration, bean);
         validaDuracaoPrograma(executionYear, registration, bean);
         validaNivelCursoOrigem(executionYear, registration, bean);

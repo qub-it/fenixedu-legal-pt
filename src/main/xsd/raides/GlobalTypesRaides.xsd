@@ -25,7 +25,7 @@
     </xs:simpleType>
     
 <!-- EXTRAÇAO-->
-
+<!--
     <xs:simpleType name="Email">
         <xs:restriction base="xs:string">
             <xs:pattern value="[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})"/>
@@ -38,7 +38,7 @@
             <xs:pattern value="\d{9}"/>
         </xs:restriction>
     </xs:simpleType>
-
+-->
     <!-- IDENTIFICACAO-->
     
     <xs:simpleType name="NumeroAluno">
@@ -60,6 +60,8 @@
     <xs:simpleType name="NumeroIdentificacao">
         <xs:restriction base="xs:string">
           <xs:pattern value="^[^\s]{1,30}$" />
+            <!--<xs:minLength value="1" />-->
+            <!--<xs:maxLength value="30" />-->
         </xs:restriction>
     </xs:simpleType>
     
@@ -111,6 +113,7 @@
 
     <xs:simpleType name="Paises">
         <xs:restriction base="xs:string">
+            <!--<xs:pattern value="[^\s]+"/>-->
             <xs:maxLength value="2" />
         </xs:restriction>
     </xs:simpleType>
@@ -202,9 +205,9 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="FormaIngresso"> <!--alterado-->
+    <xs:simpleType name="FormaIngresso"> 
         <xs:restriction base="xs:integer">
-			<xs:enumeration value="10"/>
+            <xs:enumeration value="10"/>
 			<xs:enumeration value="13"/>
 			<xs:enumeration value="15"/>
 			<xs:enumeration value="16"/>

@@ -468,7 +468,8 @@ angular.module('angularApp', ['ngSanitize', 'ui.select', 'bennuToolkit']).contro
 				<div class="col-sm-10">
 					<input class="form-control" type="text" ng-model="object.moment" name="code" />
 				</div>
-			</div>			
+			</div>
+			<%--			
 			<div class="form-group row">
 				<div class="col-sm-2 control-label">
 					<spring:message code="label.RaidesRequests.interlocutorName" />
@@ -496,6 +497,7 @@ angular.module('angularApp', ['ngSanitize', 'ui.select', 'bennuToolkit']).contro
 					<input class="form-control" type="text" ng-model="object.interlocutorEmail" name="code" />
 				</div>
 			</div>
+			--%>
 			<% if (RoleType.MANAGER.isMember(Authenticate.getUser())) {%>
 			<div class="form-group row">
 				<div class="col-sm-2 control-label">

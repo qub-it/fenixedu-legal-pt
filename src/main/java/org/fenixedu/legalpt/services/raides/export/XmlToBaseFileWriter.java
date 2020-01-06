@@ -154,6 +154,7 @@ public class XmlToBaseFileWriter {
         mobilidade.setECTSInscricao(bigDecimalValueOf(tblMobilidadeInternacional.getEctsInscrito()));
         mobilidade.setNivelCursoDestino(null);
         mobilidade.setNivelCursoOrigem(longValueOf(tblMobilidadeInternacional.getNivelCursoOrigem()));
+        mobilidade.setPaisOrigemMobilidadeCredito(tblMobilidadeInternacional.getPaisOrigemMobilidadeCredito());
         mobilidade.setOutroNivelCurDestino(null);
         mobilidade.setOutroNivelCurOrigem(tblMobilidadeInternacional.getOutroNivelCurOrigem());
         mobilidade.setOutroPrograma(tblMobilidadeInternacional.getOutroPrograma());
@@ -358,11 +359,7 @@ public class XmlToBaseFileWriter {
 
         extracao.setCodigoEstabelecimento(raidesRequestParameter.getInstitutionCode());
         extracao.setDataExtracao(new LocalDate());
-        extracao.setEmailInterlocutor(raidesRequestParameter.getInterlocutorEmail());
         extracao.setMomento(Integer.valueOf(raidesRequestParameter.getMoment()));
-        extracao.setNomeInterlocutor(raidesRequestParameter.getInterlocutorName());
-        extracao.setTelefoneInterlocutor(longValueOf(raidesRequestParameter.getInterlocutorPhone()));
-        extracao.setEmailInterlocutorAdicional(raidesRequestParameter.getInterlocutorEmail());
     }
 
     protected static Long longValueOf(final String value) {

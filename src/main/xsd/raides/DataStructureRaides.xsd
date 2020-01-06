@@ -10,10 +10,12 @@
               <xs:element type="Codigo" name="CodigoEstabelecimento" />
               <xs:element type="Momento" name="Momento" />
               <xs:element type="Datas" name="DataExtracao" />
+			  <!--
               <xs:element type="Nome"  name="NomeInterlocutor" />
               <xs:element type="Email" name="EmailInterlocutor" />
               <xs:element type="Telefone" name="TelefoneInterlocutor" />
               <xs:element type="Email" name="EmailInterlocutorAdicional" nillable="true" />
+			  -->
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -65,7 +67,7 @@
                                     <xs:element type="OpcaoIngresso" name="OpcaoIngresso" nillable="true" />
                                     <xs:element type="NumInscCursosAnt" name="NumInscCursosAnt" nillable="true" />
                                     <xs:element type="AnoUltimaInscricao" name="AnoUltimaInscricao" nillable="true" />
-                                    <xs:element type="EstadoCivil" name="EstadoCivil" nillable="true"/><!--alterado-->
+                                    <xs:element type="EstadoCivil" name="EstadoCivil" nillable="true"/>
                                     <xs:element type="myboolean" name="TrabalhadorEstudante" />
                                     <xs:element type="myboolean" name="AlunoDeslocado" />
                                     <xs:element type="Concelho" name="Concelho" nillable="true" />
@@ -148,6 +150,7 @@
                             <xs:element type="DuracaoPrograma" name="DuracaoPrograma" />
                             <xs:element type="NivelFormacaoOrigem" name="NivelCursoOrigem" />
                             <xs:element type="Outro" name="OutroNivelCurOrigem" nillable="true" />
+                            <xs:element type="Paises" name="PaisOrigemMobilidadeCredito" nillable="true" />
                             <xs:element type="NivelFormacaoDestino" name="NivelCursoDestino" nillable="true" />
                             <xs:element type="Outro" name="OutroNivelCurDestino" nillable="true" />
                           </xs:sequence>

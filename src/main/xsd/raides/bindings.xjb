@@ -15,10 +15,6 @@
 			parseMethod="org.fenixedu.legalpt.services.commons.transform.xml.jaxb.Converter.parseLocalDate" 
 			printMethod="org.fenixedu.legalpt.services.commons.transform.xml.jaxb.Converter.printLocalDate">
 		</jxb:javaType>
-		<jxb:javaType name="java.lang.Long" xmlType="Telefone" hasNsContext="true" 
-			parseMethod="org.fenixedu.legalpt.services.commons.transform.xml.jaxb.Converter.parseLong" 
-			printMethod="org.fenixedu.legalpt.services.commons.transform.xml.jaxb.Converter.printLong">
-		</jxb:javaType>
 		<jxb:javaType name="java.lang.Long" xmlType="xs:integer" hasNsContext="true" 
 			parseMethod="org.fenixedu.legalpt.services.commons.transform.xml.jaxb.Converter.parseLong" 
 			printMethod="org.fenixedu.legalpt.services.commons.transform.xml.jaxb.Converter.printLong">
