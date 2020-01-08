@@ -125,15 +125,6 @@ public class Raides {
         public static final GrantOwnerType CANDIDATO_BOLSEIRO_ACCAO_SOCIAL =
                 GrantOwnerType.HIGHER_EDUCATION_SAS_GRANT_OWNER_CANDIDATE;
 
-        public static Set<String> VALUES() {
-            final Set<String> result = Sets.newHashSet(NAO_BOLSEIRO.name(), CANDIDATO_BOLSEIRO_ACCAO_SOCIAL.name());
-            for (final GrantOwnerType type : GrantOwnerType.values()) {
-                result.add(type.name());
-            }
-
-            return result;
-        }
-
         public static LocalizedString LOCALIZED_NAME(final String key) {
             if (Sets.newHashSet(NAO_BOLSEIRO, CANDIDATO_BOLSEIRO_ACCAO_SOCIAL).contains(key)) {
                 return LegalPTUtil.bundleI18N(Bolseiro.class.getSimpleName() + "." + key);

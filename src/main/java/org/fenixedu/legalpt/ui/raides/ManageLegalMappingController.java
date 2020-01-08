@@ -15,6 +15,7 @@ import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingTyp
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMappingEntry;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
+import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.BranchMappingType;
 import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -48,7 +49,9 @@ public class ManageLegalMappingController extends FenixeduLegalPTBaseController 
 
     @RequestMapping(value = _SEARCH_URI, method = GET)
     public String search(Model model) {
-        model.addAttribute("legalMappings", RaidesInstance.getInstance().getLegalMappingsSet());
+        List<LegalMapping> mappingsToBeManage = RaidesInstance.getInstance().getLegalMappingsSet().stream()
+                .filter(m -> !BranchMappingType.isTypeForMapping(m.getType())).collect(Collectors.toList());
+        model.addAttribute("legalMappings", mappingsToBeManage);
         List<ILegalMappingType> possibleTypes = RaidesInstance.getInstance().getMappingTypes().stream()
                 .filter(type -> type instanceof LegalMappingType)
                 .filter(type -> LegalMapping.find(RaidesInstance.getInstance(), type) == null)

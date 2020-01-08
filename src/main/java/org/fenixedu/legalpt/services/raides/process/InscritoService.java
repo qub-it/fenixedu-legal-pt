@@ -234,7 +234,7 @@ public class InscritoService extends RaidesService {
             return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Raides.Bolseiro.NAO_BOLSEIRO);
         }
 
-        if (!requiresStatuteToReportGrantOwner(registration, executionYear)) {
+        if (!hasOtherActiveRegistrationWhichRequiresStatuteToReportGrantOwner(registration, executionYear)) {
             return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(pid.getGrantOwnerType());
         }
 
@@ -254,7 +254,7 @@ public class InscritoService extends RaidesService {
     }
 
     //TODO: replace with scholarship module
-    private boolean requiresStatuteToReportGrantOwner(final Registration registration, final ExecutionYear executionYear) {
+    private boolean hasOtherActiveRegistrationWhichRequiresStatuteToReportGrantOwner(final Registration registration, final ExecutionYear executionYear) {
         return registration.getStudent().getRegistrationsSet().stream()
                 .anyMatch(r -> r != registration && RegistrationServices.getEnrolmentYears(r).contains(executionYear));
     }

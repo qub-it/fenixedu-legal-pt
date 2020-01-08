@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
+import org.fenixedu.academic.domain.GrantOwnerType;
 import org.fenixedu.academic.domain.ProfessionType;
 import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
 import org.fenixedu.academic.domain.SchoolLevelType;
@@ -61,7 +62,7 @@ public enum LegalMappingType implements ILegalMappingType {
         case REGIME_TYPE:
             return Sets.newHashSet(RegistrationRegimeType.values());
         case GRANT_OWNER_TYPE:
-            return Raides.Bolseiro.VALUES();
+            return Sets.newHashSet(GrantOwnerType.values());
         case REGISTRATION_INGRESSION_TYPE:
             return Sets.newHashSet(Bennu.getInstance().getIngressionTypesSet());
         case MARITAL_STATUS:
