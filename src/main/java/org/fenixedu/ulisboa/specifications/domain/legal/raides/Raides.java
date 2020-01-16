@@ -302,6 +302,10 @@ public class Raides {
                     final String[] messageArgs = formatArgs(registration, academicPeriod);
 
                     try {
+                        if (!isAgreementPartOfEnrolledReport(raidesRequestParameter, registration)) {
+                            continue;
+                        }
+                        
                         if (graduatedPeriod.isEnrolledInAcademicPeriod()
                                 && !isEnrolledInExecutionYear(graduatedPeriod, registration, true)) {
                             continue;
