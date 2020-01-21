@@ -36,6 +36,7 @@ import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
+import org.fenixedu.academic.domain.studentCurriculum.CycleCurriculumGroup;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
@@ -174,6 +175,10 @@ public class RaidesService {
                 continue;
             }
 
+            if (isAffinity(curriculumGroup)) {
+                continue;
+            }
+
             final CourseGroup courseGroup = curriculumGroup.getDegreeModule();
             if (BranchMappingType.readMapping(report).isKeyDefined(courseGroup)) {
                 result.add(courseGroup);
@@ -206,6 +211,10 @@ public class RaidesService {
                 continue;
             }
 
+            if (isAffinity(curriculumGroup)) {
+                continue;
+            }
+
             final CourseGroup courseGroup = curriculumGroup.getDegreeModule();
             if (BranchMappingType.readMapping(report).isKeyDefined(courseGroup)) {
                 result.add(courseGroup);
@@ -213,6 +222,11 @@ public class RaidesService {
         }
 
         return result;
+    }
+
+    private boolean isAffinity(final CurriculumGroup curriculumGroup) {
+        final CycleCurriculumGroup parentCycleCurriculumGroup = curriculumGroup.getParentCycleCurriculumGroup();
+        return curriculumGroup.isExternal() || (parentCycleCurriculumGroup != null && parentCycleCurriculumGroup.isExternal());
     }
 
     protected StudentCurricularPlan getStudentCurricularPlanForBranch(final Registration registration,
@@ -498,9 +512,9 @@ public class RaidesService {
         }
 
         if (isPortuguesePostHighSchool(lastCompletedQualification) && Raides.Cursos.OUTRO.equals(bean.getCursoEscolarAnt())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
-                            formatArgs(registration, executionYear)));
+            LegalReportContext.addError("", i18n(
+                    "error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
+                    formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
     }
