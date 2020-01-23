@@ -4,6 +4,7 @@ import static org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.for
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
@@ -155,6 +156,7 @@ public class MobilidadeInternacionalService extends RaidesService {
         validaDuracaoPrograma(executionYear, registration, bean);
         validaNivelCursoOrigem(executionYear, registration, bean);
         validaCursoAreaCientificaNivelCursoDestino(executionYear, registration, bean);
+        validaRegimeFrequencia(executionYear, registration, bean);
 
         return bean;
     }
@@ -214,6 +216,15 @@ public class MobilidadeInternacionalService extends RaidesService {
                 bean.markAsInvalid();
             }
 
+        }
+
+    }
+
+    private void validaRegimeFrequencia(ExecutionYear executionYear, Registration registration, TblMobilidadeInternacional bean) {
+        if (StringUtils.isEmpty(bean.getRegimeFrequencia())) {
+            LegalReportContext.addError("", i18n("error.Raides.validation.missing.mapping.for.regime.frequence",
+                    registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
+            bean.markAsInvalid();
         }
 
     }
