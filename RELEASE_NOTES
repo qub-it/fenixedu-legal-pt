@@ -1,5 +1,6 @@
 - Fix: Added missing label (IntegratedMasterFirstCycleGraduatedReportOption.ALL)
 - Fix: RAIDES: Validate frequence regime
+- Refactor: upgraded fenixedu-academic-core dependency
 
 2.8.3 (21-01-2020)
 - Fix: Branch code in degree courses was being reported incorrectly to RAIDES (#UL-ISA-1176)
