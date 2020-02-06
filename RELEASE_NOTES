@@ -1,3 +1,4 @@
+2.8.5 (06-02-2020)
 - Refactor: upgraded fenixedu-academic-core dependency (removed deprecated StudentCandidacy slots)
 
 2.8.4 (30-01-2020)
