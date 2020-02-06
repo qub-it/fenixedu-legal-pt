@@ -341,9 +341,6 @@ public class RaidesService {
     }
 
     private AcademicalInstitutionType highSchoolType(StudentCandidacy studentCandidacy) {
-        if (studentCandidacy.getHighSchoolType() != null) {
-            return studentCandidacy.getHighSchoolType();
-        }
 
         if (studentCandidacy.getPrecedentDegreeInformation() != null
                 && studentCandidacy.getPrecedentDegreeInformation().getPersonalIngressionData() != null
