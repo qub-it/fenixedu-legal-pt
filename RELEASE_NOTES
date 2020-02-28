@@ -1,3 +1,4 @@
+2.8.5-rc-jdk11 (28-02-2020)
 2.8.5 (06-02-2020)
 - Refactor: upgraded fenixedu-academic-core dependency (removed deprecated StudentCandidacy slots)
 
