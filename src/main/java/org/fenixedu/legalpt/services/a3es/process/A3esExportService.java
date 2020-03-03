@@ -422,40 +422,37 @@ abstract public class A3esExportService {
                 return;
             }
 
-            if (!bean.getSelectedIds().isEmpty() && bean.getSelectedIds().contains(data.getFormattedId())) {
+            final JSONObject root = new JSONObject();
 
-                final JSONObject root = new JSONObject();
+            final JSONObject q11 = new JSONObject();
+            data.getField("1.1").stream().forEach(i -> q11.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey(bean, "1.1"), q11);
 
-                final JSONObject q11 = new JSONObject();
-                data.getField("1.1").stream().forEach(i -> q11.put(i.getLanguage(), i.getValue()));
-                root.put(getCoursesFieldKey(bean, "1.1"), q11);
+            root.put(getCoursesFieldKey(bean, "2"), data.getFieldUnique("2").getValue());
+            root.put(getCoursesFieldKey(bean, "3"), data.getFieldUnique("3").getValue());
 
-                root.put(getCoursesFieldKey(bean, "2"), data.getFieldUnique("2").getValue());
-                root.put(getCoursesFieldKey(bean, "3"), data.getFieldUnique("3").getValue());
+            final JSONObject q4 = new JSONObject();
+            data.getField("4").stream().forEach(i -> q4.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey(bean, "4"), q4);
 
-                final JSONObject q4 = new JSONObject();
-                data.getField("4").stream().forEach(i -> q4.put(i.getLanguage(), i.getValue()));
-                root.put(getCoursesFieldKey(bean, "4"), q4);
+            final JSONObject q5 = new JSONObject();
+            data.getField("5").stream().forEach(i -> q5.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey(bean, "5"), q5);
 
-                final JSONObject q5 = new JSONObject();
-                data.getField("5").stream().forEach(i -> q5.put(i.getLanguage(), i.getValue()));
-                root.put(getCoursesFieldKey(bean, "5"), q5);
+            final JSONObject q6 = new JSONObject();
+            data.getField("6").stream().forEach(i -> q6.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey(bean, "6"), q6);
 
-                final JSONObject q6 = new JSONObject();
-                data.getField("6").stream().forEach(i -> q6.put(i.getLanguage(), i.getValue()));
-                root.put(getCoursesFieldKey(bean, "6"), q6);
+            final JSONObject q7 = new JSONObject();
+            data.getField("7").stream().forEach(i -> q7.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey(bean, "7"), q7);
 
-                final JSONObject q7 = new JSONObject();
-                data.getField("7").stream().forEach(i -> q7.put(i.getLanguage(), i.getValue()));
-                root.put(getCoursesFieldKey(bean, "7"), q7);
+            final JSONObject q8 = new JSONObject();
+            data.getField("8").stream().forEach(i -> q8.put(i.getLanguage(), i.getValue()));
+            root.put(getCoursesFieldKey(bean, "8"), q8);
 
-                final JSONObject q8 = new JSONObject();
-                data.getField("8").stream().forEach(i -> q8.put(i.getLanguage(), i.getValue()));
-                root.put(getCoursesFieldKey(bean, "8"), q8);
-
-                root.put(getCoursesFieldKey(bean, "9"), data.getFieldUnique("9").getValue());
-                result.add(root);
-            }
+            root.put(getCoursesFieldKey(bean, "9"), data.getFieldUnique("9").getValue());
+            result.add(root);
         });
 
         return result;
