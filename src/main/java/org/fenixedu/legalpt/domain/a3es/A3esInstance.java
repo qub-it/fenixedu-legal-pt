@@ -50,9 +50,10 @@ public class A3esInstance extends A3esInstance_Base {
     }
 
     public static A3esInstance getInstance() {
-        return Optional.of(find(A3esInstance.class)).orElseGet(() -> createInstance());
+        return Optional.ofNullable(find(A3esInstance.class)).orElseGet(() -> createInstance());
     }
 
+    @Atomic
     private static synchronized A3esInstance createInstance() {
         A3esInstance instance = find(A3esInstance.class);
         if (instance == null) {
