@@ -343,9 +343,8 @@ public class RaidesService {
     private AcademicalInstitutionType highSchoolType(StudentCandidacy studentCandidacy) {
 
         if (studentCandidacy.getPrecedentDegreeInformation() != null
-                && studentCandidacy.getPrecedentDegreeInformation().getPersonalIngressionData() != null
-                && studentCandidacy.getPrecedentDegreeInformation().getPersonalIngressionData().getHighSchoolType() != null) {
-            return studentCandidacy.getPrecedentDegreeInformation().getPersonalIngressionData().getHighSchoolType();
+                && studentCandidacy.getPrecedentDegreeInformation().getInstitutionType() != null) {
+            return studentCandidacy.getPrecedentDegreeInformation().getInstitutionType();
         }
 
         if (studentCandidacy.getPerson().getStudent() != null) {
