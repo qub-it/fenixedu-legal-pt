@@ -265,7 +265,7 @@ public class A3esHarvestCoursesDataService {
     }
 
     private String removeNonPrintableChars(String value) {
-        return value == null ? null : value.replaceAll("\\P{Print}", "");
+        return value /* == null ? null : value.replaceAll("\\P{Print}", "")*/ ;
     }
 
 }
