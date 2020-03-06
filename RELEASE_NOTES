@@ -1,3 +1,5 @@
+- Fix: A3es: both FCDs and FUCs don't send any data if no value is selected + fixed a typo
+
 2.8.7 (04-03-2020)
 - Refactor: Upgraded dependency of fenixedu-academic-core
 - Fix: A3es: disabled bibliography non printable chars cleanup
