@@ -7,18 +7,18 @@
 	<parent>
 		<groupId>com.qubit.solution.fenixedu</groupId>
 		<artifactId>qub-fenixedu-project</artifactId>
-		<version>1.0.1</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<groupId>org.fenixedu</groupId>
 	<artifactId>fenixedu-legal-pt</artifactId>
-	<version>2.8.8</version>
+	<version>2.9.0</version>
 	<packaging>jar</packaging>
 
 	<name>FenixEdu Legal PT</name>
 
 	<properties>
-		<version.org.fenixedu.bennu>6.0.0-FORK</version.org.fenixedu.bennu>
+		<version.org.fenixedu.bennu>6.0.8-FORK</version.org.fenixedu.bennu>
 	</properties>
 
 	<build>
@@ -59,8 +59,19 @@
 							<schemaFiles>DataStructureRebides.xsd</schemaFiles>
 						</configuration>
 					</execution>
-					
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.glassfish.jaxb</groupId>
+						<artifactId>jaxb-xjc</artifactId>
+						<version>2.3.2</version>
+					</dependency>
+					<dependency>
+						<groupId>com.sun.activation</groupId>
+						<artifactId>jakarta.activation</artifactId>
+						<version>1.2.1</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			
 			
@@ -135,13 +146,13 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>28.2.0</version>
+			<version>28.5.1</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-extensions</artifactId>
-			<version>4.4.0</version>
+			<version>4.4.1</version>
 		</dependency>		
         
         <!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
