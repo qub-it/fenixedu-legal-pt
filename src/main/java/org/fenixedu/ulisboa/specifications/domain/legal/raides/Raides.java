@@ -305,7 +305,7 @@ public class Raides {
                         if (!isAgreementPartOfEnrolledReport(raidesRequestParameter, registration)) {
                             continue;
                         }
-                        
+
                         if (graduatedPeriod.isEnrolledInAcademicPeriod()
                                 && !isEnrolledInExecutionYear(graduatedPeriod, registration, true)) {
                             continue;
@@ -782,23 +782,8 @@ public class Raides {
         Raides.requestDefaultData.fill(raidesRequestParameter);
     }
 
-    //Returning the bean which contains information relating to both the precedent and the completed qualifications
-    public Set<PersonalInformationBean> getAllPrecedentDegreeInformations() {
-        final Set<PersonalInformationBean> result = new HashSet<PersonalInformationBean>();
-        List<Registration> registrations = new ArrayList<Registration>(registrationList);
-        Collections.sort(registrations, new Comparator<Registration>() {
-
-            @Override
-            public int compare(Registration o1, Registration o2) {
-                return o1.getStudent().getName().compareTo(o2.getStudent().getName());
-            }
-        });
-
-        for (final Registration registration : registrations) {
-            result.add(new PersonalInformationBean(registration.getStudentCandidacy().getPrecedentDegreeInformation()));
-        }
-
-        return result;
+    public List<Registration> getAllRegistrations() {
+        return registrationList.stream().collect(Collectors.toUnmodifiableList());
     }
 
     public boolean isInEnrolledData(final Registration registration) {

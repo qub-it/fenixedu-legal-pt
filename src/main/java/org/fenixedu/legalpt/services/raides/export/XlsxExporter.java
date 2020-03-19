@@ -11,6 +11,7 @@ import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.academic.domain.candidacy.PersonalInformationBean;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
+import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
@@ -162,86 +163,75 @@ public class XlsxExporter {
                     }
                 };
 
-        final SheetData<PersonalInformationBean> precedentDegreeInformationData =
-                new SheetData<PersonalInformationBean>(raides.getAllPrecedentDegreeInformations()) {
+        final SheetData<Registration> precedentDegreeInformationData = new SheetData<Registration>(raides.getAllRegistrations()) {
 
-                    @Override
-                    protected void makeLine(final PersonalInformationBean personalInformationBean) {
-                        addCell("Nº Aluno", personalInformationBean.getRegistration().getStudent().getNumber());
-                        addCell(pdiLabel("executionYear"), personalInformationBean.getRegistration().getStudentCandidacy()
-                                .getExecutionYear().getQualifiedName());
-                        addCell("Curso", personalInformationBean.getRegistration().getDegree().getPresentationName());
-                        addCell("Acordo",
-                                personalInformationBean.getRegistration()
-                                        .getRegistrationProtocol() != null ? personalInformationBean.getRegistration()
-                                                .getRegistrationProtocol().getDescription().getContent() : "");
-                        addCell("Ingresso",
-                                personalInformationBean.getRegistration().getStudentCandidacy()
-                                        .getIngressionType() != null ? personalInformationBean.getRegistration()
-                                                .getIngressionType().getDescription().getContent() : "");
-                        addCell("Nome", personalInformationBean.getRegistration().getStudent().getName());
+            @Override
+            protected void makeLine(final Registration registration) {
+                addCell("Nº Aluno", registration.getStudent().getNumber());
+                addCell(pdiLabel("executionYear"), registration.getStudentCandidacy().getExecutionYear().getQualifiedName());
+                addCell("Curso", registration.getDegree().getPresentationName());
+                addCell("Acordo", registration.getRegistrationProtocol() != null ? registration.getRegistrationProtocol()
+                        .getDescription().getContent() : "");
+                addCell("Ingresso", registration.getStudentCandidacy().getIngressionType() != null ? registration
+                        .getIngressionType().getDescription().getContent() : "");
+                addCell("Nome", registration.getStudent().getName());
 
-                        addCell("Reportar como Inscrito", raides.isInEnrolledData(personalInformationBean.getRegistration()));
-                        addCell("Reportar como Diplomado", raides.isInGraduated(personalInformationBean.getRegistration()));
-                        addCell("Reportar como Mobilidade",
-                                raides.isInInternacionalMobility(personalInformationBean.getRegistration()));
+                addCell("Reportar como Inscrito", raides.isInEnrolledData(registration));
+                addCell("Reportar como Diplomado", raides.isInGraduated(registration));
+                addCell("Reportar como Mobilidade", raides.isInInternacionalMobility(registration));
 
-                        final PrecedentDegreeInformation lastCompletedQualification =
-                                personalInformationBean.getRegistration().getStudentCandidacy().getPrecedentDegreeInformation();
+                final PrecedentDegreeInformation lastCompletedQualification =
+                        registration.getStudentCandidacy().getCompletedDegreeInformation();
 
-                        addCell(pdiLabel("schoolLevel"),
-                                lastCompletedQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
-                                        lastCompletedQualification.getSchoolLevel()) : "");
-                        addCell(pdiLabel("otherSchoolLevel"), lastCompletedQualification.getOtherSchoolLevel());
-                        addCell(pdiLabel("country"), lastCompletedQualification.getCountry() != null ? lastCompletedQualification
-                                .getCountry().getCode() : "");
-                        addCell(pdiLabel("institution"),
-                                lastCompletedQualification.getInstitution() != null ? lastCompletedQualification.getInstitution()
-                                        .getName() : "");
-                        addCell(pdiLabel("degreeDesignation"), lastCompletedQualification.getDegreeDesignation());
-                        addCell(pdiLabel("conclusionGrade"), lastCompletedQualification.getConclusionGrade());
-                        addCell(pdiLabel("conclusionYear"),
-                                lastCompletedQualification.getConclusionYear() != null ? lastCompletedQualification
-                                        .getConclusionYear() : "");
+                addCell(pdiLabel("schoolLevel"), lastCompletedQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
+                        lastCompletedQualification.getSchoolLevel()) : "");
+                addCell(pdiLabel("otherSchoolLevel"), lastCompletedQualification.getOtherSchoolLevel());
+                addCell(pdiLabel("country"),
+                        lastCompletedQualification.getCountry() != null ? lastCompletedQualification.getCountry().getCode() : "");
+                addCell(pdiLabel("institution"), lastCompletedQualification.getInstitution() != null ? lastCompletedQualification
+                        .getInstitution().getName() : "");
+                addCell(pdiLabel("degreeDesignation"), lastCompletedQualification.getDegreeDesignation());
+                addCell(pdiLabel("conclusionGrade"), lastCompletedQualification.getConclusionGrade());
+                addCell(pdiLabel("conclusionYear"),
+                        lastCompletedQualification.getConclusionYear() != null ? lastCompletedQualification
+                                .getConclusionYear() : "");
 
-                        final PrecedentDegreeInformation previousQualification =
-                                personalInformationBean.getRegistration().getStudentCandidacy().getPrecedentDegreeInformation();
+                final PrecedentDegreeInformation previousQualification =
+                        registration.getStudentCandidacy().getPreviousDegreeInformation();
 
-                        addCell(pdiLabel("precedentSchoolLevel"),
-                                previousQualification != null
-                                        && previousQualification.getPrecedentSchoolLevel() != null ? schoolLevelLocalizedName(
-                                                previousQualification.getPrecedentSchoolLevel()) : "");
-                        addCell(pdiLabel("otherPrecedentSchoolLevel"),
-                                previousQualification != null ? previousQualification.getOtherPrecedentSchoolLevel() : "");
-                        addCell(pdiLabel("precedentCountry"),
-                                previousQualification != null
-                                        && previousQualification.getPrecedentCountry() != null ? previousQualification
-                                                .getPrecedentCountry().getCode() : "");
-                        addCell(pdiLabel("precedentInstitution"),
-                                previousQualification != null
-                                        && previousQualification.getPrecedentInstitution() != null ? previousQualification
-                                                .getPrecedentInstitution().getName() : "");
-                        addCell(pdiLabel("precedentDegreeDesignation"),
-                                previousQualification != null ? previousQualification.getPrecedentDegreeDesignation() : "");
-                        addCell(pdiLabel("numberOfEnrolmentsInPreviousDegrees"), previousQualification != null
+                addCell(pdiLabel("precedentSchoolLevel"),
+                        previousQualification != null
+                                && previousQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
+                                        previousQualification.getSchoolLevel()) : "");
+                addCell(pdiLabel("otherPrecedentSchoolLevel"),
+                        previousQualification != null ? previousQualification.getOtherSchoolLevel() : "");
+                addCell(pdiLabel("precedentCountry"), previousQualification != null
+                        && previousQualification.getCountry() != null ? previousQualification.getCountry().getCode() : "");
+                addCell(pdiLabel("precedentInstitution"),
+                        previousQualification != null && previousQualification.getInstitution() != null ? previousQualification
+                                .getInstitution().getName() : "");
+                addCell(pdiLabel("precedentDegreeDesignation"),
+                        previousQualification != null ? previousQualification.getDegreeDesignation() : "");
+                addCell(pdiLabel("numberOfEnrolmentsInPreviousDegrees"),
+                        previousQualification != null
                                 && previousQualification.getNumberOfEnrolmentsInPreviousDegrees() != null ? previousQualification
                                         .getNumberOfEnrolmentsInPreviousDegrees() : "");
 
-                    }
+            }
 
-                };
+        };
 
-        final SheetData<PersonalInformationBean> personalIngressionDataSheetData =
-                new SheetData<PersonalInformationBean>(raides.getAllPrecedentDegreeInformations()) {
+        final SheetData<Registration> personalIngressionDataSheetData =
+                new SheetData<Registration>(raides.getAllRegistrations()) {
 
                     @Override
-                    protected void makeLine(final PersonalInformationBean personalInformationBean) {
+                    protected void makeLine(final Registration registration) {
 
                         Set<PersonalIngressionData> personalIngressionsDataSet =
-                                personalInformationBean.getRegistration().getStudent().getPersonalIngressionsDataSet();
+                                registration.getStudent().getPersonalIngressionsDataSet();
                         for (final PersonalIngressionData personalIngressionData : personalIngressionsDataSet) {
 
-                            addCell("Nº Aluno", personalInformationBean.getRegistration().getStudent().getNumber());
+                            addCell("Nº Aluno", registration.getStudent().getNumber());
                             addCell(pdiLabel("executionYear"), personalIngressionData.getExecutionYear().getQualifiedName());
 
                             addCell(pidLabel("countryOfResidence"),

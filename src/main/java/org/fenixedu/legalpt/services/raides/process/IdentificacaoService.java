@@ -160,7 +160,7 @@ public class IdentificacaoService extends RaidesService {
 
     public static Function<Registration, String> COUNTRY_OF_HIGH_SCHOOL_PROVIDER = registration -> {
 
-        final PrecedentDegreeInformation pid = registration.getStudentCandidacy().getPrecedentDegreeInformation();
+        final PrecedentDegreeInformation pid = registration.getStudentCandidacy().getCompletedDegreeInformation();
 
         if (pid != null && pid.getSchoolLevel() == SchoolLevelType.HIGH_SCHOOL_OR_EQUIVALENT && pid.getCountry() != null) {
             return pid.getCountry().getCode();

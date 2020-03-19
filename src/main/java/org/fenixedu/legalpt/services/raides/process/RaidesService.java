@@ -259,7 +259,7 @@ public class RaidesService {
     protected void preencheGrauPrecedentCompleto(final IGrauPrecedenteCompleto bean, final Unit institutionUnit,
             final ExecutionYear executionYear, final Registration registration) {
         final StudentCandidacy studentCandidacy = registration.getStudentCandidacy();
-        final PrecedentDegreeInformation lastCompletedQualification = studentCandidacy.getPrecedentDegreeInformation();
+        final PrecedentDegreeInformation lastCompletedQualification = studentCandidacy.getCompletedDegreeInformation();
 
         if (lastCompletedQualification == null) {
             return;
@@ -342,9 +342,9 @@ public class RaidesService {
 
     private AcademicalInstitutionType highSchoolType(StudentCandidacy studentCandidacy) {
 
-        if (studentCandidacy.getPrecedentDegreeInformation() != null
-                && studentCandidacy.getPrecedentDegreeInformation().getInstitutionType() != null) {
-            return studentCandidacy.getPrecedentDegreeInformation().getInstitutionType();
+        if (studentCandidacy.getCompletedDegreeInformation() != null
+                && studentCandidacy.getCompletedDegreeInformation().getInstitutionType() != null) {
+            return studentCandidacy.getCompletedDegreeInformation().getInstitutionType();
         }
 
         if (studentCandidacy.getPerson().getStudent() != null) {

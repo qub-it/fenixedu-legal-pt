@@ -77,13 +77,13 @@ public class InscritoService extends RaidesService {
 
             if (isDegreeChangeOrTransfer(raidesRequestParameter, registration)) {
                 final PrecedentDegreeInformation precedentQualification =
-                        registration.getStudentCandidacy().getPrecedentDegreeInformation();
-                if (precedentQualification != null && precedentQualification.getPrecedentInstitution() != null
-                        && !Strings.isNullOrEmpty(precedentQualification.getPrecedentInstitution().getCode())) {
-                    bean.setEstabInscricaoAnt(precedentQualification.getPrecedentInstitution().getCode());
-                } else if (precedentQualification != null && precedentQualification.getPrecedentInstitution() != null) {
+                        registration.getStudentCandidacy().getPreviousDegreeInformation();
+                if (precedentQualification != null && precedentQualification.getInstitution() != null
+                        && !Strings.isNullOrEmpty(precedentQualification.getInstitution().getCode())) {
+                    bean.setEstabInscricaoAnt(precedentQualification.getInstitution().getCode());
+                } else if (precedentQualification != null && precedentQualification.getInstitution() != null) {
                     bean.setEstabInscricaoAnt(Raides.Cursos.OUTRO);
-                    bean.setOutroEstabInscAnt(precedentQualification.getPrecedentInstitution().getNameI18n().getContent());
+                    bean.setOutroEstabInscAnt(precedentQualification.getInstitution().getNameI18n().getContent());
                 }
 
                 bean.setNumInscCursosAnt(precedentQualification.getNumberOfEnrolmentsInPreviousDegrees());
@@ -254,7 +254,8 @@ public class InscritoService extends RaidesService {
     }
 
     //TODO: replace with scholarship module
-    private boolean hasOtherActiveRegistrationWhichRequiresStatuteToReportGrantOwner(final Registration registration, final ExecutionYear executionYear) {
+    private boolean hasOtherActiveRegistrationWhichRequiresStatuteToReportGrantOwner(final Registration registration,
+            final ExecutionYear executionYear) {
         return registration.getStudent().getRegistrationsSet().stream()
                 .anyMatch(r -> r != registration && RegistrationServices.getEnrolmentYears(r).contains(executionYear));
     }
