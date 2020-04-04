@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.organizationalStructure.PartyTypeEnum;
-import org.fenixedu.academic.domain.organizationalStructure.ScientificAreaUnit;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.person.Gender;
 import org.fenixedu.academic.domain.person.IDDocumentType;
@@ -129,7 +128,7 @@ public enum RebidesMappingType implements ILegalMappingType {
             return new LocalizedString(I18N.getLocale(), "TODO_CONTRACT_WAGE_LEVEL");// ((ContractWageLevel) FenixFramework.getDomainObject(key)).getName();
 
         case SCIENTIFIC_AREA:
-            return ((ScientificAreaUnit) FenixFramework.getDomainObject(key)).getPartyName();
+            return ((Unit) FenixFramework.getDomainObject(key)).getPartyName();
 
         case SCHOOL_LEVEL:
             final SchoolLevelType schoolLevel = SchoolLevelType.valueOf(key);

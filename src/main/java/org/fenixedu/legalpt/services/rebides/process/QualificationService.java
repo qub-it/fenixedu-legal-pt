@@ -3,7 +3,6 @@ package org.fenixedu.legalpt.services.rebides.process;
 import org.fenixedu.academic.domain.Qualification;
 import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.Teacher;
-import org.fenixedu.academic.domain.organizationalStructure.ScientificAreaUnit;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.legalpt.domain.LegalReportContext;
@@ -186,7 +185,7 @@ public class QualificationService {
         return null;
     }
 
-    private ScientificAreaUnit getQualificationScientificAreaUnit() {
+    private Unit getQualificationScientificAreaUnit() {
         //TODO: finish
         return null;
     }
