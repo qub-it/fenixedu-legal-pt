@@ -49,7 +49,7 @@ import org.fenixedu.academic.domain.TeacherCategory;
 import org.fenixedu.academic.domain.academicStructure.AcademicArea;
 import org.fenixedu.academic.domain.academicStructure.AcademicAreaType;
 import org.fenixedu.academic.domain.dml.DynamicField;
-import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
+import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.person.JobType;
 import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.academic.domain.researchPublication.ResearchPublication;
@@ -150,7 +150,10 @@ public class A3esHarvestTeachersDataService {
     }
 
     static private void fillInstitutionName(final A3esTeacherBean data) {
-        data.addField("ies", "higherEducationInstitution", UniversityUnit.getInstitutionsUniversityUnit().getName(), _200);
+        final Unit currentInstitution = Bennu.getInstance().getInstitutionUnit();
+        final Unit university = currentInstitution.getParentUnits().stream().filter(u -> u.isUniversityUnit()).findFirst()
+                .orElse(currentInstitution);
+        data.addField("ies", "higherEducationInstitution", university.getName(), _200);
     }
 
     static private void fillSchoolName(final A3esTeacherBean data) {

@@ -22,7 +22,7 @@ import org.fenixedu.academic.domain.DegreeInfo;
 import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degree.DegreeType;
-import org.fenixedu.academic.domain.organizationalStructure.UniversityUnit;
+import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.dto.a3es.A3esDegreeBean;
@@ -130,8 +130,10 @@ public class A3esHarvestDegreeDataService {
     }
 
     static private void fillInstitutionName(final A3esDegreeBean data) {
-        data.addField("q-a1_name", "higherEducationInstitution", UniversityUnit.getInstitutionsUniversityUnit().getName(),
-                _UNLIMITED);
+        final Unit currentInstitution = Bennu.getInstance().getInstitutionUnit();
+        final Unit university = currentInstitution.getParentUnits().stream().filter(u -> u.isUniversityUnit()).findFirst()
+                .orElse(currentInstitution);
+        data.addField("q-a1_name", "higherEducationInstitution", university.getName(), _UNLIMITED);
     }
 
     static private void fillSchoolName(final A3esDegreeBean data) {
