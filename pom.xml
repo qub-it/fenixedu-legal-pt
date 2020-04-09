@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
- 
+
 	<parent>
 		<groupId>com.qubit.solution.fenixedu.build</groupId>
 		<artifactId>qub-fenixedu-project</artifactId>
@@ -44,7 +45,7 @@
 							<bindingDirectory>${basedir}/src/main/xsd/raides/</bindingDirectory>
 						</configuration>
 					</execution>
-					
+
 					<execution>
 						<id>process-rebides-xsd</id>
 						<goals>
@@ -73,8 +74,8 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			
-			
+
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -89,7 +90,7 @@
 						<configuration>
 							<sources>
 								<source>${basedir}/target/generated-sources/xsd/raides/</source>
-                                <source>${basedir}/target/generated-sources/xsd/rebides/</source>
+								<source>${basedir}/target/generated-sources/xsd/rebides/</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -148,33 +149,34 @@
 			<artifactId>fenixedu-academic-core</artifactId>
 			<version>29.0.0</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-extensions</artifactId>
-			<version>4.6.0</version>
-		</dependency>		
-        
-        <!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
+			<version>4.6.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
 		<dependency>
-		    <groupId>net.lingala.zip4j</groupId>
-		    <artifactId>zip4j</artifactId>
-		    <version>1.3.2</version>
+			<groupId>net.lingala.zip4j</groupId>
+			<artifactId>zip4j</artifactId>
+			<version>1.3.2</version>
 		</dependency>
-		
-        <dependency>
-            <groupId>org.fenixedu</groupId>
-            <artifactId>fenixedu-commons</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-                
-        <!-- Need for jaxb plugin execution due to error:  not allowed due to restriction set by the accessExternalSchema property. -->
-        <dependency>
+		<dependency>
 			<groupId>org.fenixedu</groupId>
-			<artifactId>fenixedu-academic-treasury</artifactId>
-			<version>4.4.5</version>
+			<artifactId>fenixedu-commons</artifactId>
+			<version>1.1.2</version>
 		</dependency>
-				
+		<!-- Need for jaxb plugin execution due to error: not allowed due to restriction 
+			set by the accessExternalSchema property. -->
+		<dependency>
+			<groupId>org.fenixedu</groupId>
+			<artifactId>fenixedu-academic-treasury-base</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fenixedu</groupId>
+			<artifactId>fenixedu-academic-treasury-ui</artifactId>
+			<version>5.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -187,16 +189,16 @@
 			<url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
 		</repository>
 	</repositories>
-	    <distributionManagement>
-                <repository>
-                        <id>ulisboa-repo</id>
-                        <url>https://nexjen.ulisboa.pt/nexus/content/repositories/releases/</url>
-                </repository>
-                <snapshotRepository>
-                        <id>ulisboa-repo</id>
-                        <url>https://nexjen.ulisboa.pt/nexus/content/repositories/snapshots/</url>
-                </snapshotRepository>
-        </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>ulisboa-repo</id>
+			<url>https://nexjen.ulisboa.pt/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ulisboa-repo</id>
+			<url>https://nexjen.ulisboa.pt/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 
 </project>
