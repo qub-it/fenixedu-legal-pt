@@ -134,6 +134,10 @@ public class Raides {
         }
 
     }
+    
+    public static class Concelho {
+        public static final String OUTRO = "9999";
+    }
 
     public static class Cursos {
         public static final String OUTRO = "0000";
