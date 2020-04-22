@@ -575,7 +575,7 @@ public class RaidesService {
         final DistrictSubdivision districtSubdivision = Raides.districtSubdivisionOfResidence(registration, executionYear);
         if (countryOfResidence != null && districtSubdivision != null) {
             bean.setResideConcelho(districtSubdivision.getDistrict().getCode() + districtSubdivision.getCode());
-        } else {
+        } else if(Raides.countryOfResidence(registration, executionYear).isDefaultCountry()){
             bean.setResideConcelho(Raides.Concelho.OUTRO);
         }
 

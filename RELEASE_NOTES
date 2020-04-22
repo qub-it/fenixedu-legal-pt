@@ -1,3 +1,5 @@
+- Bug fix: Set default ResideConcelho with 9999 as default value only when PT is the country
+
 2.9.4 (20-04-2020)
 - Bug fix: Set default ResideConcelho with 9999 as default value
 
