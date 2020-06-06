@@ -738,10 +738,16 @@ public class A3esHarvestTeachersDataService {
             result += label("since") + " ";
         }
 
-        result += job.getBeginDate().toString("yyyy") + " ";
+        LocalDate beginDate = job.getBeginDate();
+        if (beginDate != null) {
+            result += beginDate.toString("yyyy") + " ";
+        }
 
         if (end != null) {
-            result += "- " + end.toString("yyyy") + " ";
+            if (beginDate != null) {
+                result += "- ";
+            }
+            result += end.toString("yyyy") + " ";
         }
 
         if (!StringUtils.isBlank(job.getPosition())) {
