@@ -722,7 +722,8 @@ public class A3esHarvestTeachersDataService {
     }
 
     static public SortedSet<Job> findJobsSortedByBeginDate(final Person person, final JobType type) {
-        final SortedSet<Job> result = new TreeSet<>(Comparator.comparing(Job::getBeginDate).reversed());
+        final SortedSet<Job> result =
+                new TreeSet<>(Comparator.comparing(Job::getBeginDate).reversed().thenComparing(Job::getExternalId));
         if (person != null && type != null) {
             result.addAll(person.getJobsSet().stream().filter(j -> j.getBeginDate() != null && type.equals(j.getType()))
                     .collect(Collectors.toSet()));

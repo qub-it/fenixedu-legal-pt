@@ -1,4 +1,5 @@
 - Refactor: Upgraded dependency of fenixedu-academic-core and academic-extensions
+- Bug fix: When exporting teacher jobs to A3ES, untie sort by comparing by externalId   
 
 2.9.6 (25-04-2020)
 - Refactor: Replace fenixedu-academic-treasury dependency by fenixedu-academic-treasury-base and fenixedu-academic-treasury-ui
