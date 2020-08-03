@@ -252,7 +252,8 @@ public class A3esHarvestTeachersDataService {
 
         final Qualification main = findMostRelevantQualification(person);
         person.getAssociatedQualificationsSet().stream().filter(q -> q != main)
-                .sorted(Comparator.comparing(Qualification::getYear).reversed()).forEach(q -> {
+                .sorted(Comparator.comparing(Qualification::getYear, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
+                .forEach(q -> {
                     if (otherAttainedDegrees.size() == _QUALIFICATIONS) {
                         return;
                     }
@@ -723,7 +724,8 @@ public class A3esHarvestTeachersDataService {
 
     static public SortedSet<Job> findJobsSortedByBeginDate(final Person person, final JobType type) {
         final SortedSet<Job> result =
-                new TreeSet<>(Comparator.comparing(Job::getBeginDate).reversed().thenComparing(Job::getExternalId));
+                new TreeSet<>(Comparator.comparing(Job::getBeginDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed()
+                        .thenComparing(Job::getExternalId));
         if (person != null && type != null) {
             result.addAll(person.getJobsSet().stream().filter(j -> j.getBeginDate() != null && type.equals(j.getType()))
                     .collect(Collectors.toSet()));
