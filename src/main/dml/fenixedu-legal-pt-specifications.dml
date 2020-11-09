@@ -301,4 +301,14 @@ class legal.raides.RaidesInstance extends legal.report.LegalReport {
 		}
 	}
 	
+	relation RaidesInstanceExcludedDegrees{
+        .org.fenixedu.academic.domain.Degree playsRole excludedDegrees {
+            multiplicity *;
+        }
+        
+        legal.raides.RaidesInstance playsRole {
+            multiplicity *;
+        }
+    }
+	
 

@@ -1,3 +1,5 @@
+- Improvement: Added excluded dregrees to RaidesInstance
+
 2.9.7 (14-07-2020)
 - Refactor: Upgraded dependency of fenixedu-academic-core and academic-extensions
 - Bug fix: When exporting teacher jobs to A3ES, untie sort by comparing by externalId   
