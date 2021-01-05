@@ -152,6 +152,7 @@ public class MobilidadeInternacionalService extends RaidesService {
             bean.setPaisOrigemMobilidadeCredito(mobility.getCountry().getCode());
         }
 
+        validaPaisOrigemMobilidadeCredito(executionYear, registration, bean);
         validaProgramaMobilidade(executionYear, registration, bean);
         validaDuracaoPrograma(executionYear, registration, bean);
         validaNivelCursoOrigem(executionYear, registration, bean);
@@ -224,6 +225,16 @@ public class MobilidadeInternacionalService extends RaidesService {
         if (StringUtils.isEmpty(bean.getRegimeFrequencia())) {
             LegalReportContext.addError("", i18n("error.Raides.validation.missing.mapping.for.regime.frequence",
                     registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
+            bean.markAsInvalid();
+        }
+
+    }
+
+    private void validaPaisOrigemMobilidadeCredito(ExecutionYear executionYear, Registration registration,
+            TblMobilidadeInternacional bean) {
+        if (Strings.isNullOrEmpty(bean.getPaisOrigemMobilidadeCredito())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.mobility.country.empty", formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
 
