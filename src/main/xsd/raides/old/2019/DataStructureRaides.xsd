@@ -150,7 +150,7 @@
                             <xs:element type="DuracaoPrograma" name="DuracaoPrograma" />
                             <xs:element type="NivelFormacaoOrigem" name="NivelCursoOrigem" />
                             <xs:element type="Outro" name="OutroNivelCurOrigem" nillable="true" />
-                            <xs:element type="Paises" name="PaisOrigemMobilidadeCredito" />
+                            <xs:element type="Paises" name="PaisOrigemMobilidadeCredito" nillable="true" />
                             <xs:element type="NivelFormacaoDestino" name="NivelCursoDestino" nillable="true" />
                             <xs:element type="Outro" name="OutroNivelCurDestino" nillable="true" />
                           </xs:sequence>
