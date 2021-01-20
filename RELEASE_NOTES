@@ -1,6 +1,8 @@
+- Bug fix: On A3ES export, replace non standard dashes
+
 2.10.1 (05-01-2021)
 - Improvement: Added new XSD files for RAIDES 2020
-- Fix: RAIDES: Validate mobility origin country
+- Bug fix: RAIDES: Validate mobility origin country
 
 2.10.0 (09-11-2020)
 - Improvement: Added excluded dregrees to RaidesInstance

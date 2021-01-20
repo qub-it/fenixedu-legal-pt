@@ -5,6 +5,7 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.i18n;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
 
 import java.util.Locale;
+import java.util.function.Function;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.IBean;
@@ -16,6 +17,9 @@ import org.jsoup.Jsoup;
 public class A3esBeanField implements IBean {
 
     static final public String CUT = " ...";
+
+    private final static Function<String, String> INVALID_CHARS_CLEANER =
+            source -> source.replace("\\u2013", "-").replace("\\u2014", "-").replace("\\u2022", "-").replace("\\/", "|");
 
     private String id;
     private String label;
@@ -51,8 +55,8 @@ public class A3esBeanField implements IBean {
         final String label = i18n(labelKey) + language;
         result.setLabel(label);
 
-        String value = StringUtils.isBlank(source) ? null : limit == _UNSUPPORTED ? source : JSONObject
-                .escape(Jsoup.parse(source).text()).replace("\\u2022", "-").replace("\\/", "|");
+        String value = StringUtils.isBlank(source) ? null : limit == _UNSUPPORTED ? source : INVALID_CHARS_CLEANER
+                .apply(JSONObject.escape(Jsoup.parse(source).text()));
 
         if (StringUtils.isBlank(value)) {
             if (limit == _UNSUPPORTED) {
