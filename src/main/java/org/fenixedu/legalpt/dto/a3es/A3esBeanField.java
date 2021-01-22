@@ -19,7 +19,8 @@ public class A3esBeanField implements IBean {
     static final public String CUT = " ...";
 
     private final static Function<String, String> INVALID_CHARS_CLEANER =
-            source -> source.replace("\\u2013", "-").replace("\\u2014", "-").replace("\\u2022", "-").replace("\\/", "|");
+            source -> source.replace("\\u2013", "-").replace("\\u2014", "-").replace("\\u2022", "-").replace("\\u201C", "\\\"")
+                    .replace("\\u201D", "\\\"").replace("\\/", "|");
 
     private String id;
     private String label;
