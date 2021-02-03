@@ -103,7 +103,9 @@ public class RaidesService {
     }
 
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
-        if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty()) {
+        // todo refactor
+        if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty() &&
+                RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear).size() > 1) {
             return false;
         }
 
@@ -251,7 +253,7 @@ public class RaidesService {
                 return -result;
             }
 
-            return o1.getExternalId().compareTo(o2.getExternalId());
+            return o1.getExternalId().compareTo(o2.getE)xternalId());
         }
 
     }
