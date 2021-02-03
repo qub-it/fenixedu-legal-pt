@@ -253,7 +253,7 @@ public class RaidesService {
                 return -result;
             }
 
-            return o1.getExternalId().compareTo(o2.getE)xternalId());
+            return o1.getExternalId().compareTo(o2.getExternalId());
         }
 
     }
