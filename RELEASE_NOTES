@@ -1,5 +1,7 @@
+- Refactor: Remove references of deprecated slots of qualification
+
 2.10.4 (03-02-2021)
-Bug fix - isFirstTimeOnDegree - #UL-FC-2363
+- Bug fix - isFirstTimeOnDegree - #UL-FC-2363
 
 2.10.3 (22-01-2021)
 - Bug fix: On A3ES export, replace non standard double quotes

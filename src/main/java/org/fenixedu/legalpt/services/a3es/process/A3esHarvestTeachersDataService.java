@@ -226,11 +226,6 @@ public class A3esHarvestTeachersDataService {
 
     static private String getDegreeArea(final Qualification q) {
         if (q != null) {
-
-            if (!StringUtils.isBlank(q.getSpecializationArea())) {
-                return q.getSpecializationArea().trim();
-            }
-
             if (q.getDegreeUnit() != null) {
                 return q.getDegreeUnit().getName();
             }
@@ -240,7 +235,7 @@ public class A3esHarvestTeachersDataService {
             }
         }
 
-        return q == null ? null : q.getSpecializationArea();
+        return null;
     }
 
     private static String getDegreeInstitution(final Qualification q) {
@@ -680,15 +675,9 @@ public class A3esHarvestTeachersDataService {
 
         final Qualification qualification = findMostRelevantQualification(person);
         if (qualification != null) {
-
-            result = qualification.getSpecializationArea();
-
-            if (StringUtils.isBlank(result)) {
-                final AcademicArea area = qualification.getAcademicAreasSet().stream()
-                        .filter(a -> a.getType() == AcademicAreaType.findByCode("DEGREE_SPECIALIZATION")).findFirst()
-                        .orElse(null);
-                result = area == null ? null : area.getName().getContent(PT);
-            }
+            final AcademicArea area = qualification.getAcademicAreasSet().stream()
+                    .filter(a -> a.getType() == AcademicAreaType.findByCode("DEGREE_SPECIALIZATION")).findFirst().orElse(null);
+            result = area == null ? null : area.getName().getContent(PT);
         }
 
         return result;
