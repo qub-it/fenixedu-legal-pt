@@ -60,7 +60,7 @@ public class MobilidadeInternacionalService extends RaidesService {
             bean.setEctsInscrito(null);
         }
 
-        bean.setRegimeFrequencia(regimeFrequencia(registration, executionYear));
+        bean.setRegimeFrequencia(regimeFrequencia(registration, executionYear, true));
 
         final MobilityRegistrationInformation mobility =
                 MobilityRegistrationInformation.findInternationalIncomingInformation(registration, executionYear);

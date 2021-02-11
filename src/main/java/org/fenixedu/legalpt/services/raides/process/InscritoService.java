@@ -49,11 +49,11 @@ public class InscritoService extends RaidesService {
 
         preencheInformacaoMatricula(report, bean, institutionUnit, executionYear, registration);
 
-        bean.setAnoCurricular(anoCurricular(registration, executionYear));
+        bean.setAnoCurricular(anoCurricular(registration, executionYear, false));
         bean.setPrimeiraVez(
                 LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(isFirstTimeOnDegree(registration, executionYear)));
 
-        bean.setRegimeFrequencia(regimeFrequencia(registration, executionYear));
+        bean.setRegimeFrequencia(regimeFrequencia(registration, executionYear, false));
 
         final DateTime maximumAnnulmentDate =
                 findMaximumAnnulmentDate(raidesRequestParameter.getPeriodsForEnrolled(), executionYear);

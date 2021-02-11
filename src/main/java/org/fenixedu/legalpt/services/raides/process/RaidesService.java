@@ -64,16 +64,17 @@ public class RaidesService {
         this.report = report;
     }
 
-    protected String anoCurricular(final Registration registration, final ExecutionYear executionYear) {
+    protected String anoCurricular(final Registration registration, final ExecutionYear executionYear, final boolean mobility) {
         if (Raides.isDoctoralDegree(registration)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.NAO_APLICAVEL_CODE);
         }
 
-        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION)) {
+        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.DISSERTATION)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.DISSERTACAO_CODE);
-        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.INTERNSHIP)) {
+        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.INTERNSHIP)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.ESTAGIO_FINAL_CODE);
-        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.PROJECT_WORK)) {
+        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility,
+                CompetenceCourseType.PROJECT_WORK)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR)
                     .translate(Raides.AnoCurricular.TRABALHO_PROJECTO_CODE);
         }
@@ -83,11 +84,16 @@ public class RaidesService {
     }
 
     protected boolean isOnlyEnrolledOnCompetenceCourseType(final Registration registration, final ExecutionYear executionYear,
-            final CompetenceCourseType competenceCourseType) {
+            final boolean mobility, final CompetenceCourseType competenceCourseType) {
         final Collection<Enrolment> enrolments = registration.getEnrolments(executionYear);
 
         final Set<CompetenceCourseType> typesSet = Sets.newHashSet();
         for (final Enrolment enrolment : enrolments) {
+
+            if (!mobility && enrolment.getCurriculumGroup().isNoCourseGroupCurriculumGroup()) {
+                continue;
+            }
+
             final CurricularCourse curricularCourse = enrolment.getCurricularCourse();
             final CompetenceCourseType type =
                     curricularCourse != null ? curricularCourse.getCompetenceCourse().getType() : CompetenceCourseType.REGULAR;
@@ -104,8 +110,8 @@ public class RaidesService {
 
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
         // todo refactor
-        if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty() &&
-                RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear).size() > 1) {
+        if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty() && RegistrationServices
+                .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear).size() > 1) {
             return false;
         }
 
@@ -577,7 +583,7 @@ public class RaidesService {
         final DistrictSubdivision districtSubdivision = Raides.districtSubdivisionOfResidence(registration, executionYear);
         if (countryOfResidence != null && districtSubdivision != null) {
             bean.setResideConcelho(districtSubdivision.getDistrict().getCode() + districtSubdivision.getCode());
-        } else if(Raides.countryOfResidence(registration, executionYear).isDefaultCountry()){
+        } else if (Raides.countryOfResidence(registration, executionYear).isDefaultCountry()) {
             bean.setResideConcelho(Raides.Concelho.OUTRO);
         }
 
@@ -665,13 +671,13 @@ public class RaidesService {
         }
     }
 
-    protected String regimeFrequencia(final Registration registration, final ExecutionYear executionYear) {
+    protected String regimeFrequencia(final Registration registration, final ExecutionYear executionYear, boolean mobility) {
         final boolean onlyEnrolledOnDissertation =
-                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION);
+                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.DISSERTATION);
         final boolean onlyEnrolledOnInternship =
-                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.INTERNSHIP);
+                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.INTERNSHIP);
         final boolean onlyEnrolledOnProjectWork =
-                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.PROJECT_WORK);
+                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.PROJECT_WORK);
 
         if (onlyEnrolledOnDissertation || onlyEnrolledOnInternship || onlyEnrolledOnProjectWork) {
             return LegalMapping.find(report, LegalMappingType.REGIME_FREQUENCIA).translate(Raides.RegimeFrequencia.ETD_CODE);
@@ -730,7 +736,7 @@ public class RaidesService {
 
     protected BigDecimal doctoralEnrolledEcts(final ExecutionYear executionYear, final Registration registration,
             final DateTime maximumAnnulmentDate) {
-        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, CompetenceCourseType.DISSERTATION)) {
+        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, false, CompetenceCourseType.DISSERTATION)) {
             return null;
         }
 

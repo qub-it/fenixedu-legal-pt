@@ -1,3 +1,6 @@
+- Bug fix - Exclude extra curricular courses at isOnlyEnrolledOnCompetenceCourseType method - UL-ISA-2017
+
+
 2.10.5 (06-02-2021)
 - Refactor: Remove references of deprecated slots of qualification
 
