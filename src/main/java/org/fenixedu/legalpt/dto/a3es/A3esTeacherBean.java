@@ -7,12 +7,13 @@ public class A3esTeacherBean extends A3esAbstractBean {
 
     private AttainedDegree attainedDegree;
     private Set<AttainedDegree> otherAttainedDegrees;
+    private Set<ResearchCenter> researchCenters;
     private TeacherActivity primePublishedWork;
     private TeacherActivity primeProfessionalActivities;
     private TeacherActivity otherPublishedWork;
     private TeacherActivity otherProfessionalActivities;
+    private Set<TeachingTraining> teachingTrainings;
     private Set<TeachingService> teachingServices;
-    private Set<OtherTeachingService> otherTeachingServices;
 
     public AttainedDegree getAttainedDegree() {
         return attainedDegree;
@@ -28,6 +29,14 @@ public class A3esTeacherBean extends A3esAbstractBean {
 
     public void setOtherAttainedDegrees(final Set<AttainedDegree> otherAttainedDegrees) {
         this.otherAttainedDegrees = otherAttainedDegrees;
+    }
+
+    public Set<ResearchCenter> getResearchCenters() {
+        return researchCenters;
+    }
+
+    public void setResearchCenters(final Set<ResearchCenter> researchCenters) {
+        this.researchCenters = researchCenters;
     }
 
     public TeacherActivity getPrimePublishedWork() {
@@ -62,6 +71,14 @@ public class A3esTeacherBean extends A3esAbstractBean {
         this.otherProfessionalActivities = otherProfessionalActivities;
     }
 
+    public Set<TeachingTraining> getTeachingTrainings() {
+        return teachingTrainings;
+    }
+
+    public void setTeachingTrainings(final Set<TeachingTraining> teachingTrainings) {
+        this.teachingTrainings = teachingTrainings;
+    }
+
     public Set<TeachingService> getTeachingServices() {
         return teachingServices;
     }
@@ -70,12 +87,7 @@ public class A3esTeacherBean extends A3esAbstractBean {
         this.teachingServices = teachingServices;
     }
 
-    public Set<OtherTeachingService> getOtherTeachingServices() {
-        return otherTeachingServices;
-    }
-
-    public void setOtherTeachingServices(final Set<OtherTeachingService> otherTeachingServices) {
-        this.otherTeachingServices = otherTeachingServices;
+    static public class ResearchCenter extends A3esAbstractBean {
     }
 
     static public class AttainedDegree extends A3esAbstractBean {
@@ -84,10 +96,10 @@ public class A3esTeacherBean extends A3esAbstractBean {
     static public class TeacherActivity extends A3esAbstractBean {
     }
 
-    static public class TeachingService extends A3esAbstractBean {
+    static public class TeachingTraining extends A3esAbstractBean {
     }
 
-    static public class OtherTeachingService extends A3esAbstractBean {
+    static public class TeachingService extends A3esAbstractBean {
     }
 
 }

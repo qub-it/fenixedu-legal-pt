@@ -29,7 +29,6 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.CurricularCourse;
@@ -57,15 +56,15 @@ import org.fenixedu.academic.domain.researchPublication.ResearchPublicationType;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
-import org.fenixedu.legalpt.domain.a3es.A3esProcessType;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
 import org.fenixedu.legalpt.domain.teacher.SpecialistTitle;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.AttainedDegree;
-import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.OtherTeachingService;
+import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.ResearchCenter;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
+import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingTraining;
 import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -120,17 +119,16 @@ public class A3esHarvestTeachersDataService {
             fillAttainedDegree(data, person);
             fillOtherAttainedDegrees(data, person);
 
+            fillResearchCenters(data, person);
+
             fillPrimePublishedWork(data, person);
             fillPrimeProfessionalActivities(data, person);
             fillOtherPublishedWork(data, person);
             fillOtherProfessionalActivities(data, person);
 
-            if (bean.getProcess().getType().equals(A3esProcessType.EVALUATION_OF_NEW_PROGRAM)) {
-                fillTeachingService(data, personProfessorships);
-                fillOtherTeachingService(data, personProfessorships);
-            } else {
-                fillTeachingServiceOriginal(data, personProfessorships);
-            }
+            fillTeachingTrainings(data, person);
+
+            fillTeachingService(data, personProfessorships);
 
             return data;
         }).filter(i -> i != null).collect(Collectors.toCollection(() -> bean.getTeachersData()));
@@ -272,6 +270,34 @@ public class A3esHarvestTeachersDataService {
         data.setOtherAttainedDegrees(otherAttainedDegrees);
     }
 
+    static private void fillResearchCenters(final A3esTeacherBean data, final Person person) {
+        final Set<ResearchCenter> researchCenters = new LinkedHashSet<>();
+
+        // TODO get actual research centers data from person
+        if ("FC".equals(Bennu.getInstance().getInstitutionUnit().getAcronym())) {
+
+            final ResearchCenter researchCenter = new ResearchCenter();
+            researchCenters.add(researchCenter);
+
+            researchCenter.addField("invunit", "invunit", "Instituto Dom Luiz (IDL)", _100);
+            researchCenter.addField("mark", "mark", "excelente", _30);
+            researchCenter.addField("ies", "ies", "Faculdade de Ciências da Universidade de Lisboa (FC/ULisboa)", _100);
+            researchCenter.addField("type", "type", "institucional", _100);
+
+        } else {
+
+            final ResearchCenter researchCenter = new ResearchCenter();
+            researchCenters.add(researchCenter);
+
+            researchCenter.addField("invunit", "invunit", "unit 1", _100);
+            researchCenter.addField("mark", "mark", "excelente", _30);
+            researchCenter.addField("ies", "ies", "IES 1", _100);
+            researchCenter.addField("type", "type", "outro", _100);
+        }
+
+        data.setResearchCenters(researchCenters);
+    }
+
     static private void fillPrimePublishedWork(final A3esTeacherBean data, final Person person) {
         final TeacherActivity result = new TeacherActivity();
         final String id = "investigation";
@@ -333,98 +359,13 @@ public class A3esHarvestTeachersDataService {
         data.setOtherProfessionalActivities(result);
     }
 
-    private void fillTeachingServiceOriginal(final A3esTeacherBean data,
-            final Map<CompetenceCourse, Set<Professorship>> personProfessorships) {
+    private void fillTeachingTrainings(final A3esTeacherBean data, final Person person) {
 
-        final Set<TeachingService> teachingServices = new LinkedHashSet<>();
+        final Set<TeachingTraining> teachingTrainings = new LinkedHashSet<>();
 
-        final Stream<Entry<CompetenceCourse, Set<Professorship>>> sorted = personProfessorships.entrySet().stream()
-                .sorted((x, y) -> Collator.getInstance().compare(x.getKey().getName(), y.getKey().getName()));
+        // TODO get actual teaching trainings data from person
 
-        if (A3esInstance.getInstance().getGroupPersonProfessorshipByCourse()) {
-            fillTeachingServiceByCourseOriginal(teachingServices, sorted);
-
-        } else {
-            fillTeachingServiceByShiftTypeOriginal(teachingServices, sorted);
-        }
-
-        data.setTeachingServices(teachingServices);
-    }
-
-    private void fillTeachingServiceByShiftTypeOriginal(final Set<TeachingService> teachingServices,
-            final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
-
-        personProfessorships.forEach(entry -> {
-
-            final CompetenceCourse competence = entry.getKey();
-            final Set<Professorship> competenceProfessorships = entry.getValue();
-
-            competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream()).forEach(sp -> {
-
-                if (teachingServices.size() == _TEACHING_SERVICES) {
-                    return;
-                }
-
-                final ShiftType type = getShiftType(sp);
-                if (type == null) {
-                    return;
-                }
-
-                final TeachingService service = new TeachingService();
-                teachingServices.add(service);
-                service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
-
-                final Stream<CurricularCourse> courses =
-                        sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
-                final String studyCycle = getStudyCycles(courses);
-                service.addField("studyCycle", "studyCycle", studyCycle, _200);
-
-                final String shiftType = getShiftTypeAcronym(type);
-                service.addField("type", "type", shiftType, _30);
-
-                final BigDecimal hours = calculateTeachingHours(sp);
-                service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
-            });
-
-        });
-    }
-
-    private void fillTeachingServiceByCourseOriginal(final Set<TeachingService> teachingServices,
-            final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
-
-        personProfessorships.forEach(entry -> {
-
-            final CompetenceCourse competence = entry.getKey();
-            final Set<Professorship> competenceProfessorships = entry.getValue();
-
-            if (teachingServices.size() == _TEACHING_SERVICES) {
-                return;
-            }
-
-            final Set<ShiftProfessorship> shiftProfessorships =
-                    competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                            .filter(sp -> getShiftType(sp) != null).collect(Collectors.toSet());
-            if (shiftProfessorships.isEmpty()) {
-                return;
-            }
-
-            final TeachingService service = new TeachingService();
-            teachingServices.add(service);
-            service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
-
-            final Stream<CurricularCourse> courses = shiftProfessorships.stream()
-                    .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
-            final String studyCycle = getStudyCycles(courses);
-            service.addField("studyCycle", "studyCycle", studyCycle, _200);
-
-            final String shiftType = shiftProfessorships.stream().map(sp -> getShiftTypeAcronym(getShiftType(sp))).distinct()
-                    .sorted().collect(Collectors.joining(","));
-            service.addField("type", "type", shiftType, _30);
-
-            final BigDecimal hours =
-                    shiftProfessorships.stream().map(sp -> calculateTeachingHours(sp)).reduce(BigDecimal.ZERO, BigDecimal::add);
-            service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
-        });
+        data.setTeachingTrainings(teachingTrainings);
     }
 
     private void fillTeachingService(final A3esTeacherBean data,
@@ -464,22 +405,20 @@ public class A3esHarvestTeachersDataService {
                     return;
                 }
 
+                final TeachingService service = new TeachingService();
+                teachingServices.add(service);
+                service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
+
                 final Stream<CurricularCourse> courses =
                         sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
                 final String studyCycle = getStudyCycles(courses);
+                service.addField("studyCycle", "studyCycle", studyCycle, _200);
 
-                if (studyCycle.contains(processStudyCycle)) {
-                    final TeachingService service = new TeachingService();
-                    teachingServices.add(service);
-                    service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
+                final String shiftType = getShiftTypeAcronym(type);
+                service.addField("type", "type", shiftType, _30);
 
-                    final String shiftType = getShiftTypeAcronym(type);
-                    service.addField("type", "type", shiftType, _30);
-
-                    final BigDecimal hours = calculateTeachingHours(sp);
-                    service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
-                }
-
+                final BigDecimal hours = calculateTeachingHours(sp);
+                service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
             });
 
         });
@@ -504,119 +443,22 @@ public class A3esHarvestTeachersDataService {
                 return;
             }
 
-            final Stream<CurricularCourse> courses = shiftProfessorships.stream()
-                    .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
-            final String studyCycle = getStudyCycles(courses);
-
-            if (studyCycle.contains(processStudyCycle)) {
-                final TeachingService service = new TeachingService();
-                teachingServices.add(service);
-                service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
-
-                final String shiftType = shiftProfessorships.stream().map(sp -> getShiftTypeAcronym(getShiftType(sp))).distinct()
-                        .sorted().collect(Collectors.joining(","));
-                service.addField("type", "type", shiftType, _30);
-
-                final BigDecimal hours = shiftProfessorships.stream().map(sp -> calculateTeachingHours(sp))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
-            }
-
-        });
-    }
-
-    private void fillOtherTeachingService(final A3esTeacherBean data,
-            final Map<CompetenceCourse, Set<Professorship>> personProfessorships) {
-
-        final Set<OtherTeachingService> otherTeachingServices = new LinkedHashSet<>();
-
-        final Stream<Entry<CompetenceCourse, Set<Professorship>>> sorted = personProfessorships.entrySet().stream()
-                .sorted((x, y) -> Collator.getInstance().compare(x.getKey().getName(), y.getKey().getName()));
-
-        if (A3esInstance.getInstance().getGroupPersonProfessorshipByCourse()) {
-            fillOtherTeachingServiceByCourse(otherTeachingServices, sorted);
-
-        } else {
-            fillOtherTeachingServiceByShiftType(otherTeachingServices, sorted);
-        }
-
-        data.setOtherTeachingServices(otherTeachingServices);
-    }
-
-    private void fillOtherTeachingServiceByShiftType(final Set<OtherTeachingService> otherTeachingServices,
-            final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
-
-        personProfessorships.forEach(entry -> {
-
-            final CompetenceCourse competence = entry.getKey();
-            final Set<Professorship> competenceProfessorships = entry.getValue();
-
-            competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream()).forEach(sp -> {
-
-                if (otherTeachingServices.size() == _OTHER_TEACHING_SERVICES) {
-                    return;
-                }
-
-                final ShiftType type = getShiftType(sp);
-                if (type == null) {
-                    return;
-                }
-
-                final Stream<CurricularCourse> courses =
-                        sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream();
-                final String studyCycle = getStudyCycles(courses);
-
-                if (!studyCycle.contains(processStudyCycle)) {
-                    final OtherTeachingService service = new OtherTeachingService();
-                    otherTeachingServices.add(service);
-                    service.addField("otherCurricularUnit", "otherCurricularUnit", getCourseName(competence), _100);
-
-                    service.addField("studyCycle", "studyCycle", studyCycle, _200);
-
-                    final BigDecimal hours = calculateTeachingHours(sp);
-                    service.addField("contactHours", "totalContactHours", hours.toPlainString(), _UNLIMITED);
-                }
-
-            });
-
-        });
-    }
-
-    private void fillOtherTeachingServiceByCourse(final Set<OtherTeachingService> otherTeachingServices,
-            final Stream<Entry<CompetenceCourse, Set<Professorship>>> personProfessorships) {
-
-        personProfessorships.forEach(entry -> {
-
-            final CompetenceCourse competence = entry.getKey();
-            final Set<Professorship> competenceProfessorships = entry.getValue();
-
-            if (otherTeachingServices.size() == _OTHER_TEACHING_SERVICES) {
-                return;
-            }
-
-            final Set<ShiftProfessorship> shiftProfessorships =
-                    competenceProfessorships.stream().flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                            .filter(sp -> getShiftType(sp) != null).collect(Collectors.toSet());
-            if (shiftProfessorships.isEmpty()) {
-                return;
-            }
+            final TeachingService service = new TeachingService();
+            teachingServices.add(service);
+            service.addField("curricularUnit", "curricularUnit", getCourseName(competence), _100);
 
             final Stream<CurricularCourse> courses = shiftProfessorships.stream()
                     .flatMap(sp -> sp.getProfessorship().getExecutionCourse().getAssociatedCurricularCoursesSet().stream());
             final String studyCycle = getStudyCycles(courses);
+            service.addField("studyCycle", "studyCycle", studyCycle, _200);
 
-            if (!studyCycle.contains(processStudyCycle)) {
-                final OtherTeachingService service = new OtherTeachingService();
-                otherTeachingServices.add(service);
-                service.addField("otherCurricularUnit", "otherCurricularUnit", getCourseName(competence), _100);
+            final String shiftType = shiftProfessorships.stream().map(sp -> getShiftTypeAcronym(getShiftType(sp))).distinct()
+                    .sorted().collect(Collectors.joining(","));
+            service.addField("type", "type", shiftType, _30);
 
-                service.addField("studyCycle", "studyCycle", studyCycle, _200);
-
-                final BigDecimal hours = shiftProfessorships.stream().map(sp -> calculateTeachingHours(sp))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                service.addField("contactHours", "totalContactHours", hours.toPlainString(), _UNLIMITED);
-            }
-
+            final BigDecimal hours =
+                    shiftProfessorships.stream().map(sp -> calculateTeachingHours(sp)).reduce(BigDecimal.ZERO, BigDecimal::add);
+            service.addField("hoursPerWeek", "totalContactHours", hours.toPlainString(), _UNLIMITED);
         });
     }
 
