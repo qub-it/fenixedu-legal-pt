@@ -1,3 +1,5 @@
+- Refactor: Update academic-core dependency
+
 2.10.7 (01-10-2021)
 - Feature: Add placeholder fields and some changes to conform to newest PAPNCE structure
 
