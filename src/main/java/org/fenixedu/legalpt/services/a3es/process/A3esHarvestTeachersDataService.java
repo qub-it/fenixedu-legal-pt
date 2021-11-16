@@ -57,6 +57,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.teacher.SpecialistTitle;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean;
@@ -65,7 +66,6 @@ import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.ResearchCenter;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeacherActivity;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingService;
 import org.fenixedu.legalpt.dto.a3es.A3esTeacherBean.TeachingTraining;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 

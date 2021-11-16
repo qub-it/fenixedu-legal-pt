@@ -3,7 +3,7 @@ package org.fenixedu.legalpt.task;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.scheduler.CronTask;
 import org.fenixedu.bennu.scheduler.annotation.Task;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
 
 import pt.ist.fenixframework.FenixFramework;
 

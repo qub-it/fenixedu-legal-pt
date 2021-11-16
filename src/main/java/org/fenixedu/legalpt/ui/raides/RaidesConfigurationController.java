@@ -2,10 +2,10 @@ package org.fenixedu.legalpt.ui.raides;
 
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 import org.fenixedu.bennu.spring.portal.SpringFunctionality;
+import org.fenixedu.legalpt.domain.raides.RaidesInstance;
 import org.fenixedu.legalpt.dto.raides.RaidesInstanceBean;
 import org.fenixedu.legalpt.ui.FenixeduLegalPTBaseController;
 import org.fenixedu.legalpt.ui.FenixeduLegalPTController;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

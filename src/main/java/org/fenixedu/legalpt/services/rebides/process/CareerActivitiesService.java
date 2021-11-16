@@ -8,10 +8,10 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.TeacherAuthorization;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.dto.rebides.CareerActivitiesBean;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.joda.time.YearMonthDay;
 
 public class CareerActivitiesService {

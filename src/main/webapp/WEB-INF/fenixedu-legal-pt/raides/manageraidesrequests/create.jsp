@@ -1,7 +1,7 @@
 <%@page import="org.fenixedu.legalpt.ui.raides.RaidesRequestsController"%>
 <%@page import="org.fenixedu.academic.domain.person.RoleType"%>
 <%@page import="org.fenixedu.bennu.core.security.Authenticate"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesPeriodInputType"%>
+<%@page import="org.fenixedu.legalpt.domain.raides.report.RaidesPeriodInputType"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>

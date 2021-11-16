@@ -3,7 +3,7 @@ package org.fenixedu.legalpt.dto.mapping;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 
 import com.google.common.collect.Sets;
 

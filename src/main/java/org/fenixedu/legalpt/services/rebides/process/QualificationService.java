@@ -6,10 +6,10 @@ import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.dto.rebides.QualificationBean;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 
 public class QualificationService {
 

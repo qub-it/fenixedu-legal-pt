@@ -1,6 +1,6 @@
 package org.fenixedu.legalpt.services.raides.process;
 
-import static org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.formatArgs;
+import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
 import java.math.BigDecimal;
 
@@ -11,14 +11,14 @@ import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.mobility.MobilityRegistrationInformation;
 import org.fenixedu.legalpt.domain.LegalReportContext;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.Cursos;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblMobilidadeInternacional;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.BranchMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.TblMobilidadeInternacional;
+import org.fenixedu.legalpt.domain.raides.Raides.Cursos;
+import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
+import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
+import org.fenixedu.legalpt.domain.raides.report.RaidesRequestParameter;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;

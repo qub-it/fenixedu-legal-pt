@@ -1,6 +1,6 @@
 <%@page import="org.fenixedu.legalpt.ui.raides.ManageBranchMappingsController"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMappingEntry"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.BranchMappingType"%>
+<%@page import="org.fenixedu.legalpt.domain.mapping.LegalMappingEntry"%>
+<%@page import="org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>

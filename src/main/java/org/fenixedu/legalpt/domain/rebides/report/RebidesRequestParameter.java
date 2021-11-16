@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.bennu.IBean;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequestParameters;
+import org.fenixedu.legalpt.domain.report.LegalReportRequestParameters;
 
 public class RebidesRequestParameter extends LegalReportRequestParameters implements Serializable, IBean {
 

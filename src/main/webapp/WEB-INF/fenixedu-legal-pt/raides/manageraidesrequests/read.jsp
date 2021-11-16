@@ -1,10 +1,10 @@
 <%@page import="org.fenixedu.legalpt.ui.raides.RaidesRequestsController"%>
 <%@page import="org.fenixedu.bennu.core.security.Authenticate"%>
 <%@page import="org.fenixedu.academic.domain.person.RoleType"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequestParameters"%>
-<%@page import="org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportParameterFile"%>
+<%@page import="org.fenixedu.legalpt.domain.report.LegalReportRequest"%>
+<%@page import="org.fenixedu.legalpt.domain.raides.report.RaidesRequestParameter"%>
+<%@page import="org.fenixedu.legalpt.domain.report.LegalReportRequestParameters"%>
+<%@page import="org.fenixedu.legalpt.domain.report.LegalReportParameterFile"%>
 <%@page import="com.google.gson.Gson"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>

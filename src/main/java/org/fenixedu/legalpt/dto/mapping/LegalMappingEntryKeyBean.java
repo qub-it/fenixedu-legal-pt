@@ -1,7 +1,7 @@
 package org.fenixedu.legalpt.dto.mapping;
 
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 
 @SuppressWarnings("serial")
 public class LegalMappingEntryKeyBean implements java.io.Serializable {

@@ -14,10 +14,10 @@ import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.domain.LegalReportContext.LegalReportEntryData;
 import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntry;
 import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntryType;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
 import org.joda.time.DateTime;
 
 public class XlsExporterLog {

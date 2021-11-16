@@ -15,15 +15,15 @@ import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
+import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.TblDiplomado;
+import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
+import org.fenixedu.legalpt.domain.raides.TblInscrito;
+import org.fenixedu.legalpt.domain.raides.TblMobilidadeInternacional;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblDiplomado;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblIdentificacao;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblInscrito;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblMobilidadeInternacional;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
 
 import com.google.common.base.Strings;
 

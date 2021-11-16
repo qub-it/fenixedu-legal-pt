@@ -4,8 +4,11 @@ import java.util.Set;
 
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.domain.mapping.ILegalMappingType;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
 import org.fenixedu.legalpt.domain.rebides.report.RebidesRequestParameter;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
 import org.fenixedu.legalpt.dto.rebides.RebidesBean;
 import org.fenixedu.legalpt.services.commons.export.XmlZipFileWriter;
 import org.fenixedu.legalpt.services.rebides.export.RebidesXlsExporter;
@@ -13,9 +16,6 @@ import org.fenixedu.legalpt.services.rebides.export.RebidesXmlToBaseFileWriter;
 import org.fenixedu.legalpt.services.rebides.process.RebidesService;
 import org.fenixedu.legalpt.services.report.log.XlsExporterLog;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
 
 import com.google.common.collect.Sets;
 
