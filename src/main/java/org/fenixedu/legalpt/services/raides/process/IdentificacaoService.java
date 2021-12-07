@@ -1,6 +1,6 @@
 package org.fenixedu.legalpt.services.raides.process;
 
-import static org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.formatArgs;
+import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
 import java.util.function.Function;
 
@@ -13,12 +13,12 @@ import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.legalpt.domain.LegalReportContext;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.Idade;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblIdentificacao;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
+import org.fenixedu.legalpt.domain.raides.Raides.Idade;
+import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;

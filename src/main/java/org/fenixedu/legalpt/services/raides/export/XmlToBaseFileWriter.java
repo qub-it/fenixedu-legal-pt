@@ -13,6 +13,15 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.fenixedu.academic.domain.student.Student;
+import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.TblDiplomado;
+import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
+import org.fenixedu.legalpt.domain.raides.TblInscrito;
+import org.fenixedu.legalpt.domain.raides.TblMobilidadeInternacional;
+import org.fenixedu.legalpt.domain.raides.report.RaidesRequestParameter;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
 import org.fenixedu.legalpt.jaxb.raides.DuracaoPrograma;
 import org.fenixedu.legalpt.jaxb.raides.InformacaoAlunos;
 import org.fenixedu.legalpt.jaxb.raides.InformacaoAlunos.Alunos;
@@ -26,15 +35,6 @@ import org.fenixedu.legalpt.jaxb.raides.InformacaoAlunos.Alunos.Aluno.Mobilidade
 import org.fenixedu.legalpt.jaxb.raides.InformacaoAlunos.Extracao;
 import org.fenixedu.legalpt.jaxb.raides.NumeroID;
 import org.fenixedu.legalpt.jaxb.raides.ObjectFactory;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblDiplomado;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblIdentificacao;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblInscrito;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblMobilidadeInternacional;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestParameter;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
 import org.joda.time.LocalDate;
 
 import com.google.common.base.Strings;

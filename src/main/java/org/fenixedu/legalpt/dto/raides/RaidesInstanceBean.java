@@ -11,8 +11,8 @@ import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.IntegratedMasterFirstCycleGraduatedReportOption;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
+import org.fenixedu.legalpt.domain.raides.IntegratedMasterFirstCycleGraduatedReportOption;
+import org.fenixedu.legalpt.domain.raides.RaidesInstance;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

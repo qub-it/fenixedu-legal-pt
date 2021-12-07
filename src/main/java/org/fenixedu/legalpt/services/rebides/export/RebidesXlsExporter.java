@@ -8,14 +8,14 @@ import org.fenixedu.academic.domain.exceptions.DomainException;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
 import org.fenixedu.legalpt.dto.rebides.CareerActivitiesBean;
 import org.fenixedu.legalpt.dto.rebides.IdentificationBean;
 import org.fenixedu.legalpt.dto.rebides.QualificationBean;
 import org.fenixedu.legalpt.dto.rebides.RebidesBean;
 import org.fenixedu.legalpt.dto.rebides.TeacherBean;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
 
 public class RebidesXlsExporter {
 

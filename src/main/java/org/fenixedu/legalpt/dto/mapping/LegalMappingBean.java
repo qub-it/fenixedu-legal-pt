@@ -2,8 +2,8 @@ package org.fenixedu.legalpt.dto.mapping;
 
 import java.util.Set;
 
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
+import org.fenixedu.legalpt.domain.mapping.ILegalMappingType;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 
 @SuppressWarnings("serial")
 public class LegalMappingBean implements java.io.Serializable {

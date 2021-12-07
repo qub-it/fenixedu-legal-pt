@@ -20,6 +20,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.legalpt.domain.rebides.report.RebidesRequestParameter;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
+import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
 import org.fenixedu.legalpt.dto.rebides.CareerActivitiesBean;
 import org.fenixedu.legalpt.dto.rebides.IdentificationBean;
 import org.fenixedu.legalpt.dto.rebides.QualificationBean;
@@ -37,9 +40,6 @@ import org.fenixedu.legalpt.jaxb.rebides.Myboolean;
 import org.fenixedu.legalpt.jaxb.rebides.NumeroID;
 import org.fenixedu.legalpt.jaxb.rebides.ObjectFactory;
 import org.fenixedu.legalpt.jaxb.rebides.Sexo;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFile;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportResultFileType;
 import org.joda.time.LocalDate;
 
 public class RebidesXmlToBaseFileWriter {

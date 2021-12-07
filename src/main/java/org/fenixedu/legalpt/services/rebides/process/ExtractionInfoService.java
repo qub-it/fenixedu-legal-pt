@@ -3,8 +3,8 @@ package org.fenixedu.legalpt.services.rebides.process;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.rebides.report.RebidesRequestParameter;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
 import org.fenixedu.legalpt.dto.rebides.ExtractionInfoBean;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 import org.joda.time.LocalDate;
 
 public class ExtractionInfoService {

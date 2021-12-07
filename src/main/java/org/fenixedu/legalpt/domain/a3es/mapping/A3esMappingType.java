@@ -8,13 +8,13 @@ import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.legalpt.domain.mapping.DomainObjectLegalMapping;
+import org.fenixedu.legalpt.domain.mapping.EnumerationLegalMapping;
+import org.fenixedu.legalpt.domain.mapping.ILegalMappingType;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.domain.teacher.SpecialistTitle;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.DomainObjectLegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.EnumerationLegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 
 import com.google.common.collect.Sets;
 

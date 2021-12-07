@@ -1,6 +1,6 @@
 package org.fenixedu.legalpt.services.raides.process;
 
-import static org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.formatArgs;
+import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,18 +38,18 @@ import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationCo
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
 import org.fenixedu.academic.domain.studentCurriculum.CycleCurriculumGroup;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.raides.IGrauPrecedenteCompleto;
+import org.fenixedu.legalpt.domain.raides.IMatricula;
+import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.RaidesInstance;
+import org.fenixedu.legalpt.domain.raides.TblInscrito;
+import org.fenixedu.legalpt.domain.raides.Raides.Ramo;
+import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
+import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
+import org.fenixedu.legalpt.domain.raides.report.RaidesRequestPeriodParameter;
+import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.LegalMapping;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.IGrauPrecedenteCompleto;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.IMatricula;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.Raides.Ramo;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.RaidesInstance;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.TblInscrito;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.BranchMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.mapping.LegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.raides.report.RaidesRequestPeriodParameter;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;

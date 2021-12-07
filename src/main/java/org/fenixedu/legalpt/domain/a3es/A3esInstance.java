@@ -9,10 +9,10 @@ import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.legalpt.domain.a3es.mapping.A3esMappingType;
+import org.fenixedu.legalpt.domain.mapping.ILegalMappingType;
+import org.fenixedu.legalpt.domain.report.LegalReport;
+import org.fenixedu.legalpt.domain.report.LegalReportRequest;
 import org.fenixedu.legalpt.util.LegalPTUtil;
-import org.fenixedu.ulisboa.specifications.domain.legal.mapping.ILegalMappingType;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReport;
-import org.fenixedu.ulisboa.specifications.domain.legal.report.LegalReportRequest;
 
 import com.google.common.collect.Sets;
 
