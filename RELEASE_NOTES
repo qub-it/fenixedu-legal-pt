@@ -1,3 +1,5 @@
+- Bug fix - change isFirstTimeOnDegree method (according to DGES information)
+
 2.11.0 (07-12-2021)
 - Refactor: Change specifications packages to legalpt 
 - Refactor: Update academic-core dependency

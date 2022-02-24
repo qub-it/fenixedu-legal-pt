@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourseType;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.CurricularCourse;
@@ -109,6 +110,14 @@ public class RaidesService {
     }
 
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
+
+        final String ingressionType = LegalMapping.find(report, LegalMappingType.REGISTRATION_INGRESSION_TYPE)
+                .translate(registration.getIngressionType());
+
+        if (StringUtils.isNotBlank(ingressionType) && ingressionType.equals("38")) {
+            return true;
+        }
+
         // todo refactor
         if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty() && RegistrationServices
                 .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear).size() > 1) {
