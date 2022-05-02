@@ -30,6 +30,7 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
     private String interlocutorEmail;
     private String interlocutorPhone;
     private String studentNumber;
+    private String reportName;
     private boolean filterEntriesWithErrors;
 
     private List<RaidesRequestPeriodParameter> periods = Lists.newArrayList();
@@ -56,7 +57,7 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
     private String institutionName;
 
     public RaidesRequestParameter(final String institutionCode, final String moment, final String interlocutorName,
-            final String interlocutorEmail, final String interlocutorPhone, final String studentNumber,
+            final String interlocutorEmail, final String interlocutorPhone, final String studentNumber, final String reportName,
             final boolean filterEntriesWithErrors) {
         setInstitutionCode(institutionCode);
         setMoment(moment);
@@ -65,6 +66,7 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
         setInterlocutorPhone(interlocutorPhone);
         setFilterEntriesWithErrors(filterEntriesWithErrors);
         setStudentNumber(studentNumber);
+        setReportName(reportName);
 
         loadDataSources();
     }
@@ -237,6 +239,14 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
 
     public void setInterlocutorPhone(String interlocutorPhone) {
         this.interlocutorPhone = interlocutorPhone;
+    }
+
+    public String getReportName() {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
     }
 
     public List<RaidesRequestPeriodParameter> getPeriods() {
