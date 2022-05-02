@@ -3,6 +3,8 @@ package org.fenixedu.legalpt.domain.report;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -120,4 +122,14 @@ public class LegalReportRequest extends LegalReportRequest_Base {
         setBennuPending(null);
     }
     
+    @Atomic
+    public void delete() {
+        setBennu(null);
+        setBennuPending(null);
+        getLegalResultDataFileSet().forEach(dataFile->dataFile.delete());
+        getLegalReportParametersFilesSet().forEach(parameterFile->parameterFile.delete());
+        setRequestor(null);
+        setLegalReport(null);
+        deleteDomainObject();
+    }
 }
