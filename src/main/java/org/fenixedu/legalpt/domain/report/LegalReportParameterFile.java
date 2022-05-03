@@ -22,7 +22,7 @@ public class LegalReportParameterFile extends LegalReportParameterFile_Base {
     @Override
     public void delete() {
         setBennu(null);
-        
+        setLegalReportRequest(null);
         deleteDomainObject();
     }
 

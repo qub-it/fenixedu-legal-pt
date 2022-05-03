@@ -32,4 +32,11 @@ public class LegalReportResultFile extends LegalReportResultFile_Base {
         return getLegalReportRequest().getLegalReport().getGroup().isMember(user);
     }
     
+    @Override
+    public void delete() {
+        setLegalReportRequest(null);
+        setBennu(null);
+        super.delete();
+        
+    }
 }
