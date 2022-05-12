@@ -125,6 +125,39 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+    		<plugin>
+				<!-- <groupId>org.jvnet.jax-ws-commons</groupId> <artifactId>jaxws-maven-plugin</artifactId> 
+				<version>2.3</version> -->
+				<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jaxws-maven-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+						<execution>
+							<id>SICABEWS</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>wsimport</goal>
+							</goals>
+							<configuration>
+								<!-- <packageName>org.fenixedu.ulisboa.integration.sas.service.sicabe</packageName> -->
+								<wsdlFiles>
+									<wsdlFile>
+										${basedir}/src/main/resources/wsdl/sicabe/SICABE.wsdl
+									</wsdlFile>
+								</wsdlFiles>
+								<wsdlLocation>
+									/wsdl/sicabe/SICABE.wsdl
+								</wsdlLocation>
+								<vmArgs>
+									<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+								</vmArgs>
+							</configuration>
+	
+						</execution>
+					</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
 

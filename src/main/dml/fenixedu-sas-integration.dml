@@ -1,0 +1,267 @@
+package org.fenixedu.ulisboa.integration.sas.domain;
+
+external class .org.fenixedu.academic.domain.ExecutionYear;
+external class .org.fenixedu.academic.domain.student.Registration;
+external class .org.fenixedu.academic.domain.person.IDDocumentType;
+external class .org.fenixedu.academic.domain.candidacy.IngressionType;
+
+enum org.fenixedu.ulisboa.integration.sas.domain.CandidacyState										as CandidacyState;
+enum org.fenixedu.ulisboa.integration.sas.domain.SasScholarshipCandidacyState							as SasScholarshipCandidacyState;
+
+class SasScholarshipCandidacy {
+	String degreeCode;
+	Integer institutionCode;
+	String degreeName;
+	DateTime submissionDate;
+	String technicianEmail;
+	
+	//candidacy state
+	DateTime assignmentDate;
+	String description;
+	CandidacyState candidacyState;
+	BigDecimal gratuityAmount;
+	
+	String institutionName;
+	String fiscalNumber;
+	
+	String candidacyName;
+	String technicianName;
+	String studentNumber;
+	Integer candidacyNumber;
+	String docIdNumber;
+	String docIdType;
+
+	// Ownership
+	Boolean cetQualificationOwner;
+	Boolean cstpQualificationOwner;
+	Boolean phdQualificationOwner;
+	Boolean degreeQualificationOwner;
+	Boolean masterQualificationOwner;
+	
+	DateTime importDate;
+	DateTime exportDate;
+	Boolean firstYear;
+	
+	DateTime stateDate;
+	SasScholarshipCandidacyState state;
+}
+
+relation BennuSasScholarshipCandidacy {
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu { multiplicity 1..1; }
+	SasScholarshipCandidacy playsRole sasScholarshipCandidacies { multiplicity *; }
+}
+
+relation RegistrationSasScholarshipCandidacy {
+	.org.fenixedu.academic.domain.student.Registration playsRole registration { multiplicity 0..1; }
+	SasScholarshipCandidacy playsRole sasScholarshipCandidacies { multiplicity *; }
+}
+
+relation ExecutionYearSasScholarshipCandidacy {
+	.org.fenixedu.academic.domain.ExecutionYear playsRole executionYear { multiplicity 1..1; }
+	SasScholarshipCandidacy playsRole sasScholarshipCandidacies { multiplicity *; }
+}
+
+class SasScholarshipDataChangeLog {
+	DateTime date;
+	String studentNumber;
+	String studentName;
+	String description;
+	boolean publicLog;
+	boolean sentLog;
+}
+
+relation BennuSasScholarshipDataChangeLog {
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu { multiplicity 1..1; }
+	SasScholarshipDataChangeLog playsRole sasScholarshipDataChangeLogs { multiplicity *; }
+}
+
+relation SasScholarshipCandidacySasScholarshipDataChangeLog {
+	SasScholarshipCandidacy playsRole sasScholarshipCandidacy { multiplicity 1..1; }
+	SasScholarshipDataChangeLog playsRole sasScholarshipDataChangeLogs { multiplicity *; }
+}
+
+class SasScholarshipData {
+	Integer cycleIngressionYear; //AnoInscricaoCurso
+	Integer curricularYear; //AnoLectivoActual
+	LocalDate lastAcademicActDateLastYear; //DataConclusaoAtosAcademicosUltimoAnoLectivoInscrito
+	LocalDate enrolmentDate; //DataInscricaoAnoLectivo
+	Integer firstMonthExecutionYear; //MesPrimeiroPagamento
+	Integer numberOfDegreeCurricularYears; //NumeroAnosCurso
+	BigDecimal numberOfEnrolledECTS; // NumeroECTSActualmenteInscrito / NumeroECTSActualInscrito
+	BigDecimal numberOfApprovedEctsLastYear; //NumeroECTSObtidosUltimoAnoInscrito
+	BigDecimal numberOfEnrolledEctsLastYear; //NumeroECTSUltimoAnoInscrito
+	Integer numberOfEnrolmentsYears; //NumeroMatriculas
+	Integer cycleNumberOfEnrolmentsYearsInIntegralRegime; //NumeroInscricoesCicloEstudosTempoIntegral
+	Integer numberOfMonthsExecutionYear; //NumeroMesesPropina
+	Integer numberOfDegreeChanges; //NumeroOcorrenciasMudancaCurso
+	String observations; //Observacoes
+	Boolean hasMadeDegreeChangeOnCurrentYear; //PresenteAnoMudouDeCurso
+	String regime; //Regime
+	Boolean cetQualificationOwner; //TitularCET
+	Boolean ctspQualificationOwner; //TitularCSTP
+	Boolean phdQualificationOwner; //TitularDoutoramento
+	Boolean degreeQualificationOwner; //TitularLicenciatura
+	Boolean masterQualificationOwner; //TitularMestrado
+	String lastEnrolmentYear; //UltimoAnoInscrito
+	BigDecimal gratuityAmount; //ValorPropina
+	Boolean enroled; //iInscritoAnoLectivoActual
+	BigDecimal numberOfApprovedEcts; //totalECTScursoAtingirGrau
+	String ingressionRegime; //IngressionRegime
+	
+}
+
+relation BennuSasScholarshipData {
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu { multiplicity 1..1; }
+	SasScholarshipData playsRole sasScholarshipData { multiplicity *; }
+}
+
+relation SasScholarshipCandidacySasScholarshipData {
+	SasScholarshipCandidacy playsRole sasScholarshipCandidacy { multiplicity 1..1; }
+	SasScholarshipData playsRole sasScholarshipData { multiplicity 0..1; }
+}
+
+
+
+// Object required to enable module configuration
+// Should be a singleton
+class SocialServicesConfiguration {
+	protected int numberOfMonthsOfAcademicYear;
+	String email;
+	String institutionCode;
+}
+
+class ScholarshipReportRequest {
+	DateTime whenRequested;
+	DateTime whenProcessed;
+	LocalizedString error;
+	protected boolean firstYearOfCycle;
+	boolean contractualisation;
+}
+
+//Since the same kind of file will be used as input and as output, we are only creating one entity
+class ScholarshipReportFile extends .org.fenixedu.bennu.io.domain.GenericFile{
+}
+
+class SchoolLevelTypeMapping {
+	protected SchoolLevelType schoolLevel;
+}
+
+class SasIngressionRegimeMapping {
+	String regimeCode;
+	String regimeCodeWithDescription;
+}
+
+relation BennuSocialServicesConfiguration{
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	
+	SocialServicesConfiguration playsRole socialServicesConfiguration;
+}
+
+relation SocialServicesConfigurationIngressionType {
+	SocialServicesConfiguration playsRole socialServicesConfiguration;
+	
+	.org.fenixedu.academic.domain.candidacy.IngressionType playsRole ingressionTypeWhichAreDegreeTransfer {
+		multiplicity *;
+	}
+}
+
+relation SocialServicesConfigurationStatuteType {
+	SocialServicesConfiguration playsRole socialServicesConfiguration;
+	
+	.org.fenixedu.academic.domain.student.StatuteType playsRole statuteTypeSas {
+		multiplicity 0..1;
+	}
+}
+
+relation SocialServicesConfigurationIngressionTypeWithExternalData {
+	SocialServicesConfiguration playsRole sasConfigForIngressionsWithExternalData;
+	
+	.org.fenixedu.academic.domain.candidacy.IngressionType playsRole ingressionTypesWithExternalData {
+		multiplicity *;
+	}
+}
+
+relation SocialServicesConfigurationCreditsReasonType {
+	SocialServicesConfiguration playsRole socialServicesConfiguration;
+	
+	.org.fenixedu.academic.domain.student.curriculum.CreditsReasonType playsRole creditsReasonTypes {
+		multiplicity *;
+	}
+}
+
+relation BennuScholarshipReportRequest{
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu{
+		multiplicity 1..1;
+	}
+	
+	ScholarshipReportRequest playsRole scholarshipReportRequests {
+		multiplicity *;
+	}
+}
+
+relation BennuPendingScholarshipReportRequest{
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennuForWhichIsPending;
+	
+	ScholarshipReportRequest playsRole pendingScholarshipReportRequests {
+		multiplicity *;
+	}
+}
+
+relation ScholarshipReportRequestExecutionYear{
+	.org.fenixedu.academic.domain.ExecutionYear playsRole executionYear{
+		multiplicity 1..1;
+	}
+	
+	ScholarshipReportRequest playsRole scholarshipReportRequests{
+		multiplicity *;
+	}
+}
+
+relation ScholarshipReportParameterFile{
+	protected ScholarshipReportFile playsRole parameterFile{
+		multiplicity 1;
+	}
+	protected ScholarshipReportRequest playsRole scholarshipReportRequestForWhichIsParameter;
+}
+
+relation ScholarshipReportRequestResultFile{
+	//Default multiply (0..1) since before the processing, there will be no result file
+	protected ScholarshipReportFile playsRole resultFile;
+	protected ScholarshipReportRequest playsRole scholarshipReportRequestForWhichIsResult;
+}
+
+relation SchoolLevelTypeMappingDegreeType{
+	protected .org.fenixedu.academic.domain.degree.DegreeType playsRole degreeType{
+		multiplicity 1;
+	}
+	SchoolLevelTypeMapping playsRole schoolLevelTypeMapping;
+}
+
+relation SchoolLevelTypeMappingBennu{
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	SchoolLevelTypeMapping playsRole schoolLevelTypeMapping {
+		multiplicity *;
+	}
+}
+
+relation SasIngressionRegimeMappingIngressionType {
+	.org.fenixedu.academic.domain.candidacy.IngressionType playsRole ingressionType {
+		multiplicity 1..1;
+	}
+	
+	SasIngressionRegimeMapping playsRole sasIngressionRegimeMapping;
+}
+
+relation SasIngressionRegimeMappingBennu {
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	
+	SasIngressionRegimeMapping playsRole sasIngressionRegimeMappings {
+		multiplicity *;
+	}
+}
