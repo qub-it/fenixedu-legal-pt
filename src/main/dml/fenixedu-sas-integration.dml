@@ -143,7 +143,7 @@ class ScholarshipReportFile extends .org.fenixedu.bennu.io.domain.GenericFile{
 }
 
 class SchoolLevelTypeMapping {
-	protected SchoolLevelType schoolLevel;
+	SchoolLevelType schoolLevel;
 }
 
 class SasIngressionRegimeMapping {
@@ -233,7 +233,7 @@ relation ScholarshipReportRequestResultFile{
 }
 
 relation SchoolLevelTypeMappingDegreeType{
-	protected .org.fenixedu.academic.domain.degree.DegreeType playsRole degreeType{
+	.org.fenixedu.academic.domain.degree.DegreeType playsRole degreeType{
 		multiplicity 1;
 	}
 	SchoolLevelTypeMapping playsRole schoolLevelTypeMapping;
