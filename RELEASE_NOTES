@@ -1,3 +1,5 @@
+- Refactor: Changed the visibility of the DML attributes to SAS/SICABE integration 
+
 2.13.0 (12-05-2022)
 - Refactor: Move SAS/SICABE integration code to legal pt 
 
