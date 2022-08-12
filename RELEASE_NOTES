@@ -1,3 +1,5 @@
+- Refactor: Change the visibility of numberOfMonthsOfAcademicYear on SocialServicesConfiguration
+
 2.13.1 (19-05-2022)
 - Refactor: Changed the visibility of the DML attributes to SAS/SICABE integration 
 

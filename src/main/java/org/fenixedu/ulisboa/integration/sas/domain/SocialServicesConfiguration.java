@@ -18,14 +18,13 @@ public class SocialServicesConfiguration extends SocialServicesConfiguration_Bas
 
     public void edit(int numberOfMonthsOfAcademicYear, String email, String institutionCode,
             Collection<IngressionType> ingressionTypesWhichAreDegreeTransfer,
-            Collection<IngressionType> ingressionTypesWithExternalData,
-            Collection<CreditsReasonType> creditsReasonTypes,
+            Collection<IngressionType> ingressionTypesWithExternalData, Collection<CreditsReasonType> creditsReasonTypes,
             StatuteType statuteType) {
         SocialServicesConfiguration config = Bennu.getInstance().getSocialServicesConfiguration();
         config.setNumberOfMonthsOfAcademicYear(numberOfMonthsOfAcademicYear);
         config.setEmail(email);
         config.setInstitutionCode(institutionCode);
-        
+
         Set<IngressionType> ingressionTypeWhichAreDegreeTransferSet = config.getIngressionTypeWhichAreDegreeTransferSet();
         ingressionTypeWhichAreDegreeTransferSet.clear();
         ingressionTypeWhichAreDegreeTransferSet.addAll(ingressionTypesWhichAreDegreeTransfer);
@@ -37,17 +36,12 @@ public class SocialServicesConfiguration extends SocialServicesConfiguration_Bas
         Set<CreditsReasonType> creditsReasonType = config.getCreditsReasonTypesSet();
         creditsReasonType.clear();
         creditsReasonType.addAll(creditsReasonTypes);
-        
+
         config.setStatuteTypeSas(statuteType);
     }
 
     public static SocialServicesConfiguration getInstance() {
         return Bennu.getInstance().getSocialServicesConfiguration();
-    }
-
-    @Override
-    public int getNumberOfMonthsOfAcademicYear() {
-        return super.getNumberOfMonthsOfAcademicYear();
     }
 
     public boolean ingressionTypeRequiresExternalData(final Registration registration) {

@@ -125,7 +125,7 @@ relation SasScholarshipCandidacySasScholarshipData {
 // Object required to enable module configuration
 // Should be a singleton
 class SocialServicesConfiguration {
-	protected int numberOfMonthsOfAcademicYear;
+	int numberOfMonthsOfAcademicYear;
 	String email;
 	String institutionCode;
 }
