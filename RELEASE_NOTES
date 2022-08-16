@@ -1,3 +1,4 @@
+2.13.2 (16-08-2022)
 - Improvement: Add support for multiple institution codes on configuration
 - Refactor: Change the visibility of numberOfMonthsOfAcademicYear on SocialServicesConfiguration
 
