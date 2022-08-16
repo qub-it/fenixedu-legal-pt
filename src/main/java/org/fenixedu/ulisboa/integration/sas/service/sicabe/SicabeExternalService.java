@@ -114,13 +114,9 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         final ObterCandidaturasSubmetidasResponse obterCandidaturasSubmetidas =
                 getClient().obterCandidaturasSubmetidas(parameters);
         obterCandidaturasSubmetidas.getCandidaturas().getCandidaturaSubmetida().stream()
-                .filter(c -> String.valueOf(c.getCodigoInstituicaoEnsino())
-                        .equalsIgnoreCase(Bennu.getInstance().getSocialServicesConfiguration().getInstitutionCode()))
-                .forEach(input -> {
-
-                    updateOrCreateSasScholarshipCandidacy(input, executionYear);
-
-                });
+                .filter(c -> Bennu.getInstance().getSocialServicesConfiguration().getInstitutionCodes()
+                        .contains(String.valueOf(c.getCodigoInstituicaoEnsino())))
+                .forEach(input -> updateOrCreateSasScholarshipCandidacy(input, executionYear));
     }
 
     private void updateOrCreateSasScholarshipCandidacy(CandidaturaSubmetida input, ExecutionYear executionYear) {

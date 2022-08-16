@@ -1,8 +1,12 @@
 package org.fenixedu.ulisboa.integration.sas.domain;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.StatuteType;
@@ -42,6 +46,11 @@ public class SocialServicesConfiguration extends SocialServicesConfiguration_Bas
 
     public static SocialServicesConfiguration getInstance() {
         return Bennu.getInstance().getSocialServicesConfiguration();
+    }
+
+    public Collection<String> getInstitutionCodes() {
+        return StringUtils.isBlank(getInstitutionCode()) ? Collections.emptySet() : Stream.of(getInstitutionCode().split(","))
+                .map(s -> s.trim()).collect(Collectors.toSet());
     }
 
     public boolean ingressionTypeRequiresExternalData(final Registration registration) {
