@@ -26,7 +26,6 @@ import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.CreditsReasonType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateTypeEnum;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
