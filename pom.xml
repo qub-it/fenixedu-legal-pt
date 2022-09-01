@@ -180,7 +180,7 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>32.9.7</version>
+			<version>34.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
