@@ -725,7 +725,7 @@ public class AbstractFillScholarshipService {
 
         if (bean.getNumberOfEnrolledECTS().compareTo(beforeNumberOfEnrolledECTS) != 0
                 && bean.getNumberOfEnrolledECTS().compareTo(BigDecimal.ZERO) == 0
-                && registration.getActiveStateType().isInactive()) {
+                && registration.getActiveStateTypeEnum().isInactive()) {
             addWarning(bean, true, "message.warning.student.registration.state.inactive",
                     registration.getActiveState().getStateDate().toLocalDate().toString("yyyy-MM-dd"));
         }
