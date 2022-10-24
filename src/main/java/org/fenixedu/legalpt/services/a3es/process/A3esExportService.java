@@ -44,7 +44,6 @@ import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.ShiftProfessorship;
 import org.fenixedu.academic.domain.ShiftType;
-import org.fenixedu.academic.domain.executionPlanning.services.OccupationPeriodServices;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
@@ -65,8 +64,6 @@ import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-
-import com.google.common.collect.Lists;
 
 @SuppressWarnings("deprecation")
 abstract public class A3esExportService {
@@ -123,8 +120,7 @@ abstract public class A3esExportService {
 
             final A3esPeriod period = bean.getPeriod();
             if (!period.isInFillingPeriod()) {
-                throw new LegalPTDomainException("error.A3es.outside.period",
-                        OccupationPeriodServices.getIntervalsDescription(Lists.newArrayList(period.getFillInDateInterval())));
+                throw new LegalPTDomainException("error.A3es.outside.period", period.getDescription());
             }
 
             JSONArray processes = null;
