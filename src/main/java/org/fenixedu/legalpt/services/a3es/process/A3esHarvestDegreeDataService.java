@@ -22,6 +22,7 @@ import org.fenixedu.academic.domain.DegreeInfo;
 import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degree.DegreeType;
+import org.fenixedu.academic.domain.degreeStructure.BranchType;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -194,10 +195,12 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillBranches(final A3esDegreeBean data) {
-        final Set<LocalizedString> majors = this.degreeCurricularPlan.getMajorBranches().stream()
-                .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
-        final Set<LocalizedString> minors = this.degreeCurricularPlan.getMinorBranches().stream()
-                .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
+        final Set<LocalizedString> majors =
+                this.degreeCurricularPlan.getAllBranches().stream().filter(b -> b.getBranchType() == BranchType.MAJOR)
+                        .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
+        final Set<LocalizedString> minors =
+                this.degreeCurricularPlan.getAllBranches().stream().filter(b -> b.getBranchType() == BranchType.MINOR)
+                        .map(i -> i.getNameI18N(this.year)).collect(Collectors.toSet());
 
         final Stream<String> ptStream =
                 Stream.concat(majors.stream().map(i -> i.getContent(PT)), minors.stream().map(i -> i.getContent(PT)));

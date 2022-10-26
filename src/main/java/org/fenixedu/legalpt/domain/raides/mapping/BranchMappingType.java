@@ -1,5 +1,6 @@
 package org.fenixedu.legalpt.domain.raides.mapping;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
@@ -19,12 +20,11 @@ import com.google.common.collect.Sets;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 
-
 public class BranchMappingType implements ILegalMappingType {
 
     protected static final String CODE = "BRANCH_MAPPING";
     protected static BranchMappingType _instance = null;
-    
+
     protected BranchMappingType() {
     }
 
@@ -51,49 +51,47 @@ public class BranchMappingType implements ILegalMappingType {
 
     public Set<LegalMappingEntry> getMappingEntries(final LegalMapping mapping, final DegreeCurricularPlan degreeCurricularPlan) {
         final Set<LegalMappingEntry> entriesSet = mapping.getLegalMappingEntriesSet();
-        
-        
-        final Set<LegalMappingEntry> result =
-                Sets.newHashSet();
+
+        final Set<LegalMappingEntry> result = Sets.newHashSet();
         for (final LegalMappingEntry LegalMappingEntry : entriesSet) {
             final CourseGroup courseGroup = getCourseGroup(LegalMappingEntry.getMappingKey());
-            
-            if(courseGroup.getParentDegreeCurricularPlan() == degreeCurricularPlan) {
+
+            if (courseGroup.getParentDegreeCurricularPlan() == degreeCurricularPlan) {
                 result.add(LegalMappingEntry);
             }
         }
-        
+
         return result;
     }
-    
-    public Set<?> getValues(final DegreeCurricularPlan degreeCurricularPlan) {
+
+    public Collection<?> getValues(final DegreeCurricularPlan degreeCurricularPlan) {
         return degreeCurricularPlan.getAllBranches();
     }
-    
+
     public static final BranchMappingType getInstance() {
-        if(_instance == null) {
+        if (_instance == null) {
             _instance = new BranchMappingType();
         }
-        
+
         return _instance;
     }
-    
+
     @Atomic
     public synchronized static LegalMapping readMapping(final LegalReport report) {
         LegalMapping mapping = LegalMapping.find(report, getInstance());
-        
-        if(mapping == null) {
+
+        if (mapping == null) {
             final LegalMappingBean bean = new LegalMappingBean(report);
             mapping = getInstance().createMapping(bean.getReport());
         }
-        
+
         return mapping;
     }
-    
+
     public static final boolean isTypeForMapping(final String type) {
         return CODE.equals(type);
     }
-    
+
     @Override
     public LegalMapping createMapping(final LegalReport report) {
         return new DomainObjectLegalMapping(report, this);
