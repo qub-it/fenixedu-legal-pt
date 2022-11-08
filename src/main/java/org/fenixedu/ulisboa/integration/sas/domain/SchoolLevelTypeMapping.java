@@ -69,7 +69,8 @@ public class SchoolLevelTypeMapping extends SchoolLevelTypeMapping_Base {
             throw new RuntimeException("School Level cannot be null");
         }
         SchoolLevelTypeMapping degreeTypeCurrentSchoolLevelTypeMapping = degreeType.getSchoolLevelTypeMapping();
-        if (degreeTypeCurrentSchoolLevelTypeMapping != null && degreeTypeCurrentSchoolLevelTypeMapping != schoolLevelTypeMapping) {
+        if (degreeTypeCurrentSchoolLevelTypeMapping != null
+                && degreeTypeCurrentSchoolLevelTypeMapping != schoolLevelTypeMapping) {
             throw new RuntimeException("Degree type already has associated school level");
         }
 
@@ -90,14 +91,15 @@ public class SchoolLevelTypeMapping extends SchoolLevelTypeMapping_Base {
 
     private static final List<SchoolLevelType> CET_SCHOOL_LEVELS = Arrays.asList(SchoolLevelType.TECHNICAL_SPECIALIZATION);
 
-    private static final List<SchoolLevelType> DEGREE_SCHOOL_LEVELS = Arrays.asList(SchoolLevelType.DEGREE,
-            SchoolLevelType.DEGREE_PRE_BOLOGNA, SchoolLevelType.BACHELOR_DEGREE_PRE_BOLOGNA);
+    private static final List<SchoolLevelType> DEGREE_SCHOOL_LEVELS =
+            Arrays.asList(SchoolLevelType.DEGREE, SchoolLevelType.DEGREE_PRE_BOLOGNA, SchoolLevelType.BACHELOR_DEGREE_PRE_BOLOGNA,
+                    SchoolLevelType.FIRST_CYCLE_INTEGRATED_MASTER_DEGREE);
 
     private static final List<SchoolLevelType> MASTER_DEGREE_SCHOOL_LEVELS = Arrays.asList(SchoolLevelType.MASTER_DEGREE,
             SchoolLevelType.MASTER_DEGREE_PRE_BOLOGNA, SchoolLevelType.MASTER_DEGREE_INTEGRATED);
 
-    private static final List<SchoolLevelType> PHD_SCHOOL_LEVELS = Arrays.asList(SchoolLevelType.DOCTORATE_DEGREE,
-            SchoolLevelType.DOCTORATE_DEGREE_PRE_BOLOGNA);
+    private static final List<SchoolLevelType> PHD_SCHOOL_LEVELS =
+            Arrays.asList(SchoolLevelType.DOCTORATE_DEGREE, SchoolLevelType.DOCTORATE_DEGREE_PRE_BOLOGNA);
 
     public static boolean isCTSP(final SchoolLevelType schoolLevelType) {
         return CTSP_SCHOOL_LEVELS.contains(schoolLevelType);
