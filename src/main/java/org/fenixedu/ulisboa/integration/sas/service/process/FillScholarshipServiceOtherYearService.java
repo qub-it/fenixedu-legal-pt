@@ -1,8 +1,5 @@
 package org.fenixedu.ulisboa.integration.sas.service.process;
 
-import java.util.function.Predicate;
-
-import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.student.Registration;
@@ -67,13 +64,11 @@ public class FillScholarshipServiceOtherYearService extends AbstractFillScholars
     }
 
     private Registration getLastEnrolmentYearRegistration(Registration registration, ExecutionYear lastEnrolmentYear) {
-        final Predicate<Enrolment> activeEnrolment = e -> !e.isAnnulled();
-        if (registration.getEnrolments(lastEnrolmentYear).stream().anyMatch(activeEnrolment)) {
-            return registration;
+        if (lastEnrolmentYear == null) {
+            return null;
         }
-        
         return getCycleRegistrations(registration).stream()
-                .filter(r -> r.getEnrolments(lastEnrolmentYear).stream().anyMatch(activeEnrolment))
+                .filter(r -> RegistrationServices.getEnrolmentYears(r).contains(lastEnrolmentYear))
                 .sorted(Registration.COMPARATOR_BY_START_DATE.reversed()).findFirst().orElse(null);
     }
 

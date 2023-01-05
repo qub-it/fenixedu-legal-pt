@@ -1,3 +1,5 @@
+- Bug fix - SAS: ignore RegistrationDataByExecutionYear without registration date
+
 2.14.2 (08-11-2022)
 - Bug fix - add SchoolLevelType.FIRST_CYCLE_INTEGRATED_MASTER_DEGREE to DEGREE_SCHOOL_LEVELS
 
