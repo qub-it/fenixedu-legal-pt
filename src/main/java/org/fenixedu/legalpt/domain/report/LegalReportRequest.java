@@ -14,6 +14,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class LegalReportRequest extends LegalReportRequest_Base {
     
@@ -117,6 +118,7 @@ public class LegalReportRequest extends LegalReportRequest_Base {
         return result;
     }
 
+    @Atomic(mode = TxMode.WRITE)
     public void markAsProcessed() {
         setWhenProcessed(new DateTime());
         setBennuPending(null);

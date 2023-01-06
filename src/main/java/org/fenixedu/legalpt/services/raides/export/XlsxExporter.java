@@ -27,6 +27,9 @@ import org.fenixedu.legalpt.util.LegalPTUtil;
 
 import com.google.common.base.Strings;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 public class XlsxExporter {
 
     public static LegalReportResultFile write(final LegalReportRequest reportRequest, final Raides raides) {
@@ -288,7 +291,7 @@ public class XlsxExporter {
             spreadsheetBuilder.build(WorkbookExportFormat.EXCEL, outputStream);
             final byte[] content = outputStream.toByteArray();
 
-            return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, content);
+            return writeFile(reportRequest, content);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("error.XlsxExporter.spreadsheet.generation.failed", e);
@@ -301,6 +304,11 @@ public class XlsxExporter {
             }
         }
 
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static LegalReportResultFile writeFile(final LegalReportRequest reportRequest, final byte[] content) {
+        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, content);
     }
 
     protected static String pdiLabel(final String key) {

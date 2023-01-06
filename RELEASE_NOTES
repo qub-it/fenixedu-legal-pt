@@ -1,8 +1,11 @@
+- Improvement: Change legal report transaction boundaries to avoid performance issues
+- Improvement: Improved default raides data for new requests
+
 2.14.3 (05-01-2023)
-- Bug fix - SAS: ignore RegistrationDataByExecutionYear without registration date
+- Bug fix: SAS - ignore RegistrationDataByExecutionYear without registration date
 
 2.14.2 (08-11-2022)
-- Bug fix - add SchoolLevelType.FIRST_CYCLE_INTEGRATED_MASTER_DEGREE to DEGREE_SCHOOL_LEVELS
+- Bug fix: add SchoolLevelType.FIRST_CYCLE_INTEGRATED_MASTER_DEGREE to DEGREE_SCHOOL_LEVELS
 
 2.14.1 (26-10-2022)
 - Refactor: Remove branch group subclasses

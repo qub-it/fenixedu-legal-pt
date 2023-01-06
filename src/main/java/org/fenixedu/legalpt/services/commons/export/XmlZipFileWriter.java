@@ -12,6 +12,8 @@ import net.lingala.zip4j.io.ZipOutputStream;
 import net.lingala.zip4j.model.ZipModel;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class XmlZipFileWriter {
 
@@ -38,8 +40,7 @@ public class XmlZipFileWriter {
             zOut.finish();
             zOut.close();
 
-            return new LegalReportResultFile(reportRequest, LegalReportResultFileType.ZIP,
-                    xmlResultFile.getFilename().replace(".xml", ".zip"), baos.toByteArray());
+            return writeToFile(reportRequest, xmlResultFile, baos);
 
         } catch (ZipException | IOException e) {
             //TODO: improve error handling
@@ -48,5 +49,12 @@ public class XmlZipFileWriter {
 
         return null;
 
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static LegalReportResultFile writeToFile(final LegalReportRequest reportRequest,
+            final LegalReportResultFile xmlResultFile, final ByteArrayOutputStream baos) {
+        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.ZIP,
+                xmlResultFile.getFilename().replace(".xml", ".zip"), baos.toByteArray());
     }
 }

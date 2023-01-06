@@ -23,6 +23,7 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
 
     private static final long serialVersionUID = 1L;
 
+    @Deprecated
     private Unit institution;
     private String institutionCode;
     private String moment;
@@ -192,10 +193,12 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
      * *****************
      */
 
+    @Deprecated
     public Unit getInstitution() {
         return institution;
     }
 
+    @Deprecated
     public void setInstitution(Unit institution) {
         this.institution = institution;
         this.institutionName = institution != null ? institution.getNameI18n().getContent() : "";

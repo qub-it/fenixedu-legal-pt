@@ -20,6 +20,9 @@ import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
 import org.fenixedu.legalpt.util.LegalPTUtil;
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 public class XlsExporterLog {
 
     public static LegalReportResultFile write(final LegalReportRequest reportRequest,
@@ -75,7 +78,7 @@ public class XlsExporterLog {
             final String fileName = "Logs_" + reportRequest.getLegalReport().getName().getContent() + "_"
                     + new DateTime().toString("dd-MM-yyyy-HH-mm") + "." + LegalReportResultFileType.XLS.toString().toLowerCase();
 
-            return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, fileName, content);
+            return writeToFile(reportRequest, content, fileName);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new RuntimeException("error.XlsxExporter.spreadsheet.generation.failed", e);
@@ -87,6 +90,12 @@ public class XlsExporterLog {
                 throw new RuntimeException("error.XlsxExporter.spreadsheet.generation.failed", e);
             }
         }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static LegalReportResultFile writeToFile(final LegalReportRequest reportRequest, final byte[] content,
+            final String fileName) {
+        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, fileName, content);
     }
 
     protected static String pdiLabel(final String key) {

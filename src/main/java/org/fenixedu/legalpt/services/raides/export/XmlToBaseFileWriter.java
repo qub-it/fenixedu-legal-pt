@@ -39,6 +39,9 @@ import org.joda.time.LocalDate;
 
 import com.google.common.base.Strings;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 public class XmlToBaseFileWriter {
 
     private static final String ENCODING = "utf-8";
@@ -76,7 +79,7 @@ public class XmlToBaseFileWriter {
 
                 final String filename =
                         "A0" + raidesRequestParameter.getMoment() + raidesRequestParameter.getInstitutionCode() + ".xml";
-                return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XML, filename, content);
+                return writeToFile(reportRequest, content, filename);
             } finally {
                 try {
                     osw.close();
@@ -88,6 +91,12 @@ public class XmlToBaseFileWriter {
         } catch (final JAXBException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static LegalReportResultFile writeToFile(final LegalReportRequest reportRequest, byte[] content,
+            final String filename) {
+        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XML, filename, content);
     }
 
     protected static Aluno fillAluno(final RaidesRequestParameter raidesRequestParameter, final Raides raides,
