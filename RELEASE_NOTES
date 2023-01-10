@@ -1,3 +1,4 @@
+- Refactor: Remove institution unit deprecated slot from raides report request
 - Refactor: Update XSD to RAIDES22
 
 2.14.4 (06-01-2023)

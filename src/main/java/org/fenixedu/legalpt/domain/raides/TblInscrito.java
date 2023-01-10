@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class TblInscrito extends RaidesData implements IGrauPrecedenteCompleto, IMatricula {
 
-    protected String idEstab;
     protected String idAluno;
 
     protected String curso;
@@ -82,14 +81,6 @@ public class TblInscrito extends RaidesData implements IGrauPrecedenteCompleto, 
     /*
      * GETTERS & SETTERS
      */
-    
-    public String getIdEstab() {
-        return idEstab;
-    }
-
-    public void setIdEstab(String idEstab) {
-        this.idEstab = idEstab;
-    }
 
     public String getIdAluno() {
         return idAluno;
@@ -414,6 +405,5 @@ public class TblInscrito extends RaidesData implements IGrauPrecedenteCompleto, 
     public void setValid(boolean valid) {
         this.valid = valid;
     }
-
 
 }

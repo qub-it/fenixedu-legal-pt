@@ -4,14 +4,13 @@ import org.joda.time.LocalDate;
 
 public class TblDiplomado extends RaidesData implements IGrauPrecedenteCompleto, IMatricula {
 
-    protected String idEstab;
     protected String idAluno;
 
     protected String curso;
     protected String ramo;
 
     protected String anoLectivo;
-    
+
     protected String areaInvestigacao;
 
     protected String concluiGrau;
@@ -40,7 +39,7 @@ public class TblDiplomado extends RaidesData implements IGrauPrecedenteCompleto,
     protected String outroEstabEscolarAnt;
     protected String cursoEscolarAnt;
     protected String outroCursoEscolarAnt;
-    
+
     protected boolean valid = true;
 
     @Override
@@ -56,15 +55,6 @@ public class TblDiplomado extends RaidesData implements IGrauPrecedenteCompleto,
     /*
      * GETTERS & SETTERS
      */
-
-
-    public String getIdEstab() {
-        return idEstab;
-    }
-
-    public void setIdEstab(String idEstab) {
-        this.idEstab = idEstab;
-    }
 
     public String getIdAluno() {
         return idAluno;
@@ -97,11 +87,11 @@ public class TblDiplomado extends RaidesData implements IGrauPrecedenteCompleto,
     public void setAnoLectivo(String anoLectivo) {
         this.anoLectivo = anoLectivo;
     }
-    
+
     public String getAreaInvestigacao() {
         return areaInvestigacao;
     }
-    
+
     public void setAreaInvestigacao(String areaInvestigacao) {
         this.areaInvestigacao = areaInvestigacao;
     }
@@ -261,10 +251,7 @@ public class TblDiplomado extends RaidesData implements IGrauPrecedenteCompleto,
     public void setValid(boolean valid) {
         this.valid = valid;
     }
-    
-    
-    
-    
+
     @Override
     public boolean isTipoEstabSecSpecified() {
         return false;
@@ -279,5 +266,5 @@ public class TblDiplomado extends RaidesData implements IGrauPrecedenteCompleto,
     public void setTipoEstabSec(String tipoEstabSec) {
 
     }
-    
+
 }

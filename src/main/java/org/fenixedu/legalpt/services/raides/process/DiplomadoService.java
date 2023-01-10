@@ -7,7 +7,6 @@ import java.math.RoundingMode;
 import java.util.Set;
 
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
@@ -38,12 +37,10 @@ public class DiplomadoService extends RaidesService {
             final RaidesRequestPeriodParameter graduatedPeriod, final ExecutionYear executionYear,
             final Registration registration) {
 
-        final Unit institutionUnit = raidesRequestParameter.getInstitution();
-
         final TblDiplomado bean = new TblDiplomado();
         bean.setRegistration(registration);
 
-        preencheInformacaoMatricula(report, bean, institutionUnit, executionYear, registration);
+        preencheInformacaoMatricula(report, bean, executionYear, registration);
 
         final RegistrationConclusionInformation terminalConclusionInfo =
                 terminalConclusionInformation(registration, graduatedPeriod, executionYear);
@@ -79,7 +76,7 @@ public class DiplomadoService extends RaidesService {
             }
 
             bean.setDataDiploma(registrationConclusionBean.getConclusionDate().toLocalDate());
-            
+
             if (Raides.isDoctoralDegree(registration)) {
                 bean.setAreaInvestigacao(registration.getResearchArea() != null ? registration.getResearchArea().getCode() : "");
             }
@@ -117,7 +114,7 @@ public class DiplomadoService extends RaidesService {
         }
 
         preencheMobilidadeCredito(registration, bean, executionYear);
-        preencheGrauPrecedentCompleto(bean, institutionUnit, executionYear, registration);
+        preencheGrauPrecedentCompleto(bean, executionYear, registration);
 
         validaClassificacao(executionYear, graduatedPeriod, registration, bean);
         validaMobilidadeCredito(executionYear, registration, bean);
@@ -133,7 +130,7 @@ public class DiplomadoService extends RaidesService {
         final TblDiplomado bean = new TblDiplomado();
         bean.setRegistration(registration);
 
-        preencheInformacaoMatricula(report, bean, raidesRequestParameter.getInstitution(), executionYear, registration);
+        preencheInformacaoMatricula(report, bean, executionYear, registration);
 
         final RegistrationConclusionInformation scholarPartConclusionInfo =
                 scholarPartConclusionInformation(registration, graduatedPeriod, executionYear);
@@ -158,7 +155,7 @@ public class DiplomadoService extends RaidesService {
         preencheRamo(report, bean, executionYear, registration, true);
 
         preencheMobilidadeCredito(registration, bean, executionYear);
-        preencheGrauPrecedentCompleto(bean, raidesRequestParameter.getInstitution(), executionYear, registration);
+        preencheGrauPrecedentCompleto(bean, executionYear, registration);
 
         validaClassificacao(executionYear, graduatedPeriod, registration, bean);
         validaMobilidadeCredito(executionYear, registration, bean);

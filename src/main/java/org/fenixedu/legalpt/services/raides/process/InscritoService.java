@@ -11,7 +11,6 @@ import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.GrantOwnerType;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
@@ -42,12 +41,10 @@ public class InscritoService extends RaidesService {
 
     public TblInscrito create(final RaidesRequestParameter raidesRequestParameter, final ExecutionYear executionYear,
             final Registration registration) {
-        final Unit institutionUnit = raidesRequestParameter.getInstitution();
-
         final TblInscrito bean = new TblInscrito();
         bean.setRegistration(registration);
 
-        preencheInformacaoMatricula(report, bean, institutionUnit, executionYear, registration);
+        preencheInformacaoMatricula(report, bean, executionYear, registration);
 
         bean.setAnoCurricular(anoCurricular(registration, executionYear, false));
         bean.setPrimeiraVez(
@@ -116,11 +113,11 @@ public class InscritoService extends RaidesService {
                 LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(isWorkingStudent(registration, executionYear)));
 
         preencheInformacaoPessoal(executionYear, registration, bean);
-        preencheGrauPrecedentCompleto(bean, institutionUnit, executionYear, registration);
+        preencheGrauPrecedentCompleto(bean, executionYear, registration);
 
-        validaInformacaoMudancaCursoTransferencia(raidesRequestParameter, bean, institutionUnit, executionYear, registration);
-        validaInformacaoRegimeGeralAcesso(raidesRequestParameter, bean, institutionUnit, executionYear, registration);
-        validaNumInscricoesNoCurso(raidesRequestParameter, bean, institutionUnit, executionYear, registration);
+        validaInformacaoMudancaCursoTransferencia(raidesRequestParameter, bean, executionYear, registration);
+        validaInformacaoRegimeGeralAcesso(raidesRequestParameter, bean, executionYear, registration);
+        validaNumInscricoesNoCurso(raidesRequestParameter, bean, executionYear, registration);
 
         return bean;
     }
@@ -147,7 +144,7 @@ public class InscritoService extends RaidesService {
     }
 
     private void validaNumInscricoesNoCurso(final RaidesRequestParameter raidesRequestParameter, final TblInscrito bean,
-            final Unit institutionUnit, final ExecutionYear executionYear, final Registration registration) {
+            final ExecutionYear executionYear, final Registration registration) {
 
         if (!isFirstTimeOnDegree(registration, executionYear) && new Integer(0).equals(bean.getNumInscNesteCurso())) {
             LegalReportContext.addError("", i18n(
@@ -158,7 +155,7 @@ public class InscritoService extends RaidesService {
     }
 
     protected void validaInformacaoRegimeGeralAcesso(final RaidesRequestParameter raidesRequestParameter, final TblInscrito bean,
-            final Unit institutionUnit, final ExecutionYear executionYear, final Registration registration) {
+            final ExecutionYear executionYear, final Registration registration) {
         if (!isFirstCycle(registration) || !isFirstTimeOnDegree(registration, executionYear)) {
             return;
         }
@@ -194,8 +191,7 @@ public class InscritoService extends RaidesService {
     }
 
     protected void validaInformacaoMudancaCursoTransferencia(final RaidesRequestParameter raidesRequestParameter,
-            final TblInscrito bean, final Unit institutionUnit, final ExecutionYear executionYear,
-            final Registration registration) {
+            final TblInscrito bean, final ExecutionYear executionYear, final Registration registration) {
         if (!isFirstCycle(registration) || !isFirstTimeOnDegree(registration, executionYear)) {
             return;
         }

@@ -6,15 +6,14 @@ import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.mobility.MobilityRegistrationInformation;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
-import org.fenixedu.legalpt.domain.raides.TblMobilidadeInternacional;
 import org.fenixedu.legalpt.domain.raides.Raides.Cursos;
+import org.fenixedu.legalpt.domain.raides.TblMobilidadeInternacional;
 import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
 import org.fenixedu.legalpt.domain.raides.report.RaidesRequestParameter;
@@ -31,12 +30,10 @@ public class MobilidadeInternacionalService extends RaidesService {
 
     public TblMobilidadeInternacional create(RaidesRequestParameter raidesRequestParameter, final ExecutionYear executionYear,
             final Registration registration) {
-        final Unit institutionUnit = raidesRequestParameter.getInstitution();
-
         final TblMobilidadeInternacional bean = new TblMobilidadeInternacional();
 
         bean.setRegistration(registration);
-        preencheInformacaoMatricula(report, bean, institutionUnit, executionYear, registration);
+        preencheInformacaoMatricula(report, bean, executionYear, registration);
 
         bean.setCurso(null);
         bean.setRamo(null);

@@ -2,10 +2,6 @@ package org.fenixedu.legalpt.domain.raides;
 
 public interface IMatricula {
 
-    public String getIdEstab();
-
-    public void setIdEstab(final String idEstab);
-
     public String getIdAluno();
 
     public void setIdAluno(final String idAluno);
@@ -23,6 +19,6 @@ public interface IMatricula {
     public void setRamo(final String ramo);
 
     public void markAsInvalid();
-    
-    public boolean isValid();    
+
+    public boolean isValid();
 }

@@ -26,7 +26,6 @@ import org.fenixedu.academic.domain.candidacy.StudentCandidacy;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.degreeStructure.RootCourseGroup;
 import org.fenixedu.academic.domain.organizationalStructure.AcademicalInstitutionType;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.organizationalStructure.UnitUtils;
 import org.fenixedu.academic.domain.raides.DegreeClassification;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
@@ -43,9 +42,9 @@ import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.IGrauPrecedenteCompleto;
 import org.fenixedu.legalpt.domain.raides.IMatricula;
 import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.Raides.Ramo;
 import org.fenixedu.legalpt.domain.raides.RaidesInstance;
 import org.fenixedu.legalpt.domain.raides.TblInscrito;
-import org.fenixedu.legalpt.domain.raides.Raides.Ramo;
 import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
 import org.fenixedu.legalpt.domain.raides.report.RaidesRequestPeriodParameter;
@@ -131,10 +130,9 @@ public class RaidesService {
      * OTHER METHODS
      */
 
-    protected void preencheInformacaoMatricula(final LegalReport report, final IMatricula bean, final Unit institutionUnit,
-            final ExecutionYear executionYear, final Registration registration) {
+    protected void preencheInformacaoMatricula(final LegalReport report, final IMatricula bean, final ExecutionYear executionYear,
+            final Registration registration) {
 
-        bean.setIdEstab(institutionUnit.getCode());
         bean.setIdAluno(registration.getStudent().getNumber().toString());
 
         bean.setAnoLectivo(executionYear.getQualifiedName());
@@ -273,8 +271,8 @@ public class RaidesService {
 
     }
 
-    protected void preencheGrauPrecedentCompleto(final IGrauPrecedenteCompleto bean, final Unit institutionUnit,
-            final ExecutionYear executionYear, final Registration registration) {
+    protected void preencheGrauPrecedentCompleto(final IGrauPrecedenteCompleto bean, final ExecutionYear executionYear,
+            final Registration registration) {
         final StudentCandidacy studentCandidacy = registration.getStudentCandidacy();
         final PrecedentDegreeInformation lastCompletedQualification = studentCandidacy.getCompletedDegreeInformation();
 
@@ -353,8 +351,8 @@ public class RaidesService {
                     .translate(personalIngressionData.getHighSchoolType()));
         }
 
-        validaGrauPrecedenteCompleto(institutionUnit, executionYear, registration, lastCompletedQualification, bean);
-        validaCursoOficialInstituicaoOficial(institutionUnit, executionYear, registration, lastCompletedQualification, bean);
+        validaGrauPrecedenteCompleto(executionYear, registration, lastCompletedQualification, bean);
+        validaCursoOficialInstituicaoOficial(executionYear, registration, lastCompletedQualification, bean);
     }
 
     private AcademicalInstitutionType highSchoolType(StudentCandidacy studentCandidacy) {
@@ -391,9 +389,8 @@ public class RaidesService {
                 && lastCompletedQualification.getSchoolLevel() == SchoolLevelType.TECHNICAL_SPECIALIZATION;
     }
 
-    protected void validaGrauPrecedenteCompleto(final Unit institutionUnit, final ExecutionYear executionYear,
-            final Registration registration, final PrecedentDegreeInformation lastCompletedQualification,
-            final IGrauPrecedenteCompleto bean) {
+    protected void validaGrauPrecedenteCompleto(final ExecutionYear executionYear, final Registration registration,
+            final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
 
         if (Strings.isNullOrEmpty(bean.getEscolaridadeAnterior())) {
             LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.school.level.missing",
@@ -414,8 +411,8 @@ public class RaidesService {
             bean.markAsInvalid();
         }
 
-        validaEstabelecimentoAnteriorCompleto(institutionUnit, executionYear, registration, lastCompletedQualification, bean);
-        validaCursoAnteriorCompleto(institutionUnit, executionYear, registration, lastCompletedQualification, bean);
+        validaEstabelecimentoAnteriorCompleto(executionYear, registration, lastCompletedQualification, bean);
+        validaCursoAnteriorCompleto(executionYear, registration, lastCompletedQualification, bean);
 
         if (!bean.isTipoEstabSecSpecified()) {
             return;
@@ -430,9 +427,8 @@ public class RaidesService {
         }
     }
 
-    protected void validaEstabelecimentoAnteriorCompleto(final Unit institutionUnit, final ExecutionYear executionYear,
-            final Registration registration, final PrecedentDegreeInformation lastCompletedQualification,
-            final IGrauPrecedenteCompleto bean) {
+    protected void validaEstabelecimentoAnteriorCompleto(final ExecutionYear executionYear, final Registration registration,
+            final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
         if (lastCompletedQualification.getCountry() == null || !lastCompletedQualification.getCountry().isDefaultCountry()) {
             return;
         }
@@ -460,9 +456,8 @@ public class RaidesService {
         }
     }
 
-    protected void validaCursoOficialInstituicaoOficial(final Unit institutionUnit, final ExecutionYear executionYear,
-            final Registration registration, final PrecedentDegreeInformation lastCompletedQualification,
-            final IGrauPrecedenteCompleto bean) {
+    protected void validaCursoOficialInstituicaoOficial(final ExecutionYear executionYear, final Registration registration,
+            final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
         if (!isPortuguesePostHighSchool(lastCompletedQualification)) {
             return;
         }
@@ -500,9 +495,8 @@ public class RaidesService {
         }
     }
 
-    protected void validaCursoAnteriorCompleto(final Unit institutionUnit, final ExecutionYear executionYear,
-            final Registration registration, final PrecedentDegreeInformation lastCompletedQualification,
-            final IGrauPrecedenteCompleto bean) {
+    protected void validaCursoAnteriorCompleto(final ExecutionYear executionYear, final Registration registration,
+            final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
         if (lastCompletedQualification.getCountry() == null || !lastCompletedQualification.getCountry().isDefaultCountry()) {
             return;
         }

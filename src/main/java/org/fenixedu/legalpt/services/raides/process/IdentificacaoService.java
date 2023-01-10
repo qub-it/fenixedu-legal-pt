@@ -7,7 +7,6 @@ import java.util.function.Function;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.SchoolLevelType;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
@@ -15,8 +14,8 @@ import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
-import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
 import org.fenixedu.legalpt.domain.raides.Raides.Idade;
+import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
 import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.joda.time.DateTimeConstants;
@@ -31,8 +30,7 @@ public class IdentificacaoService extends RaidesService {
         super(report);
     }
 
-    public TblIdentificacao create(final Unit institution, final Student student, final Registration registration,
-            final ExecutionYear executionYear) {
+    public TblIdentificacao create(final Student student, final Registration registration, final ExecutionYear executionYear) {
         TblIdentificacao bean = new TblIdentificacao();
 
         bean.setIdAluno(registration.getStudent().getNumber());
@@ -88,9 +86,9 @@ public class IdentificacaoService extends RaidesService {
 
         bean.setPaisEnsinoSecundario(countryHighSchool(registration));
 
-        validaPais(bean, institution, student, registration, executionYear);
-        validaDocumentoIdentificacao(bean, institution, student, registration, executionYear);
-        validaDataNascimento(bean, institution, student, registration, executionYear);
+        validaPais(bean, student, registration, executionYear);
+        validaDocumentoIdentificacao(bean, student, registration, executionYear);
+        validaDataNascimento(bean, student, registration, executionYear);
 
         return bean;
     }
@@ -185,8 +183,8 @@ public class IdentificacaoService extends RaidesService {
         return COUNTRY_OF_HIGH_SCHOOL_PROVIDER.apply(registration);
     }
 
-    protected void validaDataNascimento(final TblIdentificacao bean, final Unit institution, final Student student,
-            final Registration registration, final ExecutionYear executionYear) {
+    protected void validaDataNascimento(final TblIdentificacao bean, final Student student, final Registration registration,
+            final ExecutionYear executionYear) {
         if (bean.getDataNasc() == null) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.birth.date.missing", formatArgs(registration, executionYear)));
@@ -207,7 +205,7 @@ public class IdentificacaoService extends RaidesService {
         }
     }
 
-    protected void validaDocumentoIdentificacao(final TblIdentificacao bean, final Unit institution, final Student student,
+    protected void validaDocumentoIdentificacao(final TblIdentificacao bean, final Student student,
             final Registration registration, final ExecutionYear executionYear) {
 
         if (Strings.isNullOrEmpty(bean.getNumId())) {
@@ -238,8 +236,8 @@ public class IdentificacaoService extends RaidesService {
         }
     }
 
-    protected void validaPais(final TblIdentificacao bean, final Unit institution, final Student student,
-            final Registration registration, final ExecutionYear executionYear) {
+    protected void validaPais(final TblIdentificacao bean, final Student student, final Registration registration,
+            final ExecutionYear executionYear) {
         if (Strings.isNullOrEmpty(bean.getResidePais())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.country.of.residence.incomplete", formatArgs(registration, executionYear)));

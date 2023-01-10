@@ -2,7 +2,6 @@ package org.fenixedu.legalpt.domain.raides;
 
 public class TblMobilidadeInternacional extends RaidesData implements IMatricula {
 
-    protected String idEstab;
     protected String idAluno;
     protected String curso;
     protected String ramo;
@@ -36,14 +35,6 @@ public class TblMobilidadeInternacional extends RaidesData implements IMatricula
     @Override
     public boolean isValid() {
         return valid;
-    }
-
-    public String getIdEstab() {
-        return idEstab;
-    }
-
-    public void setIdEstab(String idEstab) {
-        this.idEstab = idEstab;
     }
 
     public String getIdAluno() {

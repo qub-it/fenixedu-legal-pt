@@ -23,7 +23,6 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.GrantOwnerType;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationDataByExecutionYear;
@@ -131,7 +130,7 @@ public class Raides {
         }
 
     }
-    
+
     public static class Concelho {
         public static final String OUTRO = "9999";
     }
@@ -271,8 +270,7 @@ public class Raides {
                         }
 
                         if (!containsStudentIdentification(registration.getStudent())) {
-                            addStudent(report, raidesRequestParameter.getInstitution(), registration.getStudent(), registration,
-                                    academicPeriod);
+                            addStudent(report, registration.getStudent(), registration, academicPeriod);
                         }
 
                         addMobilidadeInternacional(report, raidesRequestParameter, academicPeriod, registration);
@@ -328,8 +326,7 @@ public class Raides {
                         }
 
                         if (!containsStudentIdentification(registration.getStudent())) {
-                            addStudent(report, raidesRequestParameter.getInstitution(), registration.getStudent(), registration,
-                                    academicPeriod);
+                            addStudent(report, registration.getStudent(), registration, academicPeriod);
                         }
 
                         addGraduated(report, raidesRequestParameter, graduatedPeriod, academicPeriod, registration);
@@ -487,8 +484,7 @@ public class Raides {
                         }
 
                         if (!containsStudentIdentification(registration.getStudent())) {
-                            addStudent(report, raidesRequestParameter.getInstitution(), registration.getStudent(), registration,
-                                    academicPeriod);
+                            addStudent(report, registration.getStudent(), registration, academicPeriod);
                         }
 
                         addEnrolledStudent(report, raidesRequestParameter, academicPeriod, registration);
@@ -519,7 +515,8 @@ public class Raides {
     protected boolean isActiveAtPeriod(final RaidesRequestPeriodParameter enroledPeriod, final Registration registration,
             final ExecutionYear academicPeriod) {
         final RegistrationState stateInDate = registration.getStateInDate(enroledPeriod.getEnd());
-        return stateInDate != null && (stateInDate.isActive() || stateInDate.getStateTypeEnum() == RegistrationStateTypeEnum.CONCLUDED);
+        return stateInDate != null
+                && (stateInDate.isActive() || stateInDate.getStateTypeEnum() == RegistrationStateTypeEnum.CONCLUDED);
     }
 
     protected boolean isEnrolled(Registration registration, final RaidesRequestPeriodParameter enroledPeriod) {
@@ -614,10 +611,9 @@ public class Raides {
         registrationList.add(registration);
     }
 
-    protected TblIdentificacao addStudent(final LegalReport report, final Unit institution, final Student student,
-            final Registration registration, final ExecutionYear executionYear) {
-        final TblIdentificacao aluno =
-                (new IdentificacaoService(report)).create(institution, student, registration, executionYear);
+    protected TblIdentificacao addStudent(final LegalReport report, final Student student, final Registration registration,
+            final ExecutionYear executionYear) {
+        final TblIdentificacao aluno = (new IdentificacaoService(report)).create(student, registration, executionYear);
         alunos.put(student, aluno);
 
         return aluno;

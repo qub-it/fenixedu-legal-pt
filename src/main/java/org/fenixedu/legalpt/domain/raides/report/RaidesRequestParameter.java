@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
-import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
@@ -23,8 +23,6 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
 
     private static final long serialVersionUID = 1L;
 
-    @Deprecated
-    private Unit institution;
     private String institutionCode;
     private String moment;
     private String interlocutorName;
@@ -50,12 +48,6 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
     private List<TupleDataSourceBean> registrationProtocolsDataSource;
     private List<TupleDataSourceBean> ingressionTypesDataSource;
     private List<TupleDataSourceBean> executionYearsDataSource;
-
-    /**
-     * Used to display data with Angular
-     */
-
-    private String institutionName;
 
     public RaidesRequestParameter(final String institutionCode, final String moment, final String interlocutorName,
             final String interlocutorEmail, final String interlocutorPhone, final String studentNumber, final String reportName,
@@ -122,9 +114,10 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
             throw new IllegalArgumentException("error.RaidesReportRequest.degrees.required");
         }
 
-        if (getInstitution() != null) {
-            throw new IllegalArgumentException("error.RaidesReportRequest.unit.required");
+        if (StringUtils.isBlank(getInstitutionCode())) {
+            throw new IllegalArgumentException("error.RaidesReportRequest.institutionCode.required");
         }
+
     }
 
     public RaidesRequestPeriodParameter addPeriod(final RaidesPeriodInputType periodType, final ExecutionYear academicPeriod,
@@ -177,32 +170,10 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
         return result;
     }
 
-    public void edit(final Unit institution, final String institutionCode, final String moment, final String interlocutorName,
-            final String interlocutorEmail, final String interlocutorPhone, final boolean filterEntriesWithErrors) {
-        this.institution = institution;
-        this.institutionCode = institutionCode;
-        this.moment = moment;
-        this.interlocutorName = interlocutorName;
-        this.interlocutorEmail = interlocutorEmail;
-        this.interlocutorPhone = interlocutorPhone;
-        this.filterEntriesWithErrors = filterEntriesWithErrors;
-    }
-
     /* *****************
      * GETTERS & SETTERS
      * *****************
      */
-
-    @Deprecated
-    public Unit getInstitution() {
-        return institution;
-    }
-
-    @Deprecated
-    public void setInstitution(Unit institution) {
-        this.institution = institution;
-        this.institutionName = institution != null ? institution.getNameI18n().getContent() : "";
-    }
 
     public String getInstitutionCode() {
         return institutionCode;
@@ -341,7 +312,6 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
         result.setIngressionsForDegreeChange(getIngressionsForDegreeChange());
         result.setIngressionsForDegreeTransfer(getIngressionsForDegreeTransfer());
         result.setIngressionsForGeneralAccessRegime(getIngressionsForGeneralAccessRegime());
-        result.setInstitution(getInstitution());
         result.setInstitutionCode(getInstitutionCode());
         result.setInterlocutorEmail(getInterlocutorEmail());
         result.setInterlocutorName(getInterlocutorName());

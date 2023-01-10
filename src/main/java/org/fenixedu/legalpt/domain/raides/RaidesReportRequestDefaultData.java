@@ -35,7 +35,6 @@ public class RaidesReportRequestDefaultData implements IRaidesReportRequestDefau
         raidesRequestParameter.getIngressionsForGeneralAccessRegime()
                 .addAll(RaidesInstance.getInstance().getGeneralAccessRegimeIngressionsSet());
 
-        raidesRequestParameter.setInstitution(Bennu.getInstance().getInstitutionUnit());
         raidesRequestParameter
                 .setInstitutionCode(!Strings.isNullOrEmpty(RaidesInstance.getInstance().getInstitutionCode()) ? RaidesInstance
                         .getInstance().getInstitutionCode() : Bennu.getInstance().getInstitutionUnit().getCode());
