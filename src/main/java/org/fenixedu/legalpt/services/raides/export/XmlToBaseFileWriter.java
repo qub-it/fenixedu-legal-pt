@@ -297,22 +297,22 @@ public class XmlToBaseFileWriter {
         }
 
         if (!Strings.isNullOrEmpty(tblInscrito.getProfissaoPai())) {
-            inscricao.setProfissaoPai(longValueOf(tblInscrito.getProfissaoPai()));
+            inscricao.setProfissaoPai(tblInscrito.getProfissaoPai());
         } else {
-            inscricao.setProfissaoPai(longValueOf(Raides.Profissao.NAO_DISPONIVEL));
+            inscricao.setProfissaoPai(Raides.Profissao.NAO_DISPONIVEL);
         }
 
         if (!Strings.isNullOrEmpty(tblInscrito.getProfissaoMae())) {
-            inscricao.setProfissaoMae(longValueOf(tblInscrito.getProfissaoMae()));
+            inscricao.setProfissaoMae(tblInscrito.getProfissaoMae());
         } else {
-            inscricao.setProfissaoMae(longValueOf(Raides.Profissao.NAO_DISPONIVEL));
+            inscricao.setProfissaoMae(Raides.Profissao.NAO_DISPONIVEL);
         }
 
         if (!Strings.isNullOrEmpty(tblInscrito.getProfissaoAluno())
                 && !Raides.Profissao.NAO_DISPONIVEL.equals(tblInscrito.getProfissaoAluno())) {
-            inscricao.setProfissaoAluno(longValueOf(tblInscrito.getProfissaoAluno()));
+            inscricao.setProfissaoAluno(tblInscrito.getProfissaoAluno());
         } else {
-            inscricao.setProfissaoAluno(longValueOf(Raides.Profissao.OUTRA_SITUACAO));
+            inscricao.setProfissaoAluno(Raides.Profissao.OUTRA_SITUACAO);
         }
 
         inscricao.setEscolaridadeAnterior(longValueOf(tblInscrito.getEscolaridadeAnterior()));
