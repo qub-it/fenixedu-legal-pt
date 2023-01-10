@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:include schemaLocation="GlobalTypesRaides.xsd" />
+  <xs:element name="InformacaoAlunos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Extracao">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="Codigo" name="CodigoEstabelecimento" />
+              <xs:element type="Momento" name="Momento" />
+              <xs:element type="Datas" name="DataExtracao" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Alunos">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice maxOccurs="unbounded">
+                <xs:element name="Aluno">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="Identificacao">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element type="NumeroAluno" name="NumeroAluno"/>
+                            <xs:element type="Nome" name="Nome" />
+                            <xs:element type="NumeroID" name="NumeroID" />
+                            <xs:element type="OutroTipoID" name="OutroTipoID" nillable="true" />
+                            <xs:element type="Data" name="DataNascimento" />
+                            <xs:element type="Sexo" name="Sexo" />
+                            <xs:element type="Paises" name="PaisDeNacionalidade" />
+                            <xs:element type="Paises" name="OutroPaisDeNacionalidade" nillable="true" />
+                            <xs:element type="Paises" name="PaisResidencia" />
+                            <xs:element type="Paises" name="PaisEnsinoSec" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="Inscricoes" nillable="true">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:choice maxOccurs="2">
+                              <xs:element name="Inscricao">
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element type="Curso" name="Curso" />
+                                    <xs:element type="Ramo" name="Ramo" />
+                                    <xs:element type="AnoLetivo" name="AnoLetivo" />
+                                    <xs:element type="AnoCurricular" name="AnoCurricular" />
+                                    <xs:element type="myboolean" name="PrimeiraVez" />
+                                    <xs:element type="RegimeFrequencia" name="RegimeFrequencia" />
+                                    <xs:element type="NumInscCursos" name="NumInscNesteCurso" nillable="true" />
+                                    <xs:element type="ECTS" name="ECTSInscricao" nillable="true" />
+                                    <xs:element type="ECTSAcumulados" name="ECTSAcumulados" nillable="true" />
+                                    <xs:element type="myboolean" name="TempoParcial" />
+                                    <xs:element type="Bolseiro" name="Bolseiro" />
+                                    <xs:element type="FormaIngresso" name="FormaIngresso" nillable="true" />
+                                    <xs:element type="Codigo" name="EstabInscricaoAnt" nillable="true" />
+                                    <xs:element type="OutroAux" name="OutroEstabInscAnt" nillable="true" />
+                                    <xs:element type="NotaIngresso" name="NotaIngresso" nillable="true" />
+                                    <xs:element type="OpcaoIngresso" name="OpcaoIngresso" nillable="true" />
+                                    <xs:element type="NumInscCursosAnt" name="NumInscCursosAnt" nillable="true" />
+                                    <xs:element type="AnoUltimaInscricao" name="AnoUltimaInscricao" nillable="true" />
+                                    <xs:element type="EstadoCivil" name="EstadoCivil" nillable="true"/>
+                                    <xs:element type="myboolean" name="TrabalhadorEstudante" />
+                                    <xs:element type="myboolean" name="AlunoDeslocado" />
+                                    <xs:element type="Concelho" name="Concelho" nillable="true" />
+                                    <xs:element type="Escolaridade" name="NivelEscolarPai" />
+                                    <xs:element type="Escolaridade" name="NivelEscolarMae" />
+                                    <xs:element type="Condicao" name="SituacaoProfPai" />
+                                    <xs:element type="Condicao" name="SituacaoProfMae" />
+                                    <xs:element type="Condicao" name="SituacaoProfAluno" />
+                                    <xs:element type="Profissao" name="ProfissaoPai" />
+                                    <xs:element type="Profissao" name="ProfissaoMae" />
+                                    <xs:element type="Profissao" name="ProfissaoAluno" />
+                                    <xs:element type="EscolaridadeAnterior" name="EscolaridadeAnterior" />
+                                    <xs:element type="Outro" name="OutroEscolaridadeAnterior" nillable="true" />
+                                    <xs:element type="Paises" name="PaisEscolaridadeAnt" />
+                                    <xs:element type="AnoEscolaridadeAnt" name="AnoEscolaridadeAnt" nillable="true" />
+                                    <xs:element type="Codigo" name="EstabEscolaridadeAnt" nillable="true" />
+                                    <xs:element type="OutroAux" name="OutroEstabEscolarAnt" nillable="true" />
+                                    <xs:element type="Codigo" name="CursoEscolarAnt" nillable="true" />
+                                    <xs:element type="OutroAux" name="OutroCursoEscolarAnt" nillable="true" />
+                                    <xs:element type="TipoEstabSec" name="TipoEstabSec" nillable="true" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:choice>
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="Diplomas" nillable="true">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:choice minOccurs="0" maxOccurs="3">
+                              <!--<xs:choice maxOccurs="3">-->
+                              <xs:element name="Diploma" nillable="true">
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element type="Curso" name="Curso" />
+                                    <xs:element type="Ramo" name="Ramo" />
+                                    <xs:element type="AnoLetivo" name="AnoLetivo" />
+                                    <xs:element type="AreaInvestigacao" name ="AreaInvestigacao" nillable="true"/>
+                                    <xs:element type="myboolean" name="ConcluiuGrau"/>
+                                    <xs:element type="NumInscConclusao" name="NumInscConclusao" nillable="true" />
+                                    <xs:element type="Classificacao" name="ClassificacaoFinal" nillable="true" />
+                                    <xs:element type="Datas" name="DataDiploma" nillable="true" />
+                                    <xs:element type="myboolean" name="ConclusaoMD" nillable="true" />
+                                    <xs:element type="Classificacao" name="ClassificacaoFinalMD" nillable="true" />
+                                    <xs:element type="myboolean" name="MobilidadeCredito" />
+                                    <xs:element type="TipoMobilidadeCredito" name="TipoMobilidadeCredito" nillable="true" />
+                                    <xs:element type="ProgMobilidadeCredito" name="ProgMobilidadeCredito"  nillable="true"/>
+                                    <xs:element type="OutroProgMobCredito" name="OutroProgMobCredito" nillable="true" />
+                                    <xs:element type="Paises" name="PaisMobilidadeCredito" nillable="true"/>
+                                    <xs:element type="EscolaridadeAnterior" name="EscolaridadeAnterior" />
+                                    <xs:element type="Outro" name="OutroEscolaridadeAnterior" nillable="true" />
+                                    <xs:element type="Paises" name="PaisEscolaridadeAnt" />
+                                    <xs:element type="AnoEscolaridadeAnt" name="AnoEscolaridadeAnt" nillable="true" />
+                                    <xs:element type="Codigo" name="EstabEscolaridadeAnt" nillable="true" />
+                                    <xs:element type="OutroAux" name="OutroEstabEscolarAnt" nillable="true" />
+                                    <xs:element type="Codigo" name="CursoEscolarAnt" nillable="true" />
+                                    <xs:element type="OutroAux" name="OutroCursoEscolarAnt" nillable="true" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:choice>
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="Mobilidade" nillable="true">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element type="Curso" name="Curso"/>
+                            <xs:element type="Ramo" name="Ramo" />
+                            <xs:element type="AnoLetivo" name="AnoLetivo" />
+                            <!--Tipo alterado-->
+                            <xs:element type="AreaCientifica" name="AreaCientifica" nillable="true" />
+                            <xs:element type="AnoCurricular" name="AnoCurricular" />
+                            <xs:element type="RegimeFrequencia" name="RegimeFrequencia" />
+                            <xs:element type="ECTS" name="ECTSInscricao" nillable="true" />
+                            <xs:element type="ProgMobilidade" name="ProgMobilidade" />
+                            <xs:element type="Outro" name="OutroPrograma" nillable="true" />
+                            <xs:element type="TipoProgMobilidade" name="TipoProgMobilidade" />
+                            <xs:element type="DuracaoPrograma" name="DuracaoPrograma" />
+                            <xs:element type="NivelFormacaoOrigem" name="NivelCursoOrigem" />
+                            <xs:element type="Outro" name="OutroNivelCurOrigem" nillable="true" />
+                            <xs:element type="Paises" name="PaisOrigemMobilidadeCredito" />
+                            <xs:element type="NivelFormacaoDestino" name="NivelCursoDestino" nillable="true" />
+                            <xs:element type="Outro" name="OutroNivelCurDestino" nillable="true" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
