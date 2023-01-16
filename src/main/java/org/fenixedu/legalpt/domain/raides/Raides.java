@@ -156,10 +156,6 @@ public class Raides {
         public static final String OUTRO = "4";
     }
 
-    public static class Pais {
-        public static final String OMISSAO = "PT";
-    }
-
     public static class Ramo {
         public static final String TRONCO_COMUM = "1000017";
         public static final String OUTRO = "0000000";
@@ -174,13 +170,16 @@ public class Raides {
     }
 
     public static class SituacaoProfissional {
+        public static final String DOMESTICO = "16";
         public static final String ALUNO = "17";
+        public static final String OUTRA = "18";
         public static final String NAO_DISPONIVEL = "19";
-    }
 
-    public static class Profissao {
-        public static final String OUTRA_SITUACAO = "20";
-        public static final String NAO_DISPONIVEL = "21";
+        private static final List<String> WITHOUT_PROFESSION_TYPE = List.of(DOMESTICO, ALUNO, OUTRA, NAO_DISPONIVEL);
+
+        public static final boolean withoutProfessionType(String value) {
+            return value != null && WITHOUT_PROFESSION_TYPE.contains(value);
+        }
     }
 
     public static class DocumentoIdentificacao {
@@ -243,6 +242,11 @@ public class Raides {
                     final String[] messageArgs = formatArgs(registration, academicPeriod);
 
                     try {
+
+                        if (!isAcceptedDegreeType(enroledPeriod, registration)) {
+                            continue;
+                        }
+
                         if (!isAgreementPartOfMobilityReport(raidesRequestParameter, registration)) {
                             continue;
                         }
@@ -301,6 +305,11 @@ public class Raides {
                     final String[] messageArgs = formatArgs(registration, academicPeriod);
 
                     try {
+
+                        if (!isAcceptedDegreeType(graduatedPeriod, registration)) {
+                            continue;
+                        }
+
                         if (!isAgreementPartOfEnrolledReport(raidesRequestParameter, registration)) {
                             continue;
                         }
@@ -450,6 +459,11 @@ public class Raides {
                     final String[] messageArgs = formatArgs(registration, academicPeriod);
 
                     try {
+
+                        if (!isAcceptedDegreeType(enroledPeriod, registration)) {
+                            continue;
+                        }
+
                         if (!isAgreementPartOfEnrolledReport(raidesRequestParameter, registration)) {
                             continue;
                         }
@@ -498,6 +512,10 @@ public class Raides {
                 }
             }
         }
+    }
+
+    private boolean isAcceptedDegreeType(RaidesRequestPeriodParameter parameter, Registration registration) {
+        return parameter.getDegreeTypes().isEmpty() || parameter.getDegreeTypes().contains(registration.getDegreeType());
     }
 
     private boolean isTerminalConcluded(Registration registration, RaidesRequestParameter raidesRequestParameter) {

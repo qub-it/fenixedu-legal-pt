@@ -2,9 +2,13 @@ package org.fenixedu.legalpt.domain.raides.report;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.fenixedu.academic.domain.ExecutionYear;
+import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.bennu.IBean;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -34,11 +38,7 @@ public class RaidesRequestPeriodParameter implements Serializable, IBean {
     private boolean enrolmentYearsConstraint;
     private Integer minEnrolmentYears;
     private Integer maxEnrolmentYears;
-
-    /**
-     * Used to display academicPeriod name with angular
-     */
-    private String academicPeriodQualifiedName;
+    private Set<DegreeType> degreeTypes = new HashSet<>();
 
     public RaidesRequestPeriodParameter(final ExecutionYear academicPeriod, final LocalDate begin, final LocalDate end,
             final boolean enrolledInAcademicPeriod, final RaidesPeriodInputType periodInputType,
@@ -46,7 +46,6 @@ public class RaidesRequestPeriodParameter implements Serializable, IBean {
             final boolean enrolmentYearsConstraint, final Integer minEnrolmentYears, final Integer maxEnrolmentYears) {
 
         setAcademicPeriod(academicPeriod);
-        setAcademicPeriodQualifiedName(academicPeriod.getQualifiedName());
         setBegin(begin);
         setEnd(end);
         setEnrolledInAcademicPeriod(enrolledInAcademicPeriod);
@@ -94,14 +93,6 @@ public class RaidesRequestPeriodParameter implements Serializable, IBean {
 
     public void setAcademicPeriod(ExecutionYear academicPeriod) {
         this.academicPeriod = academicPeriod;
-    }
-
-    public String getAcademicPeriodQualifiedName() {
-        return academicPeriodQualifiedName;
-    }
-
-    public void setAcademicPeriodQualifiedName(String academicPeriodQualifiedName) {
-        this.academicPeriodQualifiedName = academicPeriodQualifiedName;
     }
 
     public LocalDate getBegin() {
@@ -184,14 +175,17 @@ public class RaidesRequestPeriodParameter implements Serializable, IBean {
         this.maxEnrolmentYears = maxEnrolmentYears;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    public void addDegreeTypes(final Collection<DegreeType> degreeTypes) {
+        this.degreeTypes.addAll(degreeTypes);
+    }
+    
+    public Set<DegreeType> getDegreeTypes() {
+        return degreeTypes;
     }
 
     public RaidesRequestPeriodParameter copy() {
         final RaidesRequestPeriodParameter result = new RaidesRequestPeriodParameter();
         result.setAcademicPeriod(getAcademicPeriod());
-        result.setAcademicPeriodQualifiedName(getAcademicPeriodQualifiedName());
         result.setBegin(getBegin());
         result.setEnd(getEnd());
         result.setEnrolledInAcademicPeriod(this.enrolledInAcademicPeriod);
@@ -202,6 +196,7 @@ public class RaidesRequestPeriodParameter implements Serializable, IBean {
         result.setMinEnrolmentYears(getMinEnrolmentYears());
         result.setMaxEnrolmentYears(getMaxEnrolmentYears());
         result.setPeriodInputType(getPeriodInputType());
+        result.getDegreeTypes().addAll(getDegreeTypes());
 
         return result;
     }

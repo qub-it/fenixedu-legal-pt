@@ -2,6 +2,7 @@ package org.fenixedu.legalpt.domain.raides.report;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
+import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
@@ -123,15 +125,17 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
     public RaidesRequestPeriodParameter addPeriod(final RaidesPeriodInputType periodType, final ExecutionYear academicPeriod,
             final LocalDate begin, final LocalDate end, final boolean enrolledInAcademicPeriod,
             final boolean enrolmentEctsConstraint, final BigDecimal minEnrolmentEcts, final BigDecimal maxEnrolmentEcts,
-            final boolean enrolmentYearsConstraint, final Integer minEnrolmentYears, final Integer maxEnrolmentYears) {
+            final boolean enrolmentYearsConstraint, final Integer minEnrolmentYears, final Integer maxEnrolmentYears,
+            final Collection<DegreeType> degreeTypes) {
 
-        RaidesRequestPeriodParameter periodParameter = new RaidesRequestPeriodParameter(academicPeriod, begin, end,
+        RaidesRequestPeriodParameter result = new RaidesRequestPeriodParameter(academicPeriod, begin, end,
                 enrolledInAcademicPeriod, periodType, enrolmentEctsConstraint, minEnrolmentEcts, maxEnrolmentEcts,
                 enrolmentYearsConstraint, minEnrolmentYears, maxEnrolmentYears);
+        result.addDegreeTypes(degreeTypes);
 
-        periods.add(periodParameter);
+        periods.add(result);
 
-        return periodParameter;
+        return result;
     }
 
     public List<RaidesRequestPeriodParameter> getPeriodsForEnrolled() {
@@ -319,6 +323,7 @@ public class RaidesRequestParameter extends LegalReportRequestParameters impleme
         result.setMoment(getMoment());
         result.setPeriods(getPeriods().stream().map(p -> p.copy()).collect(Collectors.toList()));
         result.setGraduatedExecutionYear(getGraduatedExecutionYear());
+        result.setReportName(getReportName());
 
         return result;
     }

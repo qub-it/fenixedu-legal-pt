@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourseType;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.CurricularCourse;
@@ -43,7 +42,7 @@ import org.fenixedu.legalpt.domain.raides.IGrauPrecedenteCompleto;
 import org.fenixedu.legalpt.domain.raides.IMatricula;
 import org.fenixedu.legalpt.domain.raides.Raides;
 import org.fenixedu.legalpt.domain.raides.Raides.Ramo;
-import org.fenixedu.legalpt.domain.raides.RaidesInstance;
+import org.fenixedu.legalpt.domain.raides.Raides.SituacaoProfissional;
 import org.fenixedu.legalpt.domain.raides.TblInscrito;
 import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
@@ -109,14 +108,6 @@ public class RaidesService {
     }
 
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
-
-        final String ingressionType = LegalMapping.find(report, LegalMappingType.REGISTRATION_INGRESSION_TYPE)
-                .translate(registration.getIngressionType());
-
-        if (StringUtils.isNotBlank(ingressionType) && ingressionType.equals("38")) {
-            return true;
-        }
-
         // todo refactor
         if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty() && RegistrationServices
                 .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear).size() > 1) {
@@ -561,25 +552,10 @@ public class RaidesService {
                     .translate(registration.getPerson().getMaritalStatus()));
         }
 
-        PersonalIngressionData personalIngressionData = Raides.personalIngressionData(registration, executionYear);
-        if (personalIngressionData != null && personalIngressionData.getDislocatedFromPermanentResidence() != null) {
+        PersonalIngressionData ingressionData = Raides.personalIngressionData(registration, executionYear);
+        if (ingressionData != null && ingressionData.getDislocatedFromPermanentResidence() != null) {
             bean.setAlunoDeslocado(LegalMapping.find(report, LegalMappingType.BOOLEAN)
-                    .translate(personalIngressionData.getDislocatedFromPermanentResidence()));
-        }
-
-        if (Strings.isNullOrEmpty(bean.getAlunoDeslocado())
-                && ((RaidesInstance) report).getDefaultDistrictOfResidence() != null) {
-
-            if (Raides.countryOfResidence(registration, executionYear) != null
-                    && !Raides.countryOfResidence(registration, executionYear).isDefaultCountry()) {
-                bean.setAlunoDeslocado(LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(true));
-            } else if (Raides.countryOfResidence(registration, executionYear) != null
-                    && Raides.districtSubdivisionOfResidence(registration, executionYear) != null) {
-                bean.setAlunoDeslocado(
-                        LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(Raides.districtOfResidence(registration,
-                                executionYear) != ((RaidesInstance) report).getDefaultDistrictOfResidence()));
-            }
-
+                    .translate(ingressionData.getDislocatedFromPermanentResidence()));
         }
 
         final Country countryOfResidence = Raides.countryOfResidence(registration, executionYear);
@@ -590,49 +566,53 @@ public class RaidesService {
             bean.setResideConcelho(Raides.Concelho.OUTRO);
         }
 
-        if (personalIngressionData != null) {
-            if (personalIngressionData.getFatherSchoolLevel() != null) {
+        if (ingressionData != null) {
+            if (ingressionData.getFatherSchoolLevel() != null) {
                 bean.setNivelEscolarPai(LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL)
-                        .translate(personalIngressionData.getFatherSchoolLevel()));
+                        .translate(ingressionData.getFatherSchoolLevel()));
             }
 
-            if (personalIngressionData.getMotherSchoolLevel() != null) {
+            if (ingressionData.getMotherSchoolLevel() != null) {
                 bean.setNivelEscolarMae(LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL)
-                        .translate(personalIngressionData.getMotherSchoolLevel()));
+                        .translate(ingressionData.getMotherSchoolLevel()));
             }
 
-            if (personalIngressionData.getFatherProfessionalCondition() != null) {
+            if (ingressionData.getFatherProfessionalCondition() != null) {
                 bean.setSituacaoProfPai(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
-                        .translate(personalIngressionData.getFatherProfessionalCondition()));
+                        .translate(ingressionData.getFatherProfessionalCondition()));
             }
 
-            if (personalIngressionData.getMotherProfessionalCondition() != null) {
+            if (ingressionData.getMotherProfessionalCondition() != null) {
                 bean.setSituacaoProfMae(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
-                        .translate(personalIngressionData.getMotherProfessionalCondition()));
+                        .translate(ingressionData.getMotherProfessionalCondition()));
             }
 
-            if (personalIngressionData.getProfessionalCondition() != null) {
+            if (ingressionData.getProfessionalCondition() != null) {
                 bean.setSituacaoProfAluno(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
-                        .translate(personalIngressionData.getProfessionalCondition()));
+                        .translate(ingressionData.getProfessionalCondition()));
             }
 
-            if (personalIngressionData.getFatherProfessionType() != null) {
-                bean.setProfissaoPai(LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
-                        .translate(personalIngressionData.getFatherProfessionType()));
+            if (ingressionData.getFatherProfessionType() != null) {
+                bean.setProfissaoPai(transformProfessionTypeMappingValue(LegalMapping
+                        .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getFatherProfessionType())));
             }
 
-            if (personalIngressionData.getMotherProfessionType() != null) {
-                bean.setProfissaoMae(LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
-                        .translate(personalIngressionData.getMotherProfessionType()));
+            if (ingressionData.getMotherProfessionType() != null) {
+                bean.setProfissaoMae(transformProfessionTypeMappingValue(LegalMapping
+                        .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getMotherProfessionType())));
             }
 
-            if (personalIngressionData.getProfessionType() != null) {
-                bean.setProfissaoAluno(LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
-                        .translate(personalIngressionData.getProfessionType()));
+            if (ingressionData.getProfessionType() != null) {
+                bean.setProfissaoAluno(transformProfessionTypeMappingValue(LegalMapping
+                        .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getProfessionType())));
             }
         }
 
         validaInformacaoPessoal(executionYear, registration, bean);
+    }
+
+    private String transformProfessionTypeMappingValue(String value) {
+        return SituacaoProfissional.withoutProfessionType(value) ? null : value;
     }
 
     protected void validaInformacaoPessoal(final ExecutionYear executionYear, final Registration registration,
@@ -659,8 +639,7 @@ public class RaidesService {
             }
         }
 
-        if (!Strings.isNullOrEmpty(bean.getProfissaoAluno())
-                && Raides.Profissao.NAO_DISPONIVEL.equals(bean.getProfissaoAluno())) {
+        if (!Strings.isNullOrEmpty(bean.getProfissaoAluno())) {
             // errors.addError("error.Raides.validation.student.profession.cannot.be.not.available", registration.getStudent()
             //        .getNumber(), registration.getDegree().getNameI18N().getContent(), executionYear.getQualifiedName());
         }

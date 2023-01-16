@@ -296,24 +296,9 @@ public class XmlToBaseFileWriter {
             inscricao.setSituacaoProfAluno(longValueOf(Raides.SituacaoProfissional.ALUNO));
         }
 
-        if (!Strings.isNullOrEmpty(tblInscrito.getProfissaoPai())) {
-            inscricao.setProfissaoPai(tblInscrito.getProfissaoPai());
-        } else {
-            inscricao.setProfissaoPai(Raides.Profissao.NAO_DISPONIVEL);
-        }
-
-        if (!Strings.isNullOrEmpty(tblInscrito.getProfissaoMae())) {
-            inscricao.setProfissaoMae(tblInscrito.getProfissaoMae());
-        } else {
-            inscricao.setProfissaoMae(Raides.Profissao.NAO_DISPONIVEL);
-        }
-
-        if (!Strings.isNullOrEmpty(tblInscrito.getProfissaoAluno())
-                && !Raides.Profissao.NAO_DISPONIVEL.equals(tblInscrito.getProfissaoAluno())) {
-            inscricao.setProfissaoAluno(tblInscrito.getProfissaoAluno());
-        } else {
-            inscricao.setProfissaoAluno(Raides.Profissao.OUTRA_SITUACAO);
-        }
+        inscricao.setProfissaoPai(tblInscrito.getProfissaoPai());
+        inscricao.setProfissaoMae(tblInscrito.getProfissaoMae());
+        inscricao.setProfissaoAluno(tblInscrito.getProfissaoAluno());
 
         inscricao.setEscolaridadeAnterior(longValueOf(tblInscrito.getEscolaridadeAnterior()));
         inscricao.setOutroEscolaridadeAnterior(tblInscrito.getOutroEscolaridadeAnterior());
@@ -349,11 +334,7 @@ public class XmlToBaseFileWriter {
             identificacao.setOutroPaisDeNacionalidade(tblIdentificacao.getOutroPaisDeNacionalidade());
         }
 
-        if (!Strings.isNullOrEmpty(tblIdentificacao.getPaisEnsinoSecundario())) {
-            identificacao.setPaisEnsinoSec(tblIdentificacao.getPaisEnsinoSecundario());
-        } else {
-            identificacao.setPaisEnsinoSec(Raides.Pais.OMISSAO);
-        }
+        identificacao.setPaisEnsinoSec(tblIdentificacao.getPaisEnsinoSecundario());
 
         identificacao.setPaisResidencia(tblIdentificacao.getResidePais());
         identificacao.setSexo(tblIdentificacao.getSexo());

@@ -1,5 +1,8 @@
 - Refactor: Remove institution unit deprecated slot from raides report request
-- Refactor: Update XSD to RAIDES22
+- Refactor: Update XSD and logic to RAIDES22
+- Refactor: Remove temporary fix's due to RAIDES21
+- Improvement: Keep raides report request name on copy
+- Improvement: Add degree types filter to raides request periods
 
 2.14.4 (06-01-2023)
 - Improvement: Change legal report transaction boundaries to avoid performance issues
