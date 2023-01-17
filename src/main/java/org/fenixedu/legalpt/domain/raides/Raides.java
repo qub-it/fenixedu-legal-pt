@@ -177,8 +177,8 @@ public class Raides {
 
         private static final List<String> WITHOUT_PROFESSION_TYPE = List.of(DOMESTICO, ALUNO, OUTRA, NAO_DISPONIVEL);
 
-        public static final boolean withoutProfessionType(String value) {
-            return value != null && WITHOUT_PROFESSION_TYPE.contains(value);
+        public static final boolean requiresProfessionType(String value) {
+            return value != null && !WITHOUT_PROFESSION_TYPE.contains(value);
         }
     }
 

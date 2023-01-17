@@ -593,17 +593,17 @@ public class RaidesService {
             }
 
             if (ingressionData.getFatherProfessionType() != null) {
-                bean.setProfissaoPai(transformProfessionTypeMappingValue(LegalMapping
+                bean.setProfissaoPai(transformProfessionTypeMappingValue(bean.getSituacaoProfPai(), LegalMapping
                         .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getFatherProfessionType())));
             }
 
             if (ingressionData.getMotherProfessionType() != null) {
-                bean.setProfissaoMae(transformProfessionTypeMappingValue(LegalMapping
+                bean.setProfissaoMae(transformProfessionTypeMappingValue(bean.getSituacaoProfMae(), LegalMapping
                         .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getMotherProfessionType())));
             }
 
             if (ingressionData.getProfessionType() != null) {
-                bean.setProfissaoAluno(transformProfessionTypeMappingValue(LegalMapping
+                bean.setProfissaoAluno(transformProfessionTypeMappingValue(bean.getSituacaoProfAluno(), LegalMapping
                         .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getProfessionType())));
             }
         }
@@ -611,8 +611,8 @@ public class RaidesService {
         validaInformacaoPessoal(executionYear, registration, bean);
     }
 
-    private String transformProfessionTypeMappingValue(String value) {
-        return SituacaoProfissional.withoutProfessionType(value) ? null : value;
+    private String transformProfessionTypeMappingValue(String professionalSituation, String professionType) {
+        return SituacaoProfissional.requiresProfessionType(professionalSituation) ? professionType : null;
     }
 
     protected void validaInformacaoPessoal(final ExecutionYear executionYear, final Registration registration,
