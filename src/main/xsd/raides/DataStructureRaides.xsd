@@ -70,9 +70,9 @@
                                     <xs:element type="Condicao" name="SituacaoProfPai" />
                                     <xs:element type="Condicao" name="SituacaoProfMae" />
                                     <xs:element type="Condicao" name="SituacaoProfAluno" />
-                                    <xs:element type="Profissao" name="ProfissaoPai" />
-                                    <xs:element type="Profissao" name="ProfissaoMae" />
-                                    <xs:element type="Profissao" name="ProfissaoAluno" />
+                                    <xs:element type="Profissao" name="ProfissaoPai" nillable="true"/>
+                                    <xs:element type="Profissao" name="ProfissaoMae" nillable="true"/>
+                                    <xs:element type="Profissao" name="ProfissaoAluno" nillable="true"/>
                                     <xs:element type="EscolaridadeAnterior" name="EscolaridadeAnterior" />
                                     <xs:element type="Outro" name="OutroEscolaridadeAnterior" nillable="true" />
                                     <xs:element type="Paises" name="PaisEscolaridadeAnt" />
