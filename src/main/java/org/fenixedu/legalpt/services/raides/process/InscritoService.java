@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.GrantOwnerType;
@@ -21,6 +22,7 @@ import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
 import org.fenixedu.legalpt.domain.raides.RaidesInstance;
+import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
 import org.fenixedu.legalpt.domain.raides.TblInscrito;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
 import org.fenixedu.legalpt.domain.raides.report.RaidesRequestParameter;
@@ -115,6 +117,7 @@ public class InscritoService extends RaidesService {
         preencheInformacaoPessoal(executionYear, registration, bean);
         preencheGrauPrecedentCompleto(bean, executionYear, registration);
 
+        validaRegimeFrequencia(bean, registration);
         validaInformacaoMudancaCursoTransferencia(raidesRequestParameter, bean, executionYear, registration);
         validaInformacaoRegimeGeralAcesso(raidesRequestParameter, bean, executionYear, registration);
         validaNumInscricoesNoCurso(raidesRequestParameter, bean, executionYear, registration);
@@ -188,6 +191,16 @@ public class InscritoService extends RaidesService {
                 return;
             }
         }
+    }
+
+    protected void validaRegimeFrequencia(final TblInscrito bean, final Registration registration) {
+        if (Strings.isNullOrEmpty(bean.getRegimeFrequencia())) {
+            LegalReportContext.addError("", i18n("error.Raides.validation.missing.mapping.for.regime.frequence",
+                    registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
+
+            bean.markAsInvalid();
+        }
+
     }
 
     protected void validaInformacaoMudancaCursoTransferencia(final RaidesRequestParameter raidesRequestParameter,

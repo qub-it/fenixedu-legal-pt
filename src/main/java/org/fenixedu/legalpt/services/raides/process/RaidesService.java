@@ -639,18 +639,57 @@ public class RaidesService {
             }
         }
 
-        if (!Strings.isNullOrEmpty(bean.getProfissaoAluno())) {
-            // errors.addError("error.Raides.validation.student.profession.cannot.be.not.available", registration.getStudent()
-            //        .getNumber(), registration.getDegree().getNameI18N().getContent(), executionYear.getQualifiedName());
+        if (Strings.isNullOrEmpty(bean.getSituacaoProfPai())) {
+            LegalReportContext.addError("", i18n("error.Raides.validation.fatherProfessionalSituationType.missing",
+                    formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
 
-        if (Strings.isNullOrEmpty(bean.getNivelEscolarPai()) || Strings.isNullOrEmpty(bean.getNivelEscolarMae())
-                || Strings.isNullOrEmpty(bean.getSituacaoProfPai()) || Strings.isNullOrEmpty(bean.getSituacaoProfMae())
-                || Strings.isNullOrEmpty(bean.getSituacaoProfAluno()) || Strings.isNullOrEmpty(bean.getProfissaoPai())
-                || Strings.isNullOrEmpty(bean.getProfissaoMae()) || Strings.isNullOrEmpty(bean.getProfissaoAluno())) {
-            // errors.addError("error.Raides.validation.profesional.situation.missing", registration.getStudent().getNumber(),
-            //        registration.getDegree().getNameI18N().getContent(), executionYear.getQualifiedName());
+        if (Strings.isNullOrEmpty(bean.getNivelEscolarPai())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.fatherSchoolLevel.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
+
+        if (SituacaoProfissional.requiresProfessionType(bean.getSituacaoProfPai())
+                && Strings.isNullOrEmpty(bean.getProfissaoPai())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.fatherProfession.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
+        if (Strings.isNullOrEmpty(bean.getSituacaoProfMae())) {
+            LegalReportContext.addError("", i18n("error.Raides.validation.motherProfessionalSituationType.missing",
+                    formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
+        if (Strings.isNullOrEmpty(bean.getNivelEscolarMae())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.motherSchoolLevel.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
+        if (SituacaoProfissional.requiresProfessionType(bean.getSituacaoProfMae())
+                && Strings.isNullOrEmpty(bean.getProfissaoMae())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.motherProfession.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
+        if (Strings.isNullOrEmpty(bean.getSituacaoProfAluno())) {
+            LegalReportContext.addError("", i18n("error.Raides.validation.studentProfessionalSituationType.missing",
+                    formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
+        if (SituacaoProfissional.requiresProfessionType(bean.getSituacaoProfAluno())
+                && Strings.isNullOrEmpty(bean.getProfissaoAluno())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.studentProfession.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
     }
 
     protected String regimeFrequencia(final Registration registration, final ExecutionYear executionYear, boolean mobility) {
