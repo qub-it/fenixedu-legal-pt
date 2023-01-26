@@ -1,3 +1,5 @@
+- Bug fix: Test if escolaridadeAnterior is not empty
+
 2.15.2 (25-01-2023)
 - Improvement: RAIDES - add new validations (regime, school level and profession)
 

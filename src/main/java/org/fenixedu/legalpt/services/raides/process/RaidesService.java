@@ -275,7 +275,8 @@ public class RaidesService {
             bean.setEscolaridadeAnterior(LegalMapping.find(report, LegalMappingType.PRECEDENT_SCHOOL_LEVEL)
                     .translate(lastCompletedQualification.getSchoolLevel()));
 
-            if (bean.getEscolaridadeAnterior().equals(Raides.NivelEscolaridadeAluno.OUTRO)) {
+            if (bean.getEscolaridadeAnterior() != null
+                    && bean.getEscolaridadeAnterior().equals(Raides.NivelEscolaridadeAluno.OUTRO)) {
 
                 if (!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())) {
                     bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getOtherSchoolLevel().substring(0,
