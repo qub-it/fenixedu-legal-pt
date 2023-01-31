@@ -75,25 +75,11 @@ public class MobilidadeInternacionalService extends RaidesService {
             bean.setProgMobilidade(LegalMapping.find(report, LegalMappingType.INTERNATIONAL_MOBILITY_PROGRAM)
                     .translate(mobility.getMobilityProgramType()));
 
-            if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidade())
-                    || Raides.ProgramaMobilidade.OUTRO_TRES.equals(bean.getProgMobilidade())) {
+            if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidade())) {
                 bean.setOutroPrograma(mobility.getMobilityProgramType().getName().getContent());
             }
 
-        } else {
-
-            //TODO: legacy to remove later
-            final LegalMapping agreementMapping =
-                    LegalMapping.find(report, LegalMappingType.INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT);
-            bean.setProgMobilidade(agreementMapping != null
-                    && agreementMapping.isKeyDefined(registration.getRegistrationProtocol()) ? agreementMapping
-                            .translate(registration.getRegistrationProtocol()) : null);
-            if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidade())
-                    || Raides.ProgramaMobilidade.OUTRO_TRES.equals(bean.getProgMobilidade())) {
-                bean.setOutroPrograma(registration.getRegistrationProtocol().getDescription().getContent());
-            }
-
-        }
+        } 
 
         if (mobility.getMobilityActivityType() != null) {
             bean.setTipoProgMobilidade(LegalMapping.find(report, LegalMappingType.INTERNATIONAL_MOBILITY_ACTIVITY)
@@ -162,9 +148,16 @@ public class MobilidadeInternacionalService extends RaidesService {
     private void validaProgramaMobilidade(ExecutionYear executionYear, Registration registration,
             TblMobilidadeInternacional bean) {
 
-        if (Strings.isNullOrEmpty(bean.getProgMobilidade())) {
+        if (Strings.isNullOrEmpty(bean.getTipoProgMobilidade()) || Strings.isNullOrEmpty(bean.getProgMobilidade())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.mobility.program.type.empty", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
+        }
+
+        if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidade())
+                && Strings.isNullOrEmpty(bean.getOutroPrograma())) {
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.mobility.other.program.type.missing", formatArgs(registration, executionYear)));
             bean.markAsInvalid();
         }
 

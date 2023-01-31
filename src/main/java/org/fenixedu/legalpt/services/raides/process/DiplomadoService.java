@@ -178,8 +178,7 @@ public class DiplomadoService extends RaidesService {
             bean.setProgMobilidadeCredito(LegalMapping.find(report, LegalMappingType.INTERNATIONAL_MOBILITY_PROGRAM)
                     .translate(mobility.getMobilityProgramType()));
 
-            if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidadeCredito())
-                    || Raides.ProgramaMobilidade.OUTRO_TRES.equals(bean.getProgMobilidadeCredito())) {
+            if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidadeCredito())) {
                 bean.setOutroProgMobCredito(mobility.getMobilityProgramType().getName().getContent());
             }
 
@@ -294,28 +293,32 @@ public class DiplomadoService extends RaidesService {
                         executionYear) == null) {
             LegalReportContext.addError("", i18n("error.Raides.validation.graduated.mobility.mainInformation.missing",
                     formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getTipoMobilidadeCredito())) {
             LegalReportContext.addError("", i18n("error.Raides.validation.graduated.mobility.credit.type.missing",
                     formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getProgMobilidadeCredito())) {
             LegalReportContext.addError("", i18n("error.Raides.validation.graduated.mobility.program.type.missing",
                     formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
 
-        if ((Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidadeCredito())
-                || Raides.ProgramaMobilidade.OUTRO_TRES.equals(bean.getProgMobilidadeCredito()))
+        if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidadeCredito())
                 && Strings.isNullOrEmpty(bean.getOutroProgMobCredito())) {
             LegalReportContext.addError("", i18n("error.Raides.validation.graduated.mobility.other.program.type.missing",
                     formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getPaisMobilidadeCredito())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.graduated.mobility.country.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
 
     }

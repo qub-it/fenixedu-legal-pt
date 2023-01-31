@@ -1,3 +1,6 @@
+- Bug fix: only fill the OutroProgMobCredito field if the ProgMobilidadeCredito field has the value 2
+- Bug fix: only fill the OutroPrograma field if the ProgMobilidade field has the value 2
+
 2.15.4 (27-01-2023)
 - Bug fix: label error.Raides.validation.motherSchoolLevel.missing
 
