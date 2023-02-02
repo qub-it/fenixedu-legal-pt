@@ -77,9 +77,9 @@ public class CareerActivitiesService {
     }
 
     private void fillDepartment(CareerActivitiesBean bean) {
-        if (contract.getDepartment() != null && StringUtils.isNotEmpty(contract.getDepartment().getName())) {
-            if (LegalMapping.find(report, RebidesMappingType.DEPARTMENT).translate(contract.getDepartment()) != null) {
-                String department = LegalMapping.find(report, RebidesMappingType.DEPARTMENT).translate(contract.getDepartment());
+        if (contract.getUnit() != null && StringUtils.isNotEmpty(contract.getUnit().getName())) {
+            if (LegalMapping.find(report, RebidesMappingType.DEPARTMENT).translate(contract.getUnit()) != null) {
+                String department = LegalMapping.find(report, RebidesMappingType.DEPARTMENT).translate(contract.getUnit());
                 if (RebidesService.validateMaxFieldSize(teacher, "label.department", department, RebidesService.LIMIT_2CHARS)) {
                     bean.setDepartment(department);
                 }
@@ -93,7 +93,7 @@ public class CareerActivitiesService {
 
     private void fillOtherDepartment(CareerActivitiesBean bean) {
         if (bean.getDepartment().equals(CareerActivitiesService.Department.OTHER_DEPARTMENT)) {
-            String otherDepartmentName = contract.getDepartment().getName();
+            String otherDepartmentName = contract.getUnit().getName();
             if (RebidesService.validateMaxFieldSize(teacher, "label.otherDepartment", otherDepartmentName,
                     RebidesService.LIMIT_160CHARS)) {
                 bean.setOtherDepartment(otherDepartmentName);
