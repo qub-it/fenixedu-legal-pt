@@ -117,7 +117,7 @@ public class InscritoService extends RaidesService {
         preencheInformacaoPessoal(executionYear, registration, bean);
         preencheGrauPrecedentCompleto(bean, executionYear, registration);
 
-        validaRegimeFrequencia(bean, registration);
+        validaRegimeFrequencia(bean, registration, executionYear);
         validaInformacaoMudancaCursoTransferencia(raidesRequestParameter, bean, executionYear, registration);
         validaInformacaoRegimeGeralAcesso(raidesRequestParameter, bean, executionYear, registration);
         validaNumInscricoesNoCurso(raidesRequestParameter, bean, executionYear, registration);
@@ -193,10 +193,10 @@ public class InscritoService extends RaidesService {
         }
     }
 
-    protected void validaRegimeFrequencia(final TblInscrito bean, final Registration registration) {
+    protected void validaRegimeFrequencia(final TblInscrito bean, final Registration registration, ExecutionYear executionYear) {
         if (Strings.isNullOrEmpty(bean.getRegimeFrequencia())) {
             LegalReportContext.addError("", i18n("error.Raides.validation.missing.mapping.for.regime.frequence",
-                    registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
+                    formatArgs(registration, executionYear)));
 
             bean.markAsInvalid();
         }
