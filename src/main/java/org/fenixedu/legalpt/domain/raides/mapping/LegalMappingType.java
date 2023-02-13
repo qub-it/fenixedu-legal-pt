@@ -13,6 +13,7 @@ import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
 import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
+import org.fenixedu.academic.domain.curriculum.grade.GradeScale;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.organizationalStructure.AcademicalInstitutionType;
 import org.fenixedu.academic.domain.person.Gender;
@@ -90,16 +91,8 @@ public enum LegalMappingType implements ILegalMappingType {
         case INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT:
             return Sets.newHashSet(Bennu.getInstance().getRegistrationProtocolsSet());
         case GRADE:
-            final Set<String> possibleGrades = Sets.newHashSet();
-            /*
-            for (final GradeScaleType gradeScaleType : GradeScaleType.readAll()) {
-                for (final GradeScaleValue gradeScaleValue : gradeScaleType.getGradeScaleValuesSet()) {
-                    possibleGrades.add(gradeScaleValue.getAcronym());
-                }
-            }
-            */
-
-            return possibleGrades;
+            return GradeScale.findActive(true).flatMap(gs -> gs.getOrderedGradeScaleEntriesSet().stream()).map(e -> e.getValue())
+                    .collect(Collectors.toSet());
         case INTEGRATED_MASTER_FIRST_CYCLE_CODES:
             return Sets.newHashSet(Bennu.getInstance().getDegreesSet().stream()
                     .filter(d -> d.getDegreeType().isIntegratedMasterDegree()).collect(Collectors.toSet()));
