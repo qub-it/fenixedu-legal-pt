@@ -1,3 +1,5 @@
+- Bug fix: RAIDES - report document ID type "other" as error at log file
+
 2.15.8 (08-03-2023)
 - Bug fix: RAIDES - report document ID type "other" as invalid
 - Bug fix: RAIDES - Conclusion data - send the descriptive grade in specific conditions

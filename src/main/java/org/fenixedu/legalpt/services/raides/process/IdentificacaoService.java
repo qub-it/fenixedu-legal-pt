@@ -238,6 +238,10 @@ public class IdentificacaoService extends RaidesService {
 
         if (!Strings.isNullOrEmpty(bean.getTipoIdDescr())
                 && bean.getTipoIdDescr().equalsIgnoreCase(IDDocumentType.OTHER.getLocalizedName(Locale.getDefault()))) {
+            
+            LegalReportContext.addError("",
+                    i18n("error.Raides.validation.document.id.invalid.other", formatArgs(registration, executionYear)));
+            
             bean.markAsInvalid();
         }
     }
