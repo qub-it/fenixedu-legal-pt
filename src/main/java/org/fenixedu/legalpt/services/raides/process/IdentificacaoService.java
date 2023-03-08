@@ -2,6 +2,7 @@ package org.fenixedu.legalpt.services.raides.process;
 
 import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
+import java.util.Locale;
 import java.util.function.Function;
 
 import org.fenixedu.academic.domain.Country;
@@ -44,7 +45,7 @@ public class IdentificacaoService extends RaidesService {
         }
 
         if (Raides.DocumentoIdentificacao.OUTRO.equals(bean.getTipoId())) {
-            bean.setTipoIdDescr(student.getPerson().getIdDocumentType().getLocalizedName());
+            bean.setTipoIdDescr(student.getPerson().getIdDocumentType().getLocalizedName(Locale.getDefault()));
         }
 
         if (student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD) {
@@ -233,6 +234,11 @@ public class IdentificacaoService extends RaidesService {
                 bean.markAsInvalid();
 
             }
+        }
+
+        if (!Strings.isNullOrEmpty(bean.getTipoIdDescr())
+                && bean.getTipoIdDescr().equalsIgnoreCase(IDDocumentType.OTHER.getLocalizedName(Locale.getDefault()))) {
+            bean.markAsInvalid();
         }
     }
 

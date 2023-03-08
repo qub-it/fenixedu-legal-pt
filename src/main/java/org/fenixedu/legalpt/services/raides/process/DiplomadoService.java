@@ -63,7 +63,8 @@ public class DiplomadoService extends RaidesService {
             }
 
             if (registrationConclusionBean.getDescriptiveGrade() != null
-                    && !registrationConclusionBean.getDescriptiveGrade().isEmpty() && Raides.isDoctoralDegree(registration)) {
+                    && !registrationConclusionBean.getDescriptiveGrade().isEmpty()
+                    && isToReportDescriptiveGrade(registrationConclusionBean)) {
                 bean.setClassificacaoFinal(LegalMapping.find(report, LegalMappingType.GRADE)
                         .translate(finalGrade(registrationConclusionBean.getDescriptiveGrade().getValue())));
             } else if (registrationConclusionBean.getFinalGrade().isEmpty()) {
@@ -121,6 +122,23 @@ public class DiplomadoService extends RaidesService {
         validaAreaInvestigacao(executionYear, registration, bean);
 
         return bean;
+    }
+
+    private boolean isToReportDescriptiveGrade(final RegistrationConclusionBean conclusionBean) {
+        if (Raides.isDoctoralDegree(conclusionBean.getRegistration())) {
+            return true;
+        }
+
+        if (conclusionBean.getFinalGrade().isEmpty()) {
+            return true;
+        }
+
+        if (conclusionBean.getFinalGrade().isNumeric()
+                && conclusionBean.getFinalGrade().getNumericValue().compareTo(BigDecimal.ZERO) == 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public TblDiplomado createIntegratedCycleFirstCyle(final RaidesRequestParameter raidesRequestParameter,

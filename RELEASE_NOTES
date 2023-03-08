@@ -1,3 +1,7 @@
+- Bug fix: RAIDES - report document ID type "other" as invalid
+- Bug fix: RAIDES - Conclusion data - send the descriptive grade in specific conditions
+- Bug fix: SAS - calculate the first month of execution year (according to student enrollments)
+
 2.15.7 (13-02-2023)
 - Bug fix: add grade entries to RAIDES mappings 
 

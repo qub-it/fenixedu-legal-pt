@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.FenixEduAcademicConfiguration;
 import org.fenixedu.academic.domain.Degree;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.SchoolLevelType;
@@ -432,7 +433,7 @@ public class AbstractFillScholarshipService {
 
         bean.setGratuityAmount(getTuitionAmount(registration, requestYear));
         bean.setNumberOfMonthsExecutionYear(SocialServicesConfiguration.getInstance().getNumberOfMonthsOfAcademicYear());
-        bean.setFirstMonthExecutionYear(getFirstMonthOfExecutionYear(requestYear));
+        bean.setFirstMonthExecutionYear(getFirstMonthOfExecutionYear(registration, requestYear));
 
         // the student number (provided by input file) is replaced by the system value
         bean.setStudentNumber(registration.getNumber());
@@ -539,8 +540,16 @@ public class AbstractFillScholarshipService {
         return treasuryEvent.getAmountToPay().subtract(treasuryEvent.getInterestsAmountToPay());
     }
 
-    private Integer getFirstMonthOfExecutionYear(ExecutionYear requestYear) {
-        return requestYear.getBeginLocalDate().getMonthOfYear();
+    private Integer getFirstMonthOfExecutionYear(Registration registration, ExecutionYear requestYear) {
+
+        final LocalDate enrolmentDate = RegistrationServices.getEnrolmentDate(registration, requestYear);
+
+        if (enrolmentDate == null || requestYear.getBeginLocalDate().compareTo(enrolmentDate) > 0) {
+            return requestYear.getBeginLocalDate().getMonthOfYear();
+        }
+
+        return enrolmentDate.getMonthOfYear();
+
     }
 
     private String getRegime(AbstractScholarshipStudentBean bean, Registration registration, ExecutionYear requestYear) {
