@@ -1,3 +1,5 @@
+- Bug fix: exclude annulled enrolments (before the end of report period) for international mobility 
+
 2.15.9 (08-03-2023)
 - Bug fix: RAIDES - report document ID type "other" as error at log file
 

@@ -386,18 +386,20 @@ public class Raides {
     }
 
     protected boolean isInEnrolledEctsLimit(final RaidesRequestPeriodParameter enroledPeriod, final Registration registration,
-            final ExecutionYear academicPeriod) {
+            final ExecutionYear executionYear) {
         if (!enroledPeriod.isEnrolmentEctsConstraint()) {
             return true;
         }
 
-        final BigDecimal ectsEnrolled = BigDecimal.valueOf(registration.getEnrolmentsEcts(academicPeriod));
+        final BigDecimal ectsEnrolled = registration.getEnrolments(executionYear).stream()
+                .filter(e -> !isEnrolmentAnnuled(e, enroledPeriod.getInterval().getEnd()))
+                .map(e -> e.getEctsCreditsForCurriculum()).collect(Collectors.reducing(BigDecimal.ZERO, BigDecimal::add));
 
-        if (enroledPeriod.getMinEnrolmentEcts() != null && enroledPeriod.getMinEnrolmentEcts().compareTo(ectsEnrolled) > 0) {
+        if (enroledPeriod.getMinEnrolmentEcts() != null && ectsEnrolled.compareTo(enroledPeriod.getMinEnrolmentEcts()) < 0) {
             return false;
         }
 
-        if (enroledPeriod.getMaxEnrolmentEcts() != null && enroledPeriod.getMaxEnrolmentEcts().compareTo(ectsEnrolled) < 0) {
+        if (enroledPeriod.getMaxEnrolmentEcts() != null && ectsEnrolled.compareTo(enroledPeriod.getMaxEnrolmentEcts()) > 0) {
             return false;
         }
 
