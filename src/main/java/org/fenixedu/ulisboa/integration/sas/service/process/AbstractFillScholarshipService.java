@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.FenixEduAcademicConfiguration;
 import org.fenixedu.academic.domain.Degree;
-import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.SchoolLevelType;
@@ -51,6 +50,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
 public class AbstractFillScholarshipService {
+
+    private static final String REGISTRATION_TYPE_CANCELED = "CANCELED";
 
     public static class MessageEntry {
 
@@ -385,7 +386,8 @@ public class AbstractFillScholarshipService {
         final RegistrationState lastRegistrationState = registration.getLastRegistrationState(requestYear);
         if (lastRegistrationState != null && !lastRegistrationState.isActive()) {
 
-            if (lastRegistrationState.getStateTypeEnum() == RegistrationStateTypeEnum.CANCELED) {
+            //TODO: remove specific test to CANCELED
+            if (lastRegistrationState.getType().getCode().equals(REGISTRATION_TYPE_CANCELED)) {
                 addWarning(bean, false, "message.warning.registration.is.canceled",
                         lastRegistrationState.getStateDate().toLocalDate().toString("yyyy-MM-dd"));
             } else {
@@ -733,7 +735,7 @@ public class AbstractFillScholarshipService {
 
         if (bean.getNumberOfEnrolledECTS().compareTo(beforeNumberOfEnrolledECTS) != 0
                 && bean.getNumberOfEnrolledECTS().compareTo(BigDecimal.ZERO) == 0
-                && registration.getActiveStateTypeEnum().isInactive()) {
+                && !registration.getActiveStateType().getActive()) {
             addWarning(bean, true, "message.warning.student.registration.state.inactive",
                     registration.getActiveState().getStateDate().toLocalDate().toString("yyyy-MM-dd"));
         }

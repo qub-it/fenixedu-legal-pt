@@ -31,7 +31,6 @@ import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateTypeEnum;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.academic.util.Bundle;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -535,8 +534,7 @@ public class Raides {
     protected boolean isActiveAtPeriod(final RaidesRequestPeriodParameter enroledPeriod, final Registration registration,
             final ExecutionYear academicPeriod) {
         final RegistrationState stateInDate = registration.getStateInDate(enroledPeriod.getEnd());
-        return stateInDate != null
-                && (stateInDate.isActive() || stateInDate.getStateTypeEnum() == RegistrationStateTypeEnum.CONCLUDED);
+        return stateInDate != null && (stateInDate.isActive() || stateInDate.getType().isConcluded());
     }
 
     protected boolean isEnrolled(Registration registration, final RaidesRequestPeriodParameter enroledPeriod) {
