@@ -539,7 +539,7 @@ public class AbstractFillScholarshipService {
             return BigDecimal.ZERO;
         }
 
-        return treasuryEvent.getAmountToPay().subtract(treasuryEvent.getInterestsAmountToPay());
+        return treasuryEvent.getAmountWithVatToPay().subtract(treasuryEvent.getInterestsAmountToPay());
     }
 
     private Integer getFirstMonthOfExecutionYear(Registration registration, ExecutionYear requestYear) {
