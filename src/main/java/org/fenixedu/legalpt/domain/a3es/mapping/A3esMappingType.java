@@ -1,9 +1,10 @@
 package org.fenixedu.legalpt.domain.a3es.mapping;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.domain.TeacherCategory;
+import org.fenixedu.academic.domain.degreeStructure.CourseLoadType;
 import org.fenixedu.academic.domain.person.qualifications.QualificationLevel;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.I18N;
@@ -66,7 +67,7 @@ public enum A3esMappingType implements ILegalMappingType {
 
         @Override
         public Set<?> getValues() {
-            return Sets.newHashSet(ShiftType.values());
+            return CourseLoadType.findAll().collect(Collectors.toSet());
         }
 
         @Override
@@ -76,9 +77,9 @@ public enum A3esMappingType implements ILegalMappingType {
 
         @Override
         public LocalizedString getLocalizedNameKey(final String key) {
-            final ShiftType object = ShiftType.valueOf(key);
-            return new LocalizedString(I18N.getLocale(), "[" + object.getSiglaTipoAula() + "] ")
-                    .append(object.getFullNameTipoAula());
+            final CourseLoadType object = CourseLoadType.of(key);
+            return new LocalizedString(I18N.getLocale(), "[" + object.getInitials().getContent() + "] ")
+                    .append(object.getName().getContent());
         }
     },
 

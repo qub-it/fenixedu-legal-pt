@@ -41,12 +41,12 @@ import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Qualification;
 import org.fenixedu.academic.domain.ShiftProfessorship;
-import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.TeacherAuthorization;
 import org.fenixedu.academic.domain.TeacherCategory;
 import org.fenixedu.academic.domain.academicStructure.AcademicArea;
 import org.fenixedu.academic.domain.academicStructure.AcademicAreaType;
+import org.fenixedu.academic.domain.degreeStructure.CourseLoadType;
 import org.fenixedu.academic.domain.dml.DynamicField;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.person.JobType;
@@ -400,7 +400,7 @@ public class A3esHarvestTeachersDataService {
                     return;
                 }
 
-                final ShiftType type = getShiftType(sp);
+                final CourseLoadType type = getShiftType(sp);
                 if (type == null) {
                     return;
                 }
@@ -473,13 +473,8 @@ public class A3esHarvestTeachersDataService {
         return result;
     }
 
-    static private ShiftType getShiftType(final ShiftProfessorship sp) {
-        final List<ShiftType> types = sp.getShift().getTypes();
-        if (types.size() != 1) {
-            return null;
-        }
-
-        return types.iterator().next();
+    static private CourseLoadType getShiftType(final ShiftProfessorship sp) {
+        return sp.getShift().getCourseLoadType();
     }
 
     private String getStudyCycles(final Stream<CurricularCourse> courses) {

@@ -4,6 +4,7 @@ import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.dto.mapping.LegalMappingEntryBean;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.DomainObject;
 
 public class EnumerationLegalMapping extends EnumerationLegalMapping_Base {
 
@@ -34,6 +35,9 @@ public class EnumerationLegalMapping extends EnumerationLegalMapping_Base {
 
     @Override
     public String keyForObject(final Object key) {
+        if (key instanceof DomainObject) { // TEMP HACK!!
+            return ((DomainObject) key).getExternalId();
+        }
         return ((Enum<?>) key).name();
     }
 

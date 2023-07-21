@@ -206,7 +206,7 @@ public class A3esHarvestCoursesDataService {
 
     static private String getTeachingHoursByShiftType(final Stream<Professorship> professorships) {
         return professorships.flatMap(p -> p.getAssociatedShiftProfessorshipSet().stream())
-                .map(sp -> getShiftTypeAcronym(sp.getShift().getTypes().iterator().next()) + " - "
+                .map(sp -> getShiftTypeAcronym(sp.getShift().getCourseLoadType()) + " - "
                         + calculateTeachingHours(sp).toPlainString() + "h")
                 .sorted().collect(Collectors.joining(SEMICOLON));
     }

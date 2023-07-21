@@ -43,7 +43,7 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.ShiftProfessorship;
-import org.fenixedu.academic.domain.ShiftType;
+import org.fenixedu.academic.domain.degreeStructure.CourseLoadType;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
@@ -800,22 +800,17 @@ abstract public class A3esExportService {
                 .flatMap(c -> c.getAssociatedExecutionCoursesSet().stream()).filter(ec -> ec.getExecutionYear() == year);
     }
 
-    static public String getShiftTypeAcronym(final ShiftType t) {
+    static public String getShiftTypeAcronym(final CourseLoadType t) {
         return LegalMapping.find(A3esInstance.getInstance(), A3esMappingType.SHIFT_TYPE).translate(t);
     }
 
     static public BigDecimal calculateTeachingHours(final ShiftProfessorship sp) {
-        final List<ShiftType> types = sp.getShift().getTypes();
+        final CourseLoadType type = sp.getShift().getCourseLoadType();
         final ExecutionCourse executionCourse = sp.getShift().getExecutionCourse();
 
-        if (types.size() != 1) {
-            return BigDecimal.ZERO; // unable to calculate correct hour
-        }
-
-        final Set<BigDecimal> allExecutionCourseTotalHoursForType =
-                sp.getShift().getExecutionCourse().getAssociatedCurricularCoursesSet().stream()
-                        .map(cc -> cc.getTotalHoursByShiftType(types.iterator().next(), executionCourse.getExecutionInterval()))
-                        .filter(Objects::nonNull).distinct().collect(Collectors.toSet());
+        final Set<BigDecimal> allExecutionCourseTotalHoursForType = sp.getShift().getExecutionCourse().getCompetenceCourses()
+                .stream().flatMap(cc -> cc.getLoadHours(type, executionCourse.getExecutionInterval()).stream())
+                .filter(Objects::nonNull).distinct().collect(Collectors.toSet());
 
         if (allExecutionCourseTotalHoursForType.size() != 1) {
             return BigDecimal.ZERO; // unable to calculate correct hour
