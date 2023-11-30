@@ -19,7 +19,7 @@
 	<name>FenixEdu Legal PT</name>
 
 	<properties>
-		<version.org.fenixedu.bennu>6.0.8-FORK</version.org.fenixedu.bennu>
+		<version.org.fenixedu.bennu>6.3.0-FORK</version.org.fenixedu.bennu>
 	</properties>
 
 	<build>
@@ -180,12 +180,12 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>41.2.0</version>
+			<version>44.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-extensions</artifactId>
-			<version>4.20.2</version>
+			<version>4.24.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
 		<dependency>
@@ -203,12 +203,12 @@
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-treasury-base</artifactId>
-			<version>10.2.0</version>
+			<version>11.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-treasury-ui</artifactId>
-			<version>9.1.0</version>
+			<version>9.2.1</version>
 		</dependency>
 	</dependencies>
 
