@@ -1,4 +1,5 @@
 - Refactor: Replace usage of ShiftType by CourseLoadType
+- Improvement: Adds fenixedu OSS DM [#qubIT-Omnis-4736]
 
 2.15.12 (19-07-2023)
 - Refactor: Rename invocation of TreasuryEvent::getAmountToPay to TreasuryEvent::getAmountWithVatToPay
