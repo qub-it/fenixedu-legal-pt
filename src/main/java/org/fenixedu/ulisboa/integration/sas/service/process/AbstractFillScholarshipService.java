@@ -26,11 +26,10 @@ import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.CreditsReasonType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateTypeEnum;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
-import org.fenixedu.academic.domain.treasury.IAcademicTreasuryEvent;
 import org.fenixedu.academic.domain.treasury.TreasuryBridgeAPIFactory;
+import org.fenixedu.academictreasury.domain.event.AcademicTreasuryEvent;
 import org.fenixedu.bennu.SasSpringConfiguration;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
@@ -533,13 +532,14 @@ public class AbstractFillScholarshipService {
 
     private BigDecimal getTuitionAmount(Registration registration, ExecutionYear requestYear) {
 
-        final IAcademicTreasuryEvent treasuryEvent =
-                TreasuryBridgeAPIFactory.implementation().getTuitionForRegistrationTreasuryEvent(registration, requestYear);
+        final AcademicTreasuryEvent treasuryEvent = (AcademicTreasuryEvent) TreasuryBridgeAPIFactory.implementation()
+                .getTuitionForRegistrationTreasuryEvent(registration, requestYear);
+
         if (treasuryEvent == null) {
             return BigDecimal.ZERO;
         }
 
-        return treasuryEvent.getAmountWithVatToPay().subtract(treasuryEvent.getInterestsAmountToPay());
+        return treasuryEvent.getRegistrationTuitionAmountToPayIncludingOtherTuitionRelatedEmolumentsAndExcludingInterests();
     }
 
     private Integer getFirstMonthOfExecutionYear(Registration registration, ExecutionYear requestYear) {

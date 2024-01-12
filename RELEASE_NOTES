@@ -1,5 +1,6 @@
 - Refactor: Replace usage of ShiftType by CourseLoadType
 - Improvement: Adds fenixedu OSS DM [#qubIT-Omnis-4736]
+- Bug Fix: Fix registration tuition amount by including other treasury events amount that account as tuition [#UL-IGOT-1569]
 
 2.15.12 (19-07-2023)
 - Refactor: Rename invocation of TreasuryEvent::getAmountToPay to TreasuryEvent::getAmountWithVatToPay
