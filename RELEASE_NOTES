@@ -1,3 +1,4 @@
+2.15.13 (12-01-2024)
 - Refactor: Replace usage of ShiftType by CourseLoadType
 - Improvement: Adds fenixedu OSS DM [#qubIT-Omnis-4736]
 - Bug Fix: Fix registration tuition amount by including other treasury events amount that account as tuition [#UL-IGOT-1569]
