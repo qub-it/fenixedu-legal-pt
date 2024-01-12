@@ -205,6 +205,7 @@
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-treasury-base</artifactId>
+			<version>11.3.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
