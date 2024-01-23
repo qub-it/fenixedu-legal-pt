@@ -1,5 +1,8 @@
 package org.fenixedu.legalpt.services.raides.process;
 
+import static org.fenixedu.academic.domain.CompetenceCourseType.DISSERTATION;
+import static org.fenixedu.academic.domain.CompetenceCourseType.INTERNSHIP;
+import static org.fenixedu.academic.domain.CompetenceCourseType.PROJECT_WORK;
 import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
 import java.math.BigDecimal;
@@ -82,7 +85,7 @@ public class RaidesService {
                 .translate(String.valueOf(RegistrationServices.getCurricularYear(registration, executionYear).getResult()));
     }
 
-    protected boolean isOnlyEnrolledOnCompetenceCourseType(final Registration registration, final ExecutionYear executionYear,
+    public static boolean isOnlyEnrolledOnCompetenceCourseType(final Registration registration, final ExecutionYear executionYear,
             final boolean mobility, final CompetenceCourseType competenceCourseType) {
         final Collection<Enrolment> enrolments = registration.getEnrolments(executionYear);
 
@@ -693,19 +696,28 @@ public class RaidesService {
 
     }
 
-    protected String regimeFrequencia(final Registration registration, final ExecutionYear executionYear, boolean mobility) {
-        final boolean onlyEnrolledOnDissertation =
-                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.DISSERTATION);
-        final boolean onlyEnrolledOnInternship =
-                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.INTERNSHIP);
-        final boolean onlyEnrolledOnProjectWork =
-                isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.PROJECT_WORK);
+    public static interface AttendanceRegimeProvider {
+        public String provide(LegalReport report, Registration registration, ExecutionYear executionYear, boolean mobility);
+    }
+
+    private static AttendanceRegimeProvider ATTENDANCE_REGIME_PROVIDER = (rpt, r, ey, mob) -> {
+        final boolean onlyEnrolledOnDissertation = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, DISSERTATION);
+        final boolean onlyEnrolledOnInternship = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, INTERNSHIP);
+        final boolean onlyEnrolledOnProjectWork = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, PROJECT_WORK);
 
         if (onlyEnrolledOnDissertation || onlyEnrolledOnInternship || onlyEnrolledOnProjectWork) {
-            return LegalMapping.find(report, LegalMappingType.REGIME_FREQUENCIA).translate(Raides.RegimeFrequencia.ETD_CODE);
+            return LegalMapping.find(rpt, LegalMappingType.REGIME_FREQUENCIA).translate(Raides.RegimeFrequencia.ETD_CODE);
         }
 
-        return LegalMapping.find(report, LegalMappingType.REGIME_FREQUENCIA).translate(registration.getDegree().getExternalId());
+        return LegalMapping.find(rpt, LegalMappingType.REGIME_FREQUENCIA).translate(r.getDegree().getExternalId());
+    };
+
+    public static void setAttendanceRegimeProvider(final AttendanceRegimeProvider provider) {
+        ATTENDANCE_REGIME_PROVIDER = provider;
+    }
+
+    protected String regimeFrequencia(final Registration registration, final ExecutionYear executionYear, boolean mobility) {
+        return ATTENDANCE_REGIME_PROVIDER.provide(report, registration, executionYear, mobility);
     }
 
     protected DateTime findMaximumAnnulmentDate(final List<RaidesRequestPeriodParameter> periods,

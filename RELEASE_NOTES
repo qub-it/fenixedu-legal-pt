@@ -1,3 +1,5 @@
+- Improvement: RAIDES: add extension point to Attendance Regime Provider
+- Bug fix: Add missing labels (XLS RAIDES report) 
 - Refactor: Update XSD to RAIDES23 (#UL-REIT-3658)
 
 2.15.13 (12-01-2024)
