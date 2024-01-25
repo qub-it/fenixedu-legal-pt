@@ -1,3 +1,4 @@
+- Improvement: Improve error message when skipping students with 0 classification on conclusion [#qubIT-Fenix-4867]
 - Bug fix: RAIDES: fill student nationalities according to DGES rules [#qubIT-Fenix-3809]
 
 2.16.0 (23-01-2024)
