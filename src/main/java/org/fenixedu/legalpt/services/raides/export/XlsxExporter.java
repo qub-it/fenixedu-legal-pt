@@ -13,6 +13,7 @@ import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
+import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.domain.raides.Raides;
 import org.fenixedu.legalpt.domain.raides.TblDiplomado;
@@ -278,7 +279,7 @@ public class XlsxExporter {
         ByteArrayOutputStream outputStream = null;
         try {
             outputStream = new ByteArrayOutputStream();
-            final SpreadsheetBuilder spreadsheetBuilder = new SpreadsheetBuilder();
+            final SpreadsheetBuilderForXLSX spreadsheetBuilder = new SpreadsheetBuilderForXLSX();
 
             spreadsheetBuilder.addSheet("Informacao Pessoal Complementar", personalIngressionDataSheetData);
             spreadsheetBuilder.addSheet("Graus Precedentes & Informacao Pessoal", precedentDegreeInformationData);
@@ -307,7 +308,7 @@ public class XlsxExporter {
 
     @Atomic(mode = TxMode.WRITE)
     private static LegalReportResultFile writeFile(final LegalReportRequest reportRequest, final byte[] content) {
-        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, content);
+        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLSX, content);
     }
 
     protected static String pdiLabel(final String key) {

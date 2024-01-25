@@ -10,6 +10,7 @@ import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
+import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
 import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.domain.LegalReportContext.LegalReportEntryData;
 import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntry;
@@ -68,7 +69,7 @@ public class XlsExporterLog {
         ByteArrayOutputStream outputStream = null;
         try {
             outputStream = new ByteArrayOutputStream();
-            final SpreadsheetBuilder spreadsheetBuilder = new SpreadsheetBuilder();
+            final SpreadsheetBuilderForXLSX spreadsheetBuilder = new SpreadsheetBuilderForXLSX();
 
             spreadsheetBuilder.addSheet("Erros | Avisos | Informações", compiledSheet);
 
@@ -76,7 +77,7 @@ public class XlsExporterLog {
             final byte[] content = outputStream.toByteArray();
 
             final String fileName = "Logs_" + reportRequest.getLegalReport().getName().getContent() + "_"
-                    + new DateTime().toString("dd-MM-yyyy-HH-mm") + "." + LegalReportResultFileType.XLS.toString().toLowerCase();
+                    + new DateTime().toString("dd-MM-yyyy-HH-mm") + "." + LegalReportResultFileType.XLSX.toString().toLowerCase();
 
             return writeToFile(reportRequest, content, fileName);
         } catch (final Exception e) {
@@ -95,7 +96,7 @@ public class XlsExporterLog {
     @Atomic(mode = TxMode.WRITE)
     private static LegalReportResultFile writeToFile(final LegalReportRequest reportRequest, final byte[] content,
             final String fileName) {
-        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLS, fileName, content);
+        return new LegalReportResultFile(reportRequest, LegalReportResultFileType.XLSX, fileName, content);
     }
 
     protected static String pdiLabel(final String key) {
