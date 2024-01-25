@@ -2,6 +2,8 @@ package org.fenixedu.legalpt.services.raides.process;
 
 import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -26,6 +28,9 @@ import org.joda.time.Years;
 import com.google.common.base.Strings;
 
 public class IdentificacaoService extends RaidesService {
+
+    private static List<String> COUNTRIES_EU = Arrays.asList("AT", "BE", "BG", "CY", "HR", "DK", "SK", "SI", "ES", "EE", "FI",
+            "FR", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "CZ", "RO", "SE", "DE");
 
     public IdentificacaoService(final LegalReport report) {
         super(report);
@@ -121,6 +126,9 @@ public class IdentificacaoService extends RaidesService {
     }
 
     private void preencheNacionalidade(final Student student, final TblIdentificacao bean) {
+
+        //ANEXO D – Regras de preenchimento dos campos “País de nacionalidade” e “Outro país de nacionalidade”
+
         final Country firstNationality = student.getPerson().getCountry();
         Country secondNationality = student.getPerson().getSecondNationality();
 
@@ -141,20 +149,40 @@ public class IdentificacaoService extends RaidesService {
         }
 
         // The two nationalities are not null
-
         if (firstNationality != null && firstNationality == secondNationality) {
             bean.setNacionalidade(firstNationality.getCode());
             bean.setOutroPaisDeNacionalidade(null);
             return;
         }
 
-        if (secondNationality.isDefaultCountry()) {
-            bean.setNacionalidade(secondNationality.getCode());
-            bean.setOutroPaisDeNacionalidade(firstNationality.getCode());
-        } else {
-            bean.setNacionalidade(firstNationality.getCode());
-            bean.setOutroPaisDeNacionalidade(secondNationality.getCode());
+        // Person has more than 1 nationality
+        if (firstNationality.isDefaultCountry() || secondNationality.isDefaultCountry()) {
+            if (firstNationality.isDefaultCountry()) {
+                bean.setNacionalidade(firstNationality.getCode());
+                bean.setOutroPaisDeNacionalidade(secondNationality.getCode());
+                return;
+            } else {
+                bean.setNacionalidade(secondNationality.getCode());
+                bean.setOutroPaisDeNacionalidade(firstNationality.getCode());
+                return;
+            }
+        } else if (COUNTRIES_EU.contains(firstNationality.getCode()) || COUNTRIES_EU.contains(secondNationality.getCode())) {
+
+            if (COUNTRIES_EU.contains(firstNationality.getCode())) {
+                bean.setNacionalidade(firstNationality.getCode());
+                bean.setOutroPaisDeNacionalidade(secondNationality.getCode());
+                return;
+            } else {
+                bean.setNacionalidade(secondNationality.getCode());
+                bean.setOutroPaisDeNacionalidade(firstNationality.getCode());
+                return;
+            }
+
         }
+
+        bean.setNacionalidade(firstNationality.getCode());
+        bean.setOutroPaisDeNacionalidade(secondNationality.getCode());
+
     }
 
     public static Function<Registration, String> COUNTRY_OF_HIGH_SCHOOL_PROVIDER = registration -> {
@@ -238,10 +266,10 @@ public class IdentificacaoService extends RaidesService {
 
         if (!Strings.isNullOrEmpty(bean.getTipoIdDescr())
                 && bean.getTipoIdDescr().equalsIgnoreCase(IDDocumentType.OTHER.getLocalizedName(Locale.getDefault()))) {
-            
+
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.document.id.invalid.other", formatArgs(registration, executionYear)));
-            
+
             bean.markAsInvalid();
         }
     }
