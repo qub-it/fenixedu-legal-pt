@@ -291,6 +291,7 @@ public class IdentificacaoService extends RaidesService {
         if (Strings.isNullOrEmpty(bean.getPaisEnsinoSecundario())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.high.school.country.missing", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
     }
 }

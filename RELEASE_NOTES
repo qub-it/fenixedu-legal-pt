@@ -1,3 +1,5 @@
+- Bug fix: Mark as excluded all blocks with errors [#qubIT-Fenix-4917]
+
 2.16.2 (30-01-2024)
 - Bug fix: Correctly export RAIDES data into XLSX format [#ISCTE-FENIXEDU-339]
 

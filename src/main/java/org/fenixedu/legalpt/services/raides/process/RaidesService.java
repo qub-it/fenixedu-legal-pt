@@ -160,6 +160,7 @@ public class RaidesService {
             if (branches.size() > 1) {
                 LegalReportContext.addError("",
                         i18n("error.Raides.validation.enrolled.more.than.one.branch", formatArgs(registration, executionYear)));
+                bean.markAsInvalid();
             }
 
             bean.setRamo(BranchMappingType.readMapping(report).translate(branches.iterator().next()));
@@ -418,6 +419,7 @@ public class RaidesService {
             if (Strings.isNullOrEmpty(bean.getTipoEstabSec())) {
                 LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.highSchoolType.missing",
                         formatArgs(registration, executionYear)));
+                bean.markAsInvalid();
             }
         }
     }
@@ -487,6 +489,7 @@ public class RaidesService {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.isMasterDoctoralOrSpecialization.but.completed.qualification.is.not.higher",
                             formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
     }
 

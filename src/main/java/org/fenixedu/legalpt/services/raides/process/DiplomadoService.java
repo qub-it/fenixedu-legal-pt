@@ -359,6 +359,7 @@ public class DiplomadoService extends RaidesService {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.masterOrDoctoral.terminalpart.classification.empty.or.zero",
                             formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
     }
 
@@ -368,6 +369,7 @@ public class DiplomadoService extends RaidesService {
                 && Strings.isNullOrEmpty(bean.getAreaInvestigacao())) {
             LegalReportContext.addError("",
                     i18n("error.Raides.validation.doctoral.requires.research.area", formatArgs(registration, executionYear)));
+            bean.markAsInvalid();
         }
     }
 
