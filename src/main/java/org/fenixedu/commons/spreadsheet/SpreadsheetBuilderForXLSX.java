@@ -48,6 +48,16 @@ public class SpreadsheetBuilderForXLSX extends SpreadsheetBuilder {
         return result;
     }
 
+    @Deprecated
+    @Override
+    public void build(WorkbookExportFormat format, OutputStream output) throws IOException {
+        if (format == WorkbookExportFormat.EXCEL) {
+            build(output);
+        }
+
+        super.build(format, output);
+    }
+
     public void build(OutputStream output) throws IOException {
 
         DocxBuilder builder = new DocxBuilder();

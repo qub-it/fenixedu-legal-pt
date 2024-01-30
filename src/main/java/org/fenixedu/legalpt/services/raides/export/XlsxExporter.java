@@ -288,7 +288,7 @@ public class XlsxExporter {
             spreadsheetBuilder.addSheet("Alunos Inscritos", inscritoData);
             spreadsheetBuilder.addSheet("Alunos", identificationData);
 
-            spreadsheetBuilder.build(WorkbookExportFormat.EXCEL, outputStream);
+            spreadsheetBuilder.build(outputStream);
             final byte[] content = outputStream.toByteArray();
 
             return writeFile(reportRequest, content);

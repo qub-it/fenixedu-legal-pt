@@ -73,7 +73,7 @@ public class XlsExporterLog {
 
             spreadsheetBuilder.addSheet("Erros | Avisos | Informações", compiledSheet);
 
-            spreadsheetBuilder.build(WorkbookExportFormat.EXCEL, outputStream);
+            spreadsheetBuilder.build(outputStream);
             final byte[] content = outputStream.toByteArray();
 
             final String fileName = "Logs_" + reportRequest.getLegalReport().getName().getContent() + "_"
