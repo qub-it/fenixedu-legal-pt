@@ -1,7 +1,5 @@
 package org.fenixedu.legalpt.services.raides.process;
 
-import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
-
 import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,6 +10,7 @@ import org.fenixedu.academic.domain.student.mobility.MobilityRegistrationInforma
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.Raides.Cursos;
 import org.fenixedu.legalpt.domain.raides.TblMobilidadeInternacional;
 import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
@@ -30,7 +29,10 @@ public class MobilidadeInternacionalService extends RaidesService {
 
     public TblMobilidadeInternacional create(RaidesRequestParameter raidesRequestParameter, final ExecutionYear executionYear,
             final Registration registration) {
+
         final TblMobilidadeInternacional bean = new TblMobilidadeInternacional();
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
 
         bean.setRegistration(registration);
         preencheInformacaoMatricula(report, bean, executionYear, registration);
@@ -63,8 +65,8 @@ public class MobilidadeInternacionalService extends RaidesService {
                 MobilityRegistrationInformation.findInternationalIncomingInformation(registration, executionYear);
 
         if (mobility == null) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.mobility.information.is.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.information.is.missing"),
+                    i18n("error.Raides.validation.mobility.information.is.missing.action"));
             bean.markAsInvalid();
 
             return bean;
@@ -79,7 +81,7 @@ public class MobilidadeInternacionalService extends RaidesService {
                 bean.setOutroPrograma(mobility.getMobilityProgramType().getName().getContent());
             }
 
-        } 
+        }
 
         if (mobility.getMobilityActivityType() != null) {
             bean.setTipoProgMobilidade(LegalMapping.find(report, LegalMappingType.INTERNATIONAL_MOBILITY_ACTIVITY)
@@ -148,16 +150,18 @@ public class MobilidadeInternacionalService extends RaidesService {
     private void validaProgramaMobilidade(ExecutionYear executionYear, Registration registration,
             TblMobilidadeInternacional bean) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getTipoProgMobilidade()) || Strings.isNullOrEmpty(bean.getProgMobilidade())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.mobility.program.type.empty", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.program.type.empty"),
+                    i18n("error.Raides.validation.mobility.program.type.empty.action"));
             bean.markAsInvalid();
         }
 
         if (Raides.ProgramaMobilidade.OUTRO_DOIS.equals(bean.getProgMobilidade())
                 && Strings.isNullOrEmpty(bean.getOutroPrograma())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.mobility.other.program.type.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.other.program.type.missing"),
+                    i18n("error.Raides.validation.mobility.other.program.type.missing.action"));
             bean.markAsInvalid();
         }
 
@@ -165,8 +169,11 @@ public class MobilidadeInternacionalService extends RaidesService {
 
     private void validaDuracaoPrograma(ExecutionYear executionYear, Registration registration, TblMobilidadeInternacional bean) {
         if (Strings.isNullOrEmpty(bean.getDuracaoPrograma())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.mobility.program.duration.empty", formatArgs(registration, executionYear)));
+
+            final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.program.duration.empty"),
+                    i18n("error.Raides.validation.mobility.program.duration.empty.action"));
             bean.markAsInvalid();
         }
 
@@ -175,15 +182,17 @@ public class MobilidadeInternacionalService extends RaidesService {
     protected void validaNivelCursoOrigem(final ExecutionYear executionYear, final Registration registration,
             final TblMobilidadeInternacional bean) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getNivelCursoOrigem())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.mobility.provenance.school.level.empty",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.provenance.school.level.empty"),
+                    i18n("error.Raides.validation.mobility.provenance.school.level.empty.action"));
             bean.markAsInvalid();
 
         } else if (Raides.NivelCursoOrigem.OUTRO.equals(bean.getNivelCursoOrigem())
                 && Strings.isNullOrEmpty(bean.getOutroNivelCurOrigem())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.mobility.other.provenance.school.level.empty",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.other.provenance.school.level.empty"),
+                    i18n("error.Raides.validation.mobility.other.provenance.school.level.empty.action"));
             bean.markAsInvalid();
         }
     }
@@ -191,19 +200,21 @@ public class MobilidadeInternacionalService extends RaidesService {
     private void validaCursoAreaCientificaNivelCursoDestino(ExecutionYear executionYear, Registration registration,
             TblMobilidadeInternacional bean) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Cursos.OUTRO.equals(bean.getCurso())) {
 
             if (Strings.isNullOrEmpty(bean.getAreaCientifica())) {
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.mobility.scientifica.area.cannot.be.empty.for.other.degree",
-                                formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.mobility.scientifica.area.cannot.be.empty.for.other.degree"),
+                        i18n("error.Raides.validation.mobility.scientifica.area.cannot.be.empty.for.other.degree.action"));
                 bean.markAsInvalid();
             }
 
             if (Strings.isNullOrEmpty(bean.getNivelCursoDestino())) {
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.mobility.incoming.mobility.program.level.cannot.be.empty.for.other.degree",
-                                formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.mobility.incoming.mobility.program.level.cannot.be.empty.for.other.degree"),
+                        i18n("error.Raides.validation.mobility.incoming.mobility.program.level.cannot.be.empty.for.other.degree.action"));
                 bean.markAsInvalid();
             }
 
@@ -213,8 +224,14 @@ public class MobilidadeInternacionalService extends RaidesService {
 
     private void validaRegimeFrequencia(ExecutionYear executionYear, Registration registration, TblMobilidadeInternacional bean) {
         if (StringUtils.isEmpty(bean.getRegimeFrequencia())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.missing.mapping.for.regime.frequence",
-                    registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
+
+            final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
+            LegalReportContext.addError(target,
+                    i18n("error.Raides.validation.missing.mapping.for.regime.frequence",
+                            registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"),
+                    i18n("error.Raides.validation.missing.mapping.for.regime.frequence.action",
+                            registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
             bean.markAsInvalid();
         }
 
@@ -222,9 +239,12 @@ public class MobilidadeInternacionalService extends RaidesService {
 
     private void validaPaisOrigemMobilidadeCredito(ExecutionYear executionYear, Registration registration,
             TblMobilidadeInternacional bean) {
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getPaisOrigemMobilidadeCredito())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.mobility.country.empty", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.mobility.country.empty"),
+                    i18n("error.Raides.validation.mobility.country.empty.action"));
             bean.markAsInvalid();
         }
 

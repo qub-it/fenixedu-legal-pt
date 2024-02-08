@@ -9,12 +9,9 @@ import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
 import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.commons.spreadsheet.SheetData;
-import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
-import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.domain.LegalReportContext.LegalReportEntryData;
-import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntry;
-import org.fenixedu.legalpt.domain.LegalReportContext.ReportEntryType;
+import org.fenixedu.legalpt.domain.ReportEntry;
 import org.fenixedu.legalpt.domain.report.LegalReportRequest;
 import org.fenixedu.legalpt.domain.report.LegalReportResultFile;
 import org.fenixedu.legalpt.domain.report.LegalReportResultFileType;
@@ -36,32 +33,13 @@ public class XlsExporterLog {
             @Override
             protected void makeLine(final ReportEntry reportEntry) {
 
-                String type = reportEntry.getType() == ReportEntryType.ERROR ? "Erro" : reportEntry
-                        .getType() == ReportEntryType.WARN ? "Aviso" : reportEntry
-                                .getType() == ReportEntryType.INFO ? "Informação" : "";
+                addCell(LegalPTUtil.bundle("label.RaidesRequests.header.excel.type"), reportEntry.getType() != null ? LegalPTUtil
+                        .bundle("label.ReportEntryType." + reportEntry.getType().name()) : "");
 
-                addCell("Tipo", type);
-                addCell("Assunto", reportEntry.getTarget());
+                reportEntry.getTarget().asMap().entrySet().forEach(e -> addCell(e.getKey(), e.getValue()));
 
-                final String[] fields = reportEntry.getMessage().split(";");
-
-                for (int i = 0; i < fields.length; i++) {
-                    if (i == 1) {
-                        addCell("Nº de Aluno", fields[i]);
-                    } else if (i == 3) {
-                        addCell("Nº de Matrícula", fields[i]);
-                    } else if (i == 5) {
-                        addCell("Código de Curso", fields[i]);
-                    } else if (i == 7) {
-                        addCell("Curso", fields[i]);
-                    } else if (i == 9) {
-                        addCell("Ano", fields[i]);
-                    } else if (i == 10) {
-                        addCell("Mensagem", fields[i]);
-                    } else if (i > 10) {
-                        addCell(String.format("[%d]", i), fields[i]);
-                    }
-                }
+                addCell(LegalPTUtil.bundle("label.RaidesRequests.header.excel.message"), reportEntry.getMessage());
+                addCell(LegalPTUtil.bundle("label.RaidesRequests.header.excel.action"), reportEntry.getAction());
 
             }
         };
@@ -71,7 +49,7 @@ public class XlsExporterLog {
             outputStream = new ByteArrayOutputStream();
             final SpreadsheetBuilderForXLSX spreadsheetBuilder = new SpreadsheetBuilderForXLSX();
 
-            spreadsheetBuilder.addSheet("Erros | Avisos | Informações", compiledSheet);
+            spreadsheetBuilder.addSheet(LegalPTUtil.bundle("label.RaidesRequests.sheet.name.excel"), compiledSheet);
 
             spreadsheetBuilder.build(outputStream);
             final byte[] content = outputStream.toByteArray();

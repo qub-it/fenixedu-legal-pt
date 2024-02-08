@@ -2,6 +2,7 @@ package org.fenixedu.legalpt.services.rebides.process;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.legalpt.domain.LegalReportContext;
+import org.fenixedu.legalpt.domain.rebides.RebidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.rebides.report.RebidesRequestParameter;
 import org.fenixedu.legalpt.domain.report.LegalReportRequest;
 import org.fenixedu.legalpt.dto.rebides.ExtractionInfoBean;
@@ -34,7 +35,7 @@ public class ExtractionInfoService {
                 bean.setInterlocutorName(institutionCode);
             }
         } else {
-            LegalReportContext.addError(RebidesService.i18n("label.extractionInfo"),
+            LegalReportContext.addError(RebidesReportEntryTarget.empty(),
                     RebidesService.createMissingFieldMessage("label.RebidesReportUI.institutionCode"));
         }
     }
@@ -43,7 +44,7 @@ public class ExtractionInfoService {
         if (StringUtils.isNotEmpty(moment)) {
             bean.setMoment(moment);
         } else {
-            LegalReportContext.addError(RebidesService.i18n("label.extractionInfo"),
+            LegalReportContext.addError(RebidesReportEntryTarget.empty(),
                     RebidesService.createMissingFieldMessage("label.RebidesReportUI.moment"));
         }
     }
@@ -58,7 +59,7 @@ public class ExtractionInfoService {
                 bean.setInterlocutorName(interlocutorName);
             }
         } else {
-            LegalReportContext.addError(RebidesService.i18n("label.extractionInfo"),
+            LegalReportContext.addError(RebidesReportEntryTarget.empty(),
                     RebidesService.createMissingFieldMessage("label.RebidesReportUI.interlocutorName"));
         }
     }
@@ -70,7 +71,7 @@ public class ExtractionInfoService {
                 bean.setInterlocutorEmail(interlocutorEmail);
             }
         } else {
-            LegalReportContext.addError(RebidesService.i18n("label.extractionInfo"),
+            LegalReportContext.addError(RebidesReportEntryTarget.empty(),
                     RebidesService.createMissingFieldMessage("label.RebidesReportUI.interlocutorEmail"));
         }
 
@@ -82,7 +83,7 @@ public class ExtractionInfoService {
                 bean.setInterlocutorPhone(interlocutorPhone);
             }
         } else {
-            LegalReportContext.addError(RebidesService.i18n("label.extractionInfo"),
+            LegalReportContext.addError(RebidesReportEntryTarget.empty(),
                     RebidesService.createMissingFieldMessage("label.RebidesReportUI.interlocutorPhone"));
         }
     }
@@ -91,7 +92,7 @@ public class ExtractionInfoService {
         if (fieldContent.length() > maxFieldSize) {
             final String message = RebidesService.i18n("rebides.fieldSizeOverflow", RebidesService.i18n(field),
                     String.valueOf(fieldContent.length()), String.valueOf(maxFieldSize));
-            LegalReportContext.addError(RebidesService.i18n("label.extractionInfo"), message);
+            LegalReportContext.addError(RebidesReportEntryTarget.empty(), message);
             return false;
         }
         return true;

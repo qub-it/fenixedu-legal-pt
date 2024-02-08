@@ -3,7 +3,6 @@ package org.fenixedu.legalpt.services.raides.process;
 import static org.fenixedu.academic.domain.CompetenceCourseType.DISSERTATION;
 import static org.fenixedu.academic.domain.CompetenceCourseType.INTERNSHIP;
 import static org.fenixedu.academic.domain.CompetenceCourseType.PROJECT_WORK;
-import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourseType;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.CurricularCourse;
@@ -46,6 +46,7 @@ import org.fenixedu.legalpt.domain.raides.IMatricula;
 import org.fenixedu.legalpt.domain.raides.Raides;
 import org.fenixedu.legalpt.domain.raides.Raides.Ramo;
 import org.fenixedu.legalpt.domain.raides.Raides.SituacaoProfissional;
+import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.TblInscrito;
 import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
@@ -158,8 +159,9 @@ public class RaidesService {
         if (!branches.isEmpty()) {
 
             if (branches.size() > 1) {
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.enrolled.more.than.one.branch", formatArgs(registration, executionYear)));
+                LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
+                        i18n("error.Raides.validation.enrolled.more.than.one.branch"),
+                        i18n("error.Raides.validation.enrolled.more.than.one.branch.action"));
                 bean.markAsInvalid();
             }
 
@@ -271,26 +273,41 @@ public class RaidesService {
         final StudentCandidacy studentCandidacy = registration.getStudentCandidacy();
         final PrecedentDegreeInformation lastCompletedQualification = studentCandidacy.getCompletedDegreeInformation();
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (lastCompletedQualification == null) {
             return;
         }
 
         if (lastCompletedQualification.getSchoolLevel() != null) {
-            bean.setEscolaridadeAnterior(LegalMapping.find(report, LegalMappingType.PRECEDENT_SCHOOL_LEVEL)
-                    .translate(lastCompletedQualification.getSchoolLevel()));
 
-            if (bean.getEscolaridadeAnterior() != null
-                    && bean.getEscolaridadeAnterior().equals(Raides.NivelEscolaridadeAluno.OUTRO)) {
+            String value = LegalMapping.find(report, LegalMappingType.PRECEDENT_SCHOOL_LEVEL)
+                    .translate(lastCompletedQualification.getSchoolLevel());
 
-                if (!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())) {
-                    bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getOtherSchoolLevel().substring(0,
-                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getOtherSchoolLevel().length())));
-                } else {
-                    bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getSchoolLevel().getLocalizedName().substring(0,
-                            Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH,
-                                    lastCompletedQualification.getSchoolLevel().getLocalizedName().length())));
+            if (StringUtils.isBlank(value)) {
+                LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.school.level.missing.translate"),
+                        i18n("error.Raides.validation.previous.complete.school.level.missing.translate.action", value));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setEscolaridadeAnterior(value);
+
+                if (bean.getEscolaridadeAnterior() != null
+                        && bean.getEscolaridadeAnterior().equals(Raides.NivelEscolaridadeAluno.OUTRO)) {
+
+                    if (!Strings.isNullOrEmpty(lastCompletedQualification.getOtherSchoolLevel())) {
+                        bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getOtherSchoolLevel().substring(0, Math
+                                .min(MAX_OTHER_SCHOOL_LEVEL_LENGTH, lastCompletedQualification.getOtherSchoolLevel().length())));
+                    } else {
+                        bean.setOutroEscolaridadeAnterior(lastCompletedQualification.getSchoolLevel().getLocalizedName()
+                                .substring(0, Math.min(MAX_OTHER_SCHOOL_LEVEL_LENGTH,
+                                        lastCompletedQualification.getSchoolLevel().getLocalizedName().length())));
+                    }
                 }
+
             }
+
         }
 
         if (lastCompletedQualification.getCountry() != null) {
@@ -328,14 +345,28 @@ public class RaidesService {
                     && lastCompletedQualification.getSchoolLevel().isHighSchoolOrEquivalent()) {
 
                 if (highSchoolType(studentCandidacy) != null) {
-                    bean.setTipoEstabSec(LegalMapping.find(report, LegalMappingType.HIGH_SCHOOL_TYPE)
-                            .translate(highSchoolType(studentCandidacy)));
+
+                    String value = LegalMapping.find(report, LegalMappingType.HIGH_SCHOOL_TYPE)
+                            .translate(highSchoolType(studentCandidacy));
+
+                    if (StringUtils.isBlank(value)) {
+                        LegalReportContext.addError(target,
+                                i18n("error.Raides.validation.highSchoolType.missing.translate",
+                                        highSchoolType(studentCandidacy).getName()),
+                                i18n("error.Raides.validation.highSchoolType.missing.translate.action",
+                                        highSchoolType(studentCandidacy).getName()));
+
+                        bean.markAsInvalid();
+                    } else {
+                        bean.setTipoEstabSec(value);
+                    }
+
                 }
 
                 if (Strings.isNullOrEmpty(bean.getTipoEstabSec())) {
                     bean.setTipoEstabSec(Raides.TipoEstabSec.PUBLICO);
-                    LegalReportContext.addWarn("",
-                            i18n("warn.Raides.highSchoolType.not.specified", formatArgs(registration, executionYear)));
+                    LegalReportContext.addWarn(RaidesReportEntryTarget.of(registration, executionYear),
+                            i18n("warn.Raides.highSchoolType.not.specified"));
                 }
             }
         }
@@ -388,21 +419,23 @@ public class RaidesService {
     protected void validaGrauPrecedenteCompleto(final ExecutionYear executionYear, final Registration registration,
             final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getEscolaridadeAnterior())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.school.level.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.school.level.missing"),
+                    i18n("error.Raides.validation.previous.complete.school.level.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getPaisEscolaridadeAnt())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.previous.complete.country.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.country.missing"),
+                    i18n("error.Raides.validation.previous.complete.country.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getAnoEscolaridadeAnt())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.previous.complete.year.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.year.missing"),
+                    i18n("error.Raides.validation.previous.complete.year.missing.action"));
 
             bean.markAsInvalid();
         }
@@ -417,8 +450,8 @@ public class RaidesService {
         if (lastCompletedQualification.getSchoolLevel() != null
                 && lastCompletedQualification.getSchoolLevel().isHighSchoolOrEquivalent()) {
             if (Strings.isNullOrEmpty(bean.getTipoEstabSec())) {
-                LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.highSchoolType.missing",
-                        formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.highSchoolType.missing"),
+                        i18n("error.Raides.validation.previous.complete.highSchoolType.missing.action"));
                 bean.markAsInvalid();
             }
         }
@@ -426,6 +459,9 @@ public class RaidesService {
 
     protected void validaEstabelecimentoAnteriorCompleto(final ExecutionYear executionYear, final Registration registration,
             final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (lastCompletedQualification.getCountry() == null || !lastCompletedQualification.getCountry().isDefaultCountry()) {
             return;
         }
@@ -435,26 +471,28 @@ public class RaidesService {
         }
 
         if (Strings.isNullOrEmpty(bean.getEstabEscolaridadeAnt())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.institution.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.institution.missing"),
+                    i18n("error.Raides.validation.previous.complete.institution.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Raides.Estabelecimentos.OUTRO.equals(bean.getEstabEscolaridadeAnt())
                 && Strings.isNullOrEmpty(bean.getOutroEstabEscolarAnt())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.other.institution.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.other.institution.missing"),
+                    i18n("error.Raides.validation.previous.complete.other.institution.missing.action"));
             bean.markAsInvalid();
         } else if (Raides.Estabelecimentos.OUTRO.equals(bean.getEstabEscolaridadeAnt())) {
-            LegalReportContext.addWarn("",
-                    i18n("warn.Raides.validation.previous.complete.other.institution.given.instead.of.code",
-                            formatArgs(registration, executionYear)));
+            LegalReportContext.addWarn(target,
+                    i18n("warn.Raides.validation.previous.complete.other.institution.given.instead.of.code"));
             bean.markAsInvalid();
         }
     }
 
     protected void validaCursoOficialInstituicaoOficial(final ExecutionYear executionYear, final Registration registration,
             final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (!isPortuguesePostHighSchool(lastCompletedQualification)) {
             return;
         }
@@ -478,23 +516,26 @@ public class RaidesService {
         }
 
         if (!degreeDesignationContainsInstitution) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.official.precedent.degree.is.not.offered.by.institution",
-                            formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target,
+                    i18n("error.Raides.validation.official.precedent.degree.is.not.offered.by.institution"),
+                    i18n("error.Raides.validation.official.precedent.degree.is.not.offered.by.institution.action"));
             bean.markAsInvalid();
         }
 
         if ((Raides.isMasterDegreeOrDoctoralDegree(registration) || Raides.isSpecializationDegree(registration))
                 && !isPostHighEducation(lastCompletedQualification)) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.isMasterDoctoralOrSpecialization.but.completed.qualification.is.not.higher",
-                            formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target,
+                    i18n("error.Raides.validation.isMasterDoctoralOrSpecialization.but.completed.qualification.is.not.higher"),
+                    i18n("error.Raides.validation.isMasterDoctoralOrSpecialization.but.completed.qualification.is.not.higher.action"));
             bean.markAsInvalid();
         }
     }
 
     protected void validaCursoAnteriorCompleto(final ExecutionYear executionYear, final Registration registration,
             final PrecedentDegreeInformation lastCompletedQualification, final IGrauPrecedenteCompleto bean) {
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (lastCompletedQualification.getCountry() == null || !lastCompletedQualification.getCountry().isDefaultCountry()) {
             return;
         }
@@ -504,22 +545,23 @@ public class RaidesService {
         }
 
         if (Strings.isNullOrEmpty(bean.getCursoEscolarAnt())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.degree.designation.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.degree.designation.missing"),
+                    i18n("error.Raides.validation.previous.complete.degree.designation.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Raides.NivelCursoOrigem.OUTRO.equals(bean.getCursoEscolarAnt())
                 && Strings.isNullOrEmpty(bean.getOutroCursoEscolarAnt())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.previous.complete.other.degree.designation.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target,
+                    i18n("error.Raides.validation.previous.complete.other.degree.designation.missing"),
+                    i18n("error.Raides.validation.previous.complete.other.degree.designation.missing.action"));
             bean.markAsInvalid();
         }
 
         if (isPortuguesePostHighSchool(lastCompletedQualification) && Raides.Cursos.OUTRO.equals(bean.getCursoEscolarAnt())) {
-            LegalReportContext.addError("", i18n(
-                    "error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n(
+                    "error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education"),
+                    i18n("error.Raides.validation.previous.complete.other.degree.designation.set.even.if.level.is.portuguese.higher.education.action"));
             bean.markAsInvalid();
         }
     }
@@ -554,6 +596,8 @@ public class RaidesService {
     protected void preencheInformacaoPessoal(final ExecutionYear executionYear, final Registration registration,
             final TblInscrito bean) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (registration.getPerson().getMaritalStatus() != null) {
             bean.setEstadoCivil(LegalMapping.find(report, LegalMappingType.MARITAL_STATUS)
                     .translate(registration.getPerson().getMaritalStatus()));
@@ -575,47 +619,168 @@ public class RaidesService {
 
         if (ingressionData != null) {
             if (ingressionData.getFatherSchoolLevel() != null) {
-                bean.setNivelEscolarPai(LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL)
-                        .translate(ingressionData.getFatherSchoolLevel()));
+
+                String value =
+                        LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL).translate(ingressionData.getFatherSchoolLevel());
+
+                if (StringUtils.isBlank(value)) {
+                    LegalReportContext.addError(target,
+                            i18n("error.Raides.validation.fatherSchoolLevel.missing.translate",
+                                    ingressionData.getFatherSchoolLevel().getName()),
+                            i18n("error.Raides.validation.fatherSchoolLevel.missing.translate.action",
+                                    ingressionData.getFatherSchoolLevel().getName()));
+
+                    bean.markAsInvalid();
+
+                } else {
+                    bean.setNivelEscolarPai(value);
+                }
+
             }
 
             if (ingressionData.getMotherSchoolLevel() != null) {
-                bean.setNivelEscolarMae(LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL)
-                        .translate(ingressionData.getMotherSchoolLevel()));
+
+                String value =
+                        LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL).translate(ingressionData.getMotherSchoolLevel());
+
+                if (StringUtils.isBlank(value)) {
+                    LegalReportContext.addError(target,
+                            i18n("error.Raides.validation.fatherSchoolLevel.missing.translate",
+                                    ingressionData.getMotherSchoolLevel().getName()),
+                            i18n("error.Raides.validation.fatherSchoolLevel.missing.translate.action",
+                                    ingressionData.getMotherSchoolLevel().getName()));
+
+                    bean.markAsInvalid();
+
+                } else {
+                    bean.setNivelEscolarMae(value);
+                }
+
             }
 
             if (ingressionData.getFatherProfessionalCondition() != null) {
-                bean.setSituacaoProfPai(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
-                        .translate(ingressionData.getFatherProfessionalCondition()));
+
+                String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
+                        .translate(ingressionData.getFatherProfessionalCondition());
+
+                if (StringUtils.isBlank(value)) {
+                    LegalReportContext.addError(target,
+                            i18n("error.Raides.validation.fatherProfessionalSituationType.missing.translate",
+                                    ingressionData.getFatherProfessionalCondition().getName()),
+                            i18n("error.Raides.validation.fatherProfessionalSituationType.missing.translate.action",
+                                    ingressionData.getFatherProfessionalCondition().getName()));
+
+                    bean.markAsInvalid();
+
+                } else {
+                    bean.setSituacaoProfPai(value);
+                }
+
             }
 
-            if (ingressionData.getMotherProfessionalCondition() != null) {
-                bean.setSituacaoProfMae(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
-                        .translate(ingressionData.getMotherProfessionalCondition()));
-            }
+        }
 
-            if (ingressionData.getProfessionalCondition() != null) {
-                bean.setSituacaoProfAluno(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
-                        .translate(ingressionData.getProfessionalCondition()));
-            }
+        if (ingressionData.getMotherProfessionalCondition() != null) {
 
-            if (ingressionData.getFatherProfessionType() != null) {
-                bean.setProfissaoPai(transformProfessionTypeMappingValue(bean.getSituacaoProfPai(), LegalMapping
-                        .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getFatherProfessionType())));
-            }
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
+                    .translate(ingressionData.getMotherProfessionalCondition());
 
-            if (ingressionData.getMotherProfessionType() != null) {
-                bean.setProfissaoMae(transformProfessionTypeMappingValue(bean.getSituacaoProfMae(), LegalMapping
-                        .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getMotherProfessionType())));
-            }
+            if (StringUtils.isBlank(value)) {
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.motherProfessionalSituationType.missing.translate",
+                                ingressionData.getMotherProfessionalCondition().getName()),
+                        i18n("error.Raides.validation.motherProfessionalSituationType.missing.translate.action",
+                                ingressionData.getMotherProfessionalCondition().getName()));
 
-            if (ingressionData.getProfessionType() != null) {
-                bean.setProfissaoAluno(transformProfessionTypeMappingValue(bean.getSituacaoProfAluno(), LegalMapping
-                        .find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getProfessionType())));
+                bean.markAsInvalid();
+
+            } else {
+                bean.setSituacaoProfMae(value);
             }
         }
 
+        if (ingressionData.getProfessionalCondition() != null) {
+
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
+                    .translate(ingressionData.getProfessionalCondition());
+
+            if (StringUtils.isBlank(value)) {
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.studentProfession.missing.translate",
+                                ingressionData.getProfessionalCondition().getName()),
+                        i18n("error.Raides.validation.studentProfession.missing.translate.action",
+                                ingressionData.getProfessionalCondition().getName()));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setSituacaoProfAluno(value);
+            }
+
+        }
+
+        if (ingressionData.getFatherProfessionType() != null) {
+
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
+                    .translate(ingressionData.getFatherProfessionType());
+
+            if (StringUtils.isBlank(value)) {
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.fatherProfession.missing.translate",
+                                ingressionData.getFatherProfessionType().getName()),
+                        i18n("error.Raides.validation.fatherProfession.missing.translate.action",
+                                ingressionData.getFatherProfessionType().getName()));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setProfissaoPai(transformProfessionTypeMappingValue(bean.getSituacaoProfPai(), value));
+            }
+
+        }
+
+        if (ingressionData.getMotherProfessionType() != null) {
+
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
+                    .translate(ingressionData.getMotherProfessionType());
+
+            if (StringUtils.isBlank(value)) {
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.motherProfession.missing.translate",
+                                ingressionData.getMotherProfessionType().getName()),
+                        i18n("error.Raides.validation.motherProfession.missing.translate.action",
+                                ingressionData.getMotherProfessionType().getName()));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setProfissaoMae(transformProfessionTypeMappingValue(bean.getSituacaoProfMae(), value));
+            }
+
+        }
+
+        if (ingressionData.getProfessionType() != null) {
+
+            String value =
+                    LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getProfessionType());
+
+            if (StringUtils.isBlank(value)) {
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.studentProfession.missing.translate",
+                                ingressionData.getProfessionType().getName()),
+                        i18n("error.Raides.validation.studentProfession.missing.translate.action",
+                                ingressionData.getProfessionType().getName()));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setProfissaoAluno(transformProfessionTypeMappingValue(bean.getSituacaoProfAluno(), value));
+            }
+
+        }
+
         validaInformacaoPessoal(executionYear, registration, bean);
+
     }
 
     private String transformProfessionTypeMappingValue(String professionalSituation, String professionType) {
@@ -625,75 +790,77 @@ public class RaidesService {
     protected void validaInformacaoPessoal(final ExecutionYear executionYear, final Registration registration,
             final TblInscrito bean) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getEstadoCivil())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.maritalStatus.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.maritalStatus.missing"),
+                    i18n("error.Raides.validation.maritalStatus.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getAlunoDeslocado())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.dislocated.from.residence.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.dislocated.from.residence.missing"),
+                    i18n("error.Raides.validation.dislocated.from.residence.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Raides.countryOfResidence(registration, executionYear) != null
                 && Raides.countryOfResidence(registration, executionYear).isDefaultCountry()) {
             if (Strings.isNullOrEmpty(bean.getResideConcelho())) {
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.district.subdivision.missing", formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target, i18n("error.Raides.validation.district.subdivision.missing"),
+                        i18n("error.Raides.validation.district.subdivision.missing.action"));
                 bean.markAsInvalid();
             }
         }
 
         if (Strings.isNullOrEmpty(bean.getSituacaoProfPai())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.fatherProfessionalSituationType.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.fatherProfessionalSituationType.missing"),
+                    i18n("error.Raides.validation.fatherProfessionalSituationType.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getNivelEscolarPai())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.fatherSchoolLevel.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.fatherSchoolLevel.missing"),
+                    i18n("error.Raides.validation.fatherSchoolLevel.missing.action"));
             bean.markAsInvalid();
         }
 
         if (SituacaoProfissional.requiresProfessionType(bean.getSituacaoProfPai())
                 && Strings.isNullOrEmpty(bean.getProfissaoPai())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.fatherProfession.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.fatherProfession.missing"),
+                    i18n("error.Raides.validation.fatherProfession.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getSituacaoProfMae())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.motherProfessionalSituationType.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.motherProfessionalSituationType.missing"),
+                    i18n("error.Raides.validation.motherProfessionalSituationType.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getNivelEscolarMae())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.motherSchoolLevel.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.motherSchoolLevel.missing"),
+                    i18n("error.Raides.validation.motherSchoolLevel.missing.action"));
             bean.markAsInvalid();
         }
 
         if (SituacaoProfissional.requiresProfessionType(bean.getSituacaoProfMae())
                 && Strings.isNullOrEmpty(bean.getProfissaoMae())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.motherProfession.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.motherProfession.missing"),
+                    i18n("error.Raides.validation.motherProfession.missing.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getSituacaoProfAluno())) {
-            LegalReportContext.addError("", i18n("error.Raides.validation.studentProfessionalSituationType.missing",
-                    formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.studentProfessionalSituationType.missing"),
+                    i18n("error.Raides.validation.studentProfessionalSituationType.missing.action"));
             bean.markAsInvalid();
         }
 
         if (SituacaoProfissional.requiresProfessionType(bean.getSituacaoProfAluno())
                 && Strings.isNullOrEmpty(bean.getProfissaoAluno())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.studentProfession.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.studentProfession.missing"),
+                    i18n("error.Raides.validation.studentProfession.missing.action"));
             bean.markAsInvalid();
         }
 
@@ -713,6 +880,7 @@ public class RaidesService {
         }
 
         return LegalMapping.find(rpt, LegalMappingType.REGIME_FREQUENCIA).translate(r.getDegree().getExternalId());
+
     };
 
     public static void setAttendanceRegimeProvider(final AttendanceRegimeProvider provider) {

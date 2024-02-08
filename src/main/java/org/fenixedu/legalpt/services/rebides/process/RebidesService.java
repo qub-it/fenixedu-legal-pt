@@ -7,6 +7,7 @@ import org.fenixedu.academic.domain.exceptions.DomainException;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.rebides.RebidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
 import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.domain.report.LegalReportRequest;
@@ -57,7 +58,8 @@ public class RebidesService {
 
         checkAllMappings();
 
-        final YearMonthDay lastDayOfTheYear = new YearMonthDay(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31);
+        final YearMonthDay lastDayOfTheYear =
+                new YearMonthDay(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31);
 
         Bennu.getInstance().getTeachersSet().forEach(t -> {
             //TODO: add teacher authorization filters (isValid on 31 Dec?)
@@ -176,11 +178,6 @@ public class RebidesService {
         return LegalPTUtil.bundle(key, arguments);
     }
 
-    public static String createSubjectForReport(Teacher teacher) {
-        return teacher.getPerson().getName() + LegalReportContext.SEPARATOR_SUBJECT + teacher.getPerson().getDocumentIdNumber()
-                + LegalReportContext.SEPARATOR_SUBJECT + teacher.getPerson().getUsername();
-    }
-
     public static String createMissingMappingMessage(String field, String value) {
         final String fieldName = i18n(field);
         return i18n("rebides.createMissingMappingMessage", fieldName, value);
@@ -200,7 +197,7 @@ public class RebidesService {
         if (fieldContent.length() > maxFieldSize) {
             final String message = i18n("rebides.fieldSizeOverflow", i18n(field), String.valueOf(fieldContent.length()),
                     String.valueOf(maxFieldSize));
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher), message);
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), message);
             return false;
         }
         return true;
@@ -211,7 +208,7 @@ public class RebidesService {
         if (value < minPercentage || value > maxPercentage) {
             final String message = i18n("rebides.invalidIntervalValue", i18n(field), String.valueOf(value),
                     String.valueOf(minPercentage), String.valueOf(maxPercentage));
-            LegalReportContext.addError(createSubjectForReport(teacher), message);
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), message);
             return false;
         }
         return true;

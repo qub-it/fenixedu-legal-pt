@@ -1,12 +1,11 @@
 package org.fenixedu.legalpt.services.raides.process;
 
-import static org.fenixedu.legalpt.domain.raides.Raides.formatArgs;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.SchoolLevelType;
@@ -17,6 +16,7 @@ import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.Raides.Idade;
 import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
@@ -37,7 +37,10 @@ public class IdentificacaoService extends RaidesService {
     }
 
     public TblIdentificacao create(final Student student, final Registration registration, final ExecutionYear executionYear) {
+
         TblIdentificacao bean = new TblIdentificacao();
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
 
         bean.setIdAluno(registration.getStudent().getNumber());
         bean.setNome(student.getName());
@@ -45,8 +48,22 @@ public class IdentificacaoService extends RaidesService {
         bean.setNumId(student.getPerson().getDocumentIdNumber());
 
         if (student.getPerson().getIdDocumentType() != null) {
-            bean.setTipoId(LegalMapping.find(report, LegalMappingType.ID_DOCUMENT_TYPE)
-                    .translate(student.getPerson().getIdDocumentType()));
+
+            String value = LegalMapping.find(report, LegalMappingType.ID_DOCUMENT_TYPE)
+                    .translate(student.getPerson().getIdDocumentType());
+
+            if (StringUtils.isBlank(value)) {
+
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.idDocumentType.missing.translate", student.getPerson().getIdDocumentType().getLocalizedName()),
+                        i18n("error.Raides.validation.idDocumentType.missing.translate.action",
+                                student.getPerson().getIdDocumentType().getLocalizedName()));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setTipoId(value);
+            }
         }
 
         if (Raides.DocumentoIdentificacao.OUTRO.equals(bean.getTipoId())) {
@@ -64,12 +81,11 @@ public class IdentificacaoService extends RaidesService {
                     int digitControl = generatePortugueseIdentityCardControlDigit(student.getPerson().getDocumentIdNumber());
                     bean.setCheckDigitId(String.valueOf(digitControl));
 
-                    LegalReportContext.addWarn("",
-                            i18n("warn.Raides.identity.card.digit.control.generated", formatArgs(registration, executionYear)));
+                    LegalReportContext.addWarn(target, i18n("warn.Raides.identity.card.digit.control.generated"));
 
                 } catch (final NumberFormatException e) {
-                    LegalReportContext.addError("", i18n("error.Raides.validation.cannot.generate.digit.control",
-                            formatArgs(registration, executionYear)));
+                    LegalReportContext.addError(target, i18n("error.Raides.validation.cannot.generate.digit.control"),
+                            i18n("error.Raides.validation.cannot.generate.digit.control.action"));
                     bean.markAsInvalid();
                 }
             }
@@ -80,7 +96,22 @@ public class IdentificacaoService extends RaidesService {
         }
 
         if (student.getPerson().getGender() != null) {
-            bean.setSexo(LegalMapping.find(report, LegalMappingType.GENDER).translate(student.getPerson().getGender()));
+
+            String value = LegalMapping.find(report, LegalMappingType.GENDER).translate(student.getPerson().getGender());
+
+            if (StringUtils.isBlank(value)) {
+
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.gender.missing.translate", student.getPerson().getGender().getLocalizedName()),
+                        i18n("error.Raides.validation.gender.missing.translate.action",
+                                student.getPerson().getGender().getLocalizedName()));
+
+                bean.markAsInvalid();
+
+            } else {
+                bean.setSexo(value);
+            }
+
         }
 
         preencheNacionalidade(student, bean);
@@ -192,6 +223,10 @@ public class IdentificacaoService extends RaidesService {
         if (pid != null && pid.getSchoolLevel() == SchoolLevelType.HIGH_SCHOOL_OR_EQUIVALENT && pid.getCountry() != null) {
             return pid.getCountry().getCode();
         }
+        
+        if (registration.getPerson().getCountryHighSchool() != null) {
+            return registration.getPerson().getCountryHighSchool().getCode();
+        }
 
         if (registration.getPerson().getCountryHighSchool() != null) {
             return registration.getPerson().getCountryHighSchool().getCode();
@@ -219,9 +254,12 @@ public class IdentificacaoService extends RaidesService {
 
     protected void validaDataNascimento(final TblIdentificacao bean, final Student student, final Registration registration,
             final ExecutionYear executionYear) {
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (bean.getDataNasc() == null) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.birth.date.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.birth.date.missing"),
+                    i18n("error.Raides.validation.birth.date.missing.action"));
             bean.markAsInvalid();
         }
 
@@ -232,8 +270,8 @@ public class IdentificacaoService extends RaidesService {
             long age = Years.yearsBetween(bean.getDataNasc(), december31BeginExecYear).getYears();
 
             if (age < Idade.MIN || age > Idade.MAX) {
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.birth.date.invalid", formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target, i18n("error.Raides.validation.birth.date.invalid"),
+                        i18n("error.Raides.validation.birth.date.invalid.action"));
                 bean.markAsInvalid();
             }
         }
@@ -242,27 +280,30 @@ public class IdentificacaoService extends RaidesService {
     protected void validaDocumentoIdentificacao(final TblIdentificacao bean, final Student student,
             final Registration registration, final ExecutionYear executionYear) {
 
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getNumId())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.missing.document.id", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.missing.document.id"),
+                    i18n("error.Raides.validation.missing.document.id.action"));
             bean.markAsInvalid();
         } else if (bean.getNumId().matches(".*\\s.*")) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.document.id.contains.spaces", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.document.id.contains.spaces"),
+                    i18n("error.Raides.validation.document.id.contains.spaces.action"));
             bean.markAsInvalid();
         } else if (IDDocumentType.IDENTITY_CARD == registration.getPerson().getIdDocumentType()
                 || IDDocumentType.CITIZEN_CARD == registration.getPerson().getIdDocumentType()) {
             if (!bean.getNumId().matches("\\d+")) {
-                LegalReportContext.addError("", i18n("error.Raides.validation.national.document.id.contains.other.than.spaces",
-                        formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target,
+                        i18n("error.Raides.validation.national.document.id.contains.other.than.spaces"),
+                        i18n("error.Raides.validation.national.document.id.contains.other.than.spaces.action"));
                 bean.markAsInvalid();
             }
 
             if (student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD
                     && student.getPerson().getDocumentIdNumber().length() != 8) {
 
-                LegalReportContext.addError("",
-                        i18n("error.Raides.validation.document.id.invalid", formatArgs(registration, executionYear)));
+                LegalReportContext.addError(target, i18n("error.Raides.validation.document.id.invalid"),
+                        i18n("error.Raides.validation.document.id.invalid.action"));
 
                 bean.markAsInvalid();
 
@@ -272,8 +313,8 @@ public class IdentificacaoService extends RaidesService {
         if (!Strings.isNullOrEmpty(bean.getTipoIdDescr())
                 && bean.getTipoIdDescr().equalsIgnoreCase(IDDocumentType.OTHER.getLocalizedName(Locale.getDefault()))) {
 
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.document.id.invalid.other", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.document.id.invalid.other"),
+                    i18n("error.Raides.validation.document.id.invalid.other.action"));
 
             bean.markAsInvalid();
         }
@@ -281,22 +322,26 @@ public class IdentificacaoService extends RaidesService {
 
     protected void validaPais(final TblIdentificacao bean, final Student student, final Registration registration,
             final ExecutionYear executionYear) {
+
+        final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
+
         if (Strings.isNullOrEmpty(bean.getResidePais())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.country.of.residence.incomplete", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.country.of.residence.incomplete"),
+                    i18n("error.Raides.validation.country.of.residence.incomplete.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getNacionalidade())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.nationality.incomplete", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.nationality.incomplete"),
+                    i18n("error.Raides.validation.nationality.incomplete.action"));
             bean.markAsInvalid();
         }
 
         if (Strings.isNullOrEmpty(bean.getPaisEnsinoSecundario())) {
-            LegalReportContext.addError("",
-                    i18n("error.Raides.validation.high.school.country.missing", formatArgs(registration, executionYear)));
+            LegalReportContext.addError(target, i18n("error.Raides.validation.high.school.country.missing"),
+                    i18n("error.Raides.validation.high.school.country.missing.action"));
             bean.markAsInvalid();
         }
+
     }
 }

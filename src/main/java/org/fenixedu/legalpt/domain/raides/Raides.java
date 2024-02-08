@@ -238,8 +238,6 @@ public class Raides {
                         continue;
                     }
 
-                    final String[] messageArgs = formatArgs(registration, academicPeriod);
-
                     try {
 
                         if (!isAcceptedDegreeType(enroledPeriod, registration)) {
@@ -278,11 +276,11 @@ public class Raides {
 
                         addMobilidadeInternacional(report, raidesRequestParameter, academicPeriod, registration);
                     } catch (final DomainException e) {
-                        LegalReportContext.addError("",
-                                i18n("error.Raides.unexpected.error.occured", concatArgs(messageArgs, e.getLocalizedMessage())));
+                        LegalReportContext.addError(RaidesReportEntryTarget.empty(),
+                                i18n("error.Raides.unexpected.error.occured", e.getLocalizedMessage()));
                     } catch (final Throwable e) {
-                        LegalReportContext.addError("", i18n("error.Raides.unexpected.error.occured",
-                                concatArgs(messageArgs, ExceptionUtils.getFullStackTrace(e))));
+                        LegalReportContext.addError(RaidesReportEntryTarget.empty(),
+                                i18n("error.Raides.unexpected.error.occured", ExceptionUtils.getFullStackTrace(e)));
                     }
                 }
             }
@@ -293,15 +291,13 @@ public class Raides {
     public void processGraduated(final LegalReport report, final RaidesRequestParameter raidesRequestParameter) {
 
         for (final RaidesRequestPeriodParameter graduatedPeriod : raidesRequestParameter.getPeriodsForGraduated()) {
-            final ExecutionYear academicPeriod = graduatedPeriod.getAcademicPeriod();
+            final ExecutionYear executionYear = graduatedPeriod.getAcademicPeriod();
             for (final Degree degree : raidesRequestParameter.getDegrees()) {
                 for (final Registration registration : degree.getRegistrationsSet()) {
 
                     if (!matchesStudent(raidesRequestParameter, registration)) {
                         continue;
                     }
-
-                    final String[] messageArgs = formatArgs(registration, academicPeriod);
 
                     try {
 
@@ -325,22 +321,22 @@ public class Raides {
                             continue;
                         }
 
-                        if (!isInEnrolledEctsLimit(graduatedPeriod, registration, academicPeriod)) {
+                        if (!isInEnrolledEctsLimit(graduatedPeriod, registration, executionYear)) {
                             continue;
                         }
 
-                        if (!isInEnrolledYearsLimit(graduatedPeriod, registration, academicPeriod)) {
+                        if (!isInEnrolledYearsLimit(graduatedPeriod, registration, executionYear)) {
                             continue;
                         }
 
                         if (!containsStudentIdentification(registration.getStudent())) {
-                            addStudent(report, registration.getStudent(), registration, academicPeriod);
+                            addStudent(report, registration.getStudent(), registration, executionYear);
                         }
 
-                        addGraduated(report, raidesRequestParameter, graduatedPeriod, academicPeriod, registration);
+                        addGraduated(report, raidesRequestParameter, graduatedPeriod, executionYear, registration);
                     } catch (final Throwable e) {
-                        LegalReportContext.addError("", i18n("error.Raides.unexpected.error.occured",
-                                concatArgs(messageArgs, ExceptionUtils.getFullStackTrace(e))));
+                        LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
+                                i18n("error.Raides.unexpected.error.occured", ExceptionUtils.getFullStackTrace(e)));
                     }
                 }
             }
@@ -448,7 +444,7 @@ public class Raides {
     public void processEnrolled(final LegalReport report, final RaidesRequestParameter raidesRequestParameter) {
 
         for (final RaidesRequestPeriodParameter enroledPeriod : raidesRequestParameter.getPeriodsForEnrolled()) {
-            final ExecutionYear academicPeriod = enroledPeriod.getAcademicPeriod();
+            final ExecutionYear executionYear = enroledPeriod.getAcademicPeriod();
             for (final Degree degree : raidesRequestParameter.getDegrees()) {
 
                 for (final Registration registration : degree.getRegistrationsSet()) {
@@ -456,8 +452,6 @@ public class Raides {
                     if (!matchesStudent(raidesRequestParameter, registration)) {
                         continue;
                     }
-
-                    final String[] messageArgs = formatArgs(registration, academicPeriod);
 
                     try {
 
@@ -479,36 +473,35 @@ public class Raides {
                             continue;
                         }
 
-                        if (!isInEnrolledEctsLimit(enroledPeriod, registration, academicPeriod)) {
+                        if (!isInEnrolledEctsLimit(enroledPeriod, registration, executionYear)) {
                             continue;
                         }
 
-                        if (!isInEnrolledYearsLimit(enroledPeriod, registration, academicPeriod)) {
+                        if (!isInEnrolledYearsLimit(enroledPeriod, registration, executionYear)) {
                             continue;
                         }
 
-                        if (!isActiveAtPeriod(enroledPeriod, registration, academicPeriod)) {
+                        if (!isActiveAtPeriod(enroledPeriod, registration, executionYear)) {
                             continue;
                         }
 
                         if (isTerminalConcluded(registration, raidesRequestParameter)) {
-                            LegalReportContext.addWarn("",
-                                    i18n("warn.Raides.skiping.enroled.because.is.already.declared.as.terminal.concluded",
-                                            concatArgs(messageArgs)));
+                            LegalReportContext.addWarn(RaidesReportEntryTarget.of(registration, executionYear),
+                                    i18n("warn.Raides.skiping.enroled.because.is.already.declared.as.terminal.concluded"));
                             continue;
                         }
 
                         if (!containsStudentIdentification(registration.getStudent())) {
-                            addStudent(report, registration.getStudent(), registration, academicPeriod);
+                            addStudent(report, registration.getStudent(), registration, executionYear);
                         }
 
-                        addEnrolledStudent(report, raidesRequestParameter, academicPeriod, registration);
+                        addEnrolledStudent(report, raidesRequestParameter, executionYear, registration);
                     } catch (final DomainException e) {
-                        LegalReportContext.addError("",
-                                i18n("error.Raides.unexpected.error.occured", concatArgs(messageArgs, e.getLocalizedMessage())));
+                        LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
+                                i18n("error.Raides.unexpected.error.occured", e.getLocalizedMessage()));
                     } catch (final Throwable e) {
-                        LegalReportContext.addError("", i18n("error.Raides.unexpected.error.occured",
-                                concatArgs(messageArgs, ExceptionUtils.getFullStackTrace(e))));
+                        LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
+                                i18n("error.Raides.unexpected.error.occured", ExceptionUtils.getFullStackTrace(e)));
                     }
                 }
             }
@@ -839,17 +832,6 @@ public class Raides {
 
         }
 
-        final PersonalIngressionData pid = registration.getStudent().getPersonalIngressionDataByExecutionYear(executionYear);
-
-        if (pid != null) {
-            if (pid.getCountryOfResidence() != null) {
-
-                LegalReportContext.addWarn("", i18n("warn.Raides.techWarning", formatArgs(registration, executionYear)));
-
-                return pid.getCountryOfResidence();
-            }
-        }
-
         return null;
     }
 
@@ -877,7 +859,8 @@ public class Raides {
             if (pid.getCountryOfResidence() != null && pid.getCountryOfResidence().isDefaultCountry()
                     && pid.getDistrictSubdivisionOfResidence() != null) {
 
-                LegalReportContext.addWarn("", i18n("warn.Raides.techWarning", formatArgs(registration, executionYear)));
+                LegalReportContext.addWarn(RaidesReportEntryTarget.of(registration, executionYear),
+                        i18n("warn.Raides.techWarning"));
 
                 return pid.getDistrictSubdivisionOfResidence();
             }
@@ -906,7 +889,8 @@ public class Raides {
             if (pid.getCountryOfResidence() != null && pid.getCountryOfResidence().isDefaultCountry()
                     && pid.getDistrictSubdivisionOfResidence() != null) {
 
-                LegalReportContext.addWarn("", i18n("warn.Raides.techWarning", formatArgs(registration, executionYear)));
+                LegalReportContext.addWarn(RaidesReportEntryTarget.of(registration, executionYear),
+                        i18n("warn.Raides.techWarning"));
 
                 return pid.getDistrictSubdivisionOfResidence().getDistrict();
             }
@@ -942,8 +926,8 @@ public class Raides {
 
         for (ExecutionYear ex = executionYear; ex.getPreviousExecutionYear() != null; ex = ex.getPreviousExecutionYear()) {
             if (registration.getStudent().getPersonalIngressionDataByExecutionYear(ex) != null) {
-                LegalReportContext.addWarn("", i18n("warn.Raides.validation.using.personal.ingression.data.from.previous.year",
-                        formatArgs(registration, executionYear)));
+                LegalReportContext.addWarn(RaidesReportEntryTarget.of(registration, executionYear),
+                        i18n("warn.Raides.validation.using.personal.ingression.data.from.previous.year"));
 
                 return registration.getStudent().getPersonalIngressionDataByExecutionYear(ex);
             }
@@ -1016,23 +1000,6 @@ public class Raides {
 
     public static RegistrationProtocol findRegistrationProtocolByCode(final String code) {
         return Bennu.getInstance().getRegistrationProtocolsSet().stream().filter(r -> r.getCode().equals(code)).findAny().get();
-    }
-
-    //TODO: move to RaidesLegalReportUtil?
-    public static String[] formatArgs(Registration registration, ExecutionYear executionYear) {
-        return new String[] {
-
-                String.valueOf(registration.getStudent().getNumber()),
-
-                String.valueOf(registration.getNumber()),
-
-                registration.getDegree().getCode(),
-
-                registration.getDegreeNameWithDescription(),
-
-                executionYear == null ? "" : executionYear.getQualifiedName()
-
-        };
     }
 
     private static String[] concatArgs(String[] left, String... right) {

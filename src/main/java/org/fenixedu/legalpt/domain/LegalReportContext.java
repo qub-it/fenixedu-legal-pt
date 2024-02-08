@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.joda.time.DateTime;
-
 public class LegalReportContext {
 
     public static String SEPARATOR_SUBJECT = " | ";
@@ -25,16 +23,21 @@ public class LegalReportContext {
         reportHolder.set(null);
     }
 
-    public static void addInfo(Object target, String message, String... args) {
-        getReport().addEntry(new ReportEntry(ReportEntryType.INFO, target, message, args));
+    public static void addInfo(ReportEntryTarget target, String message) {
+        getReport().addEntry(new ReportEntry(ReportEntryType.INFO, target, message, null));
     }
 
-    public static void addError(Object target, String message, String... args) {
-        getReport().addEntry(new ReportEntry(ReportEntryType.ERROR, target, message, args));
+    @Deprecated
+    public static void addError(ReportEntryTarget target, String message) {
+        addError(target, message, null);
+    }
+    
+    public static void addError(ReportEntryTarget target, String message, String action) {
+        getReport().addEntry(new ReportEntry(ReportEntryType.ERROR, target, message, action));
     }
 
-    public static void addWarn(Object target, String message, String... args) {
-        getReport().addEntry(new ReportEntry(ReportEntryType.WARN, target, message, args));
+    public static void addWarn(ReportEntryTarget target, String message) {
+        getReport().addEntry(new ReportEntry(ReportEntryType.WARN, target, message, null));
     }
 
     public static LegalReportEntryData getReport() {
@@ -46,43 +49,6 @@ public class LegalReportContext {
         if (reportHolder.get() == null) {
             throw new RuntimeException(
                     "Report context is not available. Make sure you are running inside a Legal Report context.");
-        }
-    }
-
-    public static class ReportEntry {
-
-        private final ReportEntryType type;
-        private final Object target;
-        private final DateTime reportDate;
-        private final String message;
-        private final String[] messageArgs;
-
-        public ReportEntry(ReportEntryType type, Object target, String message, String... args) {
-            this.type = type;
-            this.target = target;
-            this.reportDate = new DateTime();
-            this.message = message;
-            this.messageArgs = args;
-        }
-
-        public ReportEntryType getType() {
-            return type;
-        }
-
-        public Object getTarget() {
-            return target;
-        }
-
-        public DateTime getReportDate() {
-            return reportDate;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public String[] getMessageArgs() {
-            return messageArgs;
         }
     }
 
