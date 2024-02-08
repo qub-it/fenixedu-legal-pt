@@ -193,6 +193,10 @@ public class IdentificacaoService extends RaidesService {
             return pid.getCountry().getCode();
         }
 
+        if (registration.getPerson().getCountryHighSchool() != null) {
+            return registration.getPerson().getCountryHighSchool().getCode();
+        }
+
         if (pid.getCountryHighSchool() != null) {
             return pid.getCountryHighSchool().getCode();
         }
@@ -202,6 +206,7 @@ public class IdentificacaoService extends RaidesService {
         }
 
         return null;
+        
     };
 
     static public void setCountryOfHighSchoolProvider(final Function<Registration, String> provider) {
