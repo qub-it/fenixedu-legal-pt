@@ -5,6 +5,7 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.rebides.RebidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
 import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.dto.rebides.IdentificationBean;
@@ -50,7 +51,7 @@ public class IdentificationService {
                 bean.setName(name);
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Person.name"));
         }
     }
@@ -63,7 +64,7 @@ public class IdentificationService {
                 bean.setDocumentIdNumber(documentIdNumber);
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Person.documentIdNumber"));
         }
     }
@@ -75,12 +76,11 @@ public class IdentificationService {
                 bean.setDocumentIdType(LegalMapping.find(report, RebidesMappingType.ID_DOCUMENT_TYPE)
                         .translate(teacher.getPerson().getIdDocumentType()));
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
-                        RebidesService.createMissingMappingMessage("Person.idDocumentType",
-                                teacher.getPerson().getIdDocumentType().getLocalizedName()));
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService.createMissingMappingMessage(
+                        "Person.idDocumentType", teacher.getPerson().getIdDocumentType().getLocalizedName()));
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Person.idDocumentType"));
         }
     }
@@ -102,7 +102,7 @@ public class IdentificationService {
                 bean.setDateOfBirth(dateOfBirth);
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Person.dateOfBirthYearMonthDay"));
         }
     }
@@ -113,11 +113,11 @@ public class IdentificationService {
                 String gender = LegalMapping.find(report, RebidesMappingType.GENDER).translate(teacher.getPerson().getGender());
                 bean.setGender(gender);
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher), RebidesService
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
                         .createMissingMappingMessage("Person.gender", teacher.getPerson().getGender().getLocalizedName()));
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Person.gender"));
         }
     }
@@ -126,7 +126,7 @@ public class IdentificationService {
         if (teacher.getPerson().getCountry() != null) {
             bean.setNationalityCountry(teacher.getPerson().getCountry().getCode());
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Person.nationality"));
         }
     }
@@ -143,7 +143,7 @@ public class IdentificationService {
             final String message = RebidesService.i18n("rebides.invalidIntervalValue", RebidesService.i18n(field),
                     String.valueOf(period.getYears()), String.valueOf(RebidesService.MIN_AGE),
                     String.valueOf(RebidesService.MAX_AGE));
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher), message);
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), message);
             return false;
         }
         return true;

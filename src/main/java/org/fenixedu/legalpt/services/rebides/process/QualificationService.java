@@ -7,6 +7,7 @@ import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.rebides.RebidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
 import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.dto.rebides.QualificationBean;
@@ -60,11 +61,11 @@ public class QualificationService {
                 bean.setSchoolLevel(
                         LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL).translate(getQualificationSchoolLevel()));
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher), RebidesService
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
                         .createMissingMappingMessage("label.schoolLevel", getQualificationSchoolLevel().getLocalizedName()));
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("label.schoolLevel"));
         }
     }
@@ -76,11 +77,11 @@ public class QualificationService {
                 bean.setSchoolLevelOrigin(LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN)
                         .translate(getQualificationSchoolLevelOrigin()));
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher), RebidesService
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
                         .createMissingMappingMessage("label.schoolLevelOrigin", getQualificationSchoolLevelOrigin()));
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("label.schoolLevelType"));
         }
     }
@@ -93,7 +94,7 @@ public class QualificationService {
                 bean.setInstituition(Institution.OTHER);
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("label.degreeInstitution"));
         }
     }
@@ -119,7 +120,7 @@ public class QualificationService {
             }
 
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("label.degree"));
         }
     }
@@ -156,11 +157,11 @@ public class QualificationService {
                 bean.setScientificArea(LegalMapping.find(report, RebidesMappingType.SCIENTIFIC_AREA)
                         .translate(getQualificationScientificAreaUnit()));
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher), RebidesService
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
                         .createMissingMappingMessage("label.scientificArea", getQualificationScientificAreaUnit().getName()));
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("label.scientificArea"));
         }
     }

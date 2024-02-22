@@ -9,6 +9,7 @@ import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.TeacherAuthorization;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
+import org.fenixedu.legalpt.domain.rebides.RebidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.rebides.mapping.RebidesMappingType;
 import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.fenixedu.legalpt.dto.rebides.CareerActivitiesBean;
@@ -112,12 +113,11 @@ public class CareerActivitiesService {
                     bean.setCategory(contractCategory);
                 }
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
-                        RebidesService.createMissingMappingMessage("Contract.contractCategory",
-                                contract.getTeacherCategory().getName().getContent()));
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService.createMissingMappingMessage(
+                        "Contract.contractCategory", contract.getTeacherCategory().getName().getContent()));
             }
         } else {
-            LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                     RebidesService.createMissingFieldMessage("Contract.contractCategory"));
         }
     }
@@ -420,7 +420,7 @@ public class CareerActivitiesService {
                 }
 
             } else {
-                LegalReportContext.addError(RebidesService.createSubjectForReport(teacher),
+                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
                         RebidesService.createMissingFieldMessage("CareerSituation.otherActivityDescription"));
             }
         }
