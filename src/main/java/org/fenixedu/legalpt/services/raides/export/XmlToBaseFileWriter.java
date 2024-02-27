@@ -323,7 +323,7 @@ public class XmlToBaseFileWriter {
 
         final NumeroID numeroID = factory.createNumeroID();
         numeroID.setValue(tblIdentificacao.getNumId());
-        numeroID.setTipo(Long.valueOf(tblIdentificacao.getTipoId()));
+        numeroID.setTipo(tblIdentificacao.getTipoId() != null ? Long.valueOf(tblIdentificacao.getTipoId()) : null);
         numeroID.setDigitosControlo(tblIdentificacao.getCheckDigitId());
 
         identificacao.setNumeroID(numeroID);

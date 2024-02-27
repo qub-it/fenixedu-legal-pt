@@ -441,6 +441,21 @@ public class RaidesService {
                     i18n("error.Raides.validation.previous.complete.year.missing.action"));
 
             bean.markAsInvalid();
+        } else if(registration.getPerson().getDateOfBirthYearMonthDay() != null) {
+            // Se a EscolaridadeAnterior indicada for Ensino secundário[13], Curso de especialização tecnológica[14], Bacharelato[15],
+            // Licenciatura[16], Mestrado[17], Doutoramento[18], Curso técnico superior profissional[20] ou Licenciatura 1.º ciclo[30], 
+            // o valor a introduzir deve ser igual ou superior ao somatório do ano da data de nascimento do aluno mais 16.
+            
+            Integer previousConclusionYear = Integer.valueOf(bean.getAnoEscolaridadeAnt());
+            
+            if(previousConclusionYear < (registration.getPerson().getDateOfBirthYearMonthDay().getYear() + Raides.Idade.MIN)) {
+                LegalReportContext.addError(target, i18n("error.Raides.validation.previous.complete.year.invalid"),
+                        i18n("error.Raides.validation.previous.complete.year.invalid.action"));
+
+                bean.markAsInvalid();
+            }
+            
+            
         }
 
         validaEstabelecimentoAnteriorCompleto(executionYear, registration, lastCompletedQualification, bean);
