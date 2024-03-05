@@ -1,3 +1,4 @@
+2.16.6 (05-03-2024)
 - Bug fix: RAIDES: validate ingression only when the field is mandatory [#UL-FMD-1067]
 - Bug fix: RAIDES: add missing labels
 
