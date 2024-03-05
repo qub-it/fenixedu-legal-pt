@@ -1,3 +1,6 @@
+- Bug fix: RAIDES: validate ingression only when the field is mandatory [#UL-FMD-1067]
+- Bug fix: RAIDES: add missing labels
+
 2.16.5 (27-02-2024)
 - Improvement: RAIDES: validation for conclusion year of last completed qualification [#ISCTE-FENIXEDU-364]
 - Improvement: RAIDES: add problem-solving procedure [#qubIT-Fenix-4760]

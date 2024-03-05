@@ -41,9 +41,9 @@ public class InscritoService extends RaidesService {
 
     public TblInscrito create(final RaidesRequestParameter raidesRequestParameter, final ExecutionYear executionYear,
             final Registration registration) {
-        
+
         final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
-        
+
         final TblInscrito bean = new TblInscrito();
         bean.setRegistration(registration);
 
@@ -72,16 +72,17 @@ public class InscritoService extends RaidesService {
         bean.setBolseiro(bolseiro(registration, executionYear));
 
         if (isFirstCycle(registration) && isFirstTimeOnDegree(registration, executionYear)) {
-            
-            if(registration.getIngressionType() != null) {
-                
+
+            if (registration.getIngressionType() != null) {
+
                 String value = LegalMapping.find(report, LegalMappingType.REGISTRATION_INGRESSION_TYPE)
                         .translate(registration.getIngressionType());
 
                 if (StringUtils.isBlank(value)) {
 
                     LegalReportContext.addError(target,
-                            i18n("error.Raides.validation.ingression.missing.translate", registration.getIngressionType().getLocalizedName()),
+                            i18n("error.Raides.validation.ingression.missing.translate",
+                                    registration.getIngressionType().getLocalizedName()),
                             i18n("error.Raides.validation.ingression.missing.translate.action",
                                     registration.getIngressionType().getLocalizedName()));
 
@@ -91,7 +92,6 @@ public class InscritoService extends RaidesService {
                     bean.setFormaIngresso(value);
                 }
             }
-            
 
             if (isDegreeChangeOrTransfer(raidesRequestParameter, registration)) {
 
@@ -218,16 +218,17 @@ public class InscritoService extends RaidesService {
             }
         }
     }
-    
+
     protected void validaFormaIngresso(final TblInscrito bean, final Registration registration, ExecutionYear executionYear) {
-        if (Strings.isNullOrEmpty(bean.getFormaIngresso())) {
+
+        if (isFirstCycle(registration) && isFirstTimeOnDegree(registration, executionYear)
+                && Strings.isNullOrEmpty(bean.getFormaIngresso())) {
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("error.Raides.validation.missing.ingressionType"),
                     i18n("error.Raides.validation.missing.ingressionType.action"));
 
             bean.markAsInvalid();
         }
-
     }
 
     protected void validaRegimeFrequencia(final TblInscrito bean, final Registration registration, ExecutionYear executionYear) {
@@ -290,7 +291,7 @@ public class InscritoService extends RaidesService {
     }
 
     protected String bolseiro(final Registration registration, final ExecutionYear executionYear) {
-        
+
         final PersonalIngressionData pid = registration.getStudent().getPersonalIngressionDataByExecutionYear(executionYear);
         if (pid == null || pid.getGrantOwnerType() == null
                 || pid.getGrantOwnerType() == GrantOwnerType.STUDENT_WITHOUT_SCHOLARSHIP) {
