@@ -577,7 +577,7 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         }
 
         if (errors) {
-            throw new RuntimeException("Errors occured while sending candidacies to SICABE");
+            throw new RuntimeException(SasPTUtil.bundle("label.error.send"));
         }
     }
 
