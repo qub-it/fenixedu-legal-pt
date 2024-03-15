@@ -1,3 +1,4 @@
+2.16.9 (15-03-2024)
 - Bug fix: Allow null on enroled ects (valid for PhDs) [#qubIT-Fenix-5043]
 
 2.16.8 (13-03-2024)
