@@ -278,7 +278,7 @@ public class InscritoService extends RaidesService {
     }
 
     private void validaEctsInscricao(TblInscrito bean, ExecutionYear executionYear, Registration registration) {
-        if (bean.getEctsInscricao().compareTo(BigDecimal.ZERO) == 0) {
+        if (bean.getEctsInscricao() != null && bean.getEctsInscricao().compareTo(BigDecimal.ZERO) == 0) {
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("error.Raides.validation.enroled.ects.cannot.be.zero"),
                     i18n("error.Raides.validation.enroled.ects.cannot.be.zero.action"));

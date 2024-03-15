@@ -1,3 +1,5 @@
+- Bug fix: Allow null on enroled ects (valid for PhDs) [#qubIT-Fenix-5043]
+
 2.16.8 (13-03-2024)
 - Bug fix: SAS: add missing translations [#UL-IGOT-1620]
 
