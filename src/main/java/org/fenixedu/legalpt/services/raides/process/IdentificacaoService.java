@@ -111,7 +111,13 @@ public class IdentificacaoService extends RaidesService {
             } else {
                 bean.setSexo(value);
             }
-
+        } else {
+            
+            LegalReportContext.addError(target,
+                    i18n("error.Raides.validation.gender.missing"),
+                    i18n("error.Raides.validation.gender.missing.action"));
+            
+            bean.markAsInvalid();
         }
 
         preencheNacionalidade(student, bean);

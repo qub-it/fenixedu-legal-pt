@@ -1,3 +1,5 @@
+- Bug fix: Validate the person gender [#qubIT-Fenix-5044]
+
 2.16.9 (15-03-2024)
 - Bug fix: Allow null on enroled ects (valid for PhDs) [#qubIT-Fenix-5043]
 
