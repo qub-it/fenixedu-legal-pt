@@ -38,6 +38,23 @@
 				<artifactId>jaxb2-maven-plugin</artifactId>
 				<version>1.6</version>
 				<executions>
+					
+					<execution>
+						<id>process-salarybonus-xsd</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<extension>true</extension>
+							<packageName>org.fenixedu.legalpt.jaxb.salarybonus</packageName>
+							<outputDirectory>${basedir}/target/generated-sources/xsd/salarybonus</outputDirectory>
+							<schemaDirectory>${basedir}/src/main/xsd/salarybonus/</schemaDirectory>
+							<schemaFiles>Diplomados134.xsd</schemaFiles>
+							<bindingDirectory>${basedir}/src/main/xsd/salarybonus/</bindingDirectory>
+						</configuration>
+					</execution>
+					
 					<execution>
 						<id>process-raides-xsd</id>
 						<goals>
@@ -99,6 +116,7 @@
 							<sources>
 								<source>${basedir}/target/generated-sources/xsd/raides/</source>
 								<source>${basedir}/target/generated-sources/xsd/rebides/</source>
+								<source>${basedir}/target/generated-sources/xsd/salarybonus/</source>
 							</sources>
 						</configuration>
 					</execution>

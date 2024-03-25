@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Studio (https://www.liquid-technologies.com) -->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="diplomados">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="capa">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="CodUO">
+                                <!-- código de 4 dígitos da unidade orgânica a que dizem respeito os dados-->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:pattern value="\d{4}" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Designacao">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:minLength value="4" />
+                                        <xs:maxLength value="254" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="interlocutor" type="tipoInterlocutor" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="aluno" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Nome" >
+                                <!-- mínimo de 4 caracteres -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:minLength value="4" />
+                                        <xs:maxLength value="254" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="NumeroID">
+                                <!-- caracteres alfanumericos, ponto e traço; mínimo de 4 e máximo de 20 caracteres -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:pattern value="[A-Za-z0-9.\-]+" />
+                                        <xs:minLength value="4" />
+                                        <xs:maxLength value="20" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Controlo" >
+                                <!-- Caracteres de controlo do BI/CC -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:maxLength value="4" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Tipo">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="1" />
+                                        <xs:enumeration value="2" />
+                                        <xs:enumeration value="3" />
+                                        <xs:enumeration value="4" />
+                                        <xs:enumeration value="5" />
+                                        <xs:enumeration value="6" />
+                                        <xs:enumeration value="7" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="NIF">
+                                <!-- 9 caracteres numéricos -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:pattern value="\d{9}" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="DataNascimento">
+                                <!-- yyyy-mm-dd / norma NP EN 28601 (critério usado no RAIDES,IEESP e IECDES) -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:date">
+                                        <xs:pattern value="\d{4}-\d{2}-\d{2}" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="diplomas">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="diploma" maxOccurs="unbounded" type="tipoDiploma" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="tipoInterlocutor">
+        <xs:sequence>
+            <xs:element name="Nome">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:minLength value="4" />
+                        <xs:maxLength value="254" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Email">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[^@]+@[^\.]+\..+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Telefone">
+                <!-- 9 caracteres numéricos -->
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:pattern value="\d{9}" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="tipoDiploma">
+        <xs:sequence>
+            <xs:element name="CodCurso">
+                <!-- código de 4 caracteres -->
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:length value="4"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Grau">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="L1" />
+                        <xs:enumeration value="LI" />
+                        <xs:enumeration value="MI" />
+                        <xs:enumeration value="MT" />
+                        <xs:enumeration value="M2" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+          <xs:element name="ECTS">
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:minInclusive value="60" />
+                <xs:maxInclusive value="360" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+            <xs:element name="DataDiploma">
+                <xs:simpleType>
+                    <xs:restriction base="xs:date">
+                        <xs:pattern value="\d{4}-\d{2}-\d{2}" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
