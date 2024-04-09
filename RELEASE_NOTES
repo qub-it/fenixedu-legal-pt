@@ -1,3 +1,4 @@
+- Refactor: Update XSD to RAIDES23 (phase 2) [#qubIT-Fenix-5128]
 - Bug fix: Fix RAIDES action for multiple active registrations with scholarships [#UL-ISA-4962]
 
 2.16.10 (25-03-2024)

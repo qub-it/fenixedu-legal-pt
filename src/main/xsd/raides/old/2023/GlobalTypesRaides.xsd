@@ -225,7 +225,6 @@
 			<xs:enumeration value="41"/>
 			<xs:enumeration value="42"/>
 			<xs:enumeration value="43"/>
-      <xs:enumeration value="44"/>
 		</xs:restriction>
 	</xs:simpleType>
 
