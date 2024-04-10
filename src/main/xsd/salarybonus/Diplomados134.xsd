@@ -81,9 +81,7 @@
                             <xs:element name="DataNascimento">
                                 <!-- yyyy-mm-dd / norma NP EN 28601 (critério usado no RAIDES,IEESP e IECDES) -->
                                 <xs:simpleType>
-                                    <xs:restriction base="xs:date">
-                                        <xs:pattern value="\d{4}-\d{2}-\d{2}" />
-                                    </xs:restriction>
+                                    <xs:restriction base="xs:string"/>
                                 </xs:simpleType>
                             </xs:element>
                             <xs:element name="diplomas">
@@ -158,9 +156,7 @@
           </xs:element>
             <xs:element name="DataDiploma">
                 <xs:simpleType>
-                    <xs:restriction base="xs:date">
-                        <xs:pattern value="\d{4}-\d{2}-\d{2}" />
-                    </xs:restriction>
+                    <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:element>
         </xs:sequence>
