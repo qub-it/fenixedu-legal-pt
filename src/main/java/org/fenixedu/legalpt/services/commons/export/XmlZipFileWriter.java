@@ -21,38 +21,39 @@ public class XmlZipFileWriter {
     public static LegalReportResultFile write(final LegalReportRequest reportRequest, final LegalReportResultFile xmlResultFile,
             final String password) {
 
-        final ByteArrayOutputStream baos = createEncryptedZip(xmlResultFile.getFilename(), xmlResultFile.getContent(), password);
+        final byte[] baos = createEncryptedZip(xmlResultFile.getFilename(), xmlResultFile.getContent(), password);
         return baos == null ? null : writeToFile(reportRequest, xmlResultFile, baos);
     }
 
-    public static ByteArrayOutputStream createEncryptedZip(String fileName, byte[] content, String password) {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public static byte[] createEncryptedZip(String fileName, byte[] content, String password) {
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            final ZipParameters parameters = new ZipParameters();
+            parameters.setCompressionMethod(CompressionMethod.DEFLATE);
+            parameters.setCompressionLevel(CompressionLevel.NORMAL);
+            parameters.setEncryptFiles(true);
+            parameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
+            parameters.setFileNameInZip(fileName);
 
-        final ZipParameters parameters = new ZipParameters();
-        parameters.setCompressionMethod(CompressionMethod.DEFLATE);
-        parameters.setCompressionLevel(CompressionLevel.NORMAL);
-        parameters.setEncryptFiles(true);
-        parameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
-        parameters.setFileNameInZip(fileName);
-
-        try {
-            ZipOutputStream zipOutputStream = new ZipOutputStream(baos, password.toCharArray());
-            zipOutputStream.putNextEntry(parameters);
-            zipOutputStream.write(content);
-            zipOutputStream.closeEntry();
-            zipOutputStream.close();
+            try(ZipOutputStream zipOutputStream = new ZipOutputStream(baos, password.toCharArray())) {
+                zipOutputStream.putNextEntry(parameters);
+                zipOutputStream.write(content);
+            } catch (IOException e) {
+                Log.error("Error while creating zip output stream", e);
+                return null;
+            }
+            return baos.toByteArray();
         } catch (IOException e) {
-            Log.error("Error while creating zip output stream", e);
+            Log.error("Error while creating byte array output stream", e);
             return null;
         }
 
-        return baos;
     }
+
 
     @Atomic(mode = TxMode.WRITE)
     private static LegalReportResultFile writeToFile(final LegalReportRequest reportRequest,
-            final LegalReportResultFile xmlResultFile, final ByteArrayOutputStream baos) {
+            final LegalReportResultFile xmlResultFile, final byte[] baos) {
         return new LegalReportResultFile(reportRequest, LegalReportResultFileType.ZIP,
-                xmlResultFile.getFilename().replace(".xml", ".zip"), baos.toByteArray());
+                xmlResultFile.getFilename().replace(".xml", ".zip"), baos);
     }
 }

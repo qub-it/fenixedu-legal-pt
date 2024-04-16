@@ -15,11 +15,11 @@ public class XmlZipFileWriterTest extends TestCase {
         byte[] content = "This is a test content".getBytes();
         String password = "password";
 
-        ByteArrayOutputStream encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
+        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
         assertNotNull(encryptedZip);
 
         // Verify that the zip contains the expected file
-        try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip.toByteArray()))) {
+        try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip))) {
             zipInputStream.setPassword(password.toCharArray());
             LocalFileHeader entry = zipInputStream.getNextEntry();
             assertNotNull(entry);
@@ -42,11 +42,11 @@ public class XmlZipFileWriterTest extends TestCase {
         byte[] content = new byte[0];
         String password = "password";
 
-        ByteArrayOutputStream encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
+        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
         assertNotNull(encryptedZip);
 
         // Verify that the zip contains the expected file
-        try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip.toByteArray()))) {
+        try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip))) {
             zipInputStream.setPassword(password.toCharArray());
             LocalFileHeader entry = zipInputStream.getNextEntry();
             assertNotNull(entry);
