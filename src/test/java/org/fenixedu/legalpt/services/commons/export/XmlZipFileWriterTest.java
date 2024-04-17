@@ -10,20 +10,19 @@ import java.io.*;
 
 public class XmlZipFileWriterTest extends TestCase {
 
+    private static String FILENAME = "test.txt";
+    private static String PASSWORD = "password";
+    private static byte[] CONTENT = "This is a test content".getBytes();
+
     @Test
     public void testCreateEncryptedZipIsDecryptedSuccessfully() throws IOException {
-        String fileName = "test.txt";
-        byte[] content = "This is a test content".getBytes();
-        String password = "password";
-
-        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
-        assertNotNull(encryptedZip);
+        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(FILENAME, CONTENT, PASSWORD);
 
         try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip))) {
-            zipInputStream.setPassword(password.toCharArray());
+            zipInputStream.setPassword(PASSWORD.toCharArray());
             LocalFileHeader entry = zipInputStream.getNextEntry();
             assertNotNull(entry);
-            assertEquals(fileName, entry.getFileName());
+            assertEquals(FILENAME, entry.getFileName());
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -31,24 +30,21 @@ public class XmlZipFileWriterTest extends TestCase {
             while ((length = zipInputStream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
-            assertEquals(new String(content), outputStream.toString());
+            assertEquals(new String(CONTENT), outputStream.toString());
         }
     }
 
     @Test
     public void testCreateEncryptedZipWithEmptyContentIsDecryptedSuccessfully() throws IOException {
-        String fileName = "empty.txt";
         byte[] content = new byte[0];
-        String password = "password";
 
-        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
-        assertNotNull(encryptedZip);
+        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(FILENAME, content, PASSWORD);
 
         try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip))) {
-            zipInputStream.setPassword(password.toCharArray());
+            zipInputStream.setPassword(PASSWORD.toCharArray());
             LocalFileHeader entry = zipInputStream.getNextEntry();
             assertNotNull(entry);
-            assertEquals(fileName, entry.getFileName());
+            assertEquals(FILENAME, entry.getFileName());
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -62,13 +58,9 @@ public class XmlZipFileWriterTest extends TestCase {
 
     @Test
     public void testCreateEncryptedZipDecryptsWrongPasswordThrowsException() throws IOException {
-        String fileName = "test.txt";
-        byte[] content = "This is a test content".getBytes();
-        String correctPassword = "password";
         String wrongPassword = "wrong_password";
 
-        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, correctPassword);
-        assertNotNull(encryptedZip);
+        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(FILENAME, CONTENT, PASSWORD);
 
         try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip))) {
             zipInputStream.setPassword(wrongPassword.toCharArray());
@@ -80,12 +72,7 @@ public class XmlZipFileWriterTest extends TestCase {
 
     @Test
     public void testCreateEncryptedZipDecryptsWithoutPasswordThrowsException() throws IOException {
-        String fileName = "test.txt";
-        byte[] content = "This is a test content".getBytes();
-        String password = "password";
-
-        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(fileName, content, password);
-        assertNotNull(encryptedZip);
+        byte[] encryptedZip = XmlZipFileWriter.createEncryptedZip(FILENAME, CONTENT, PASSWORD);
 
         try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(encryptedZip))) {
             zipInputStream.getNextEntry();
