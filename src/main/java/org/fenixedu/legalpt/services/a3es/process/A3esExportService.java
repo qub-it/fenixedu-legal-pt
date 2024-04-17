@@ -34,7 +34,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
@@ -208,12 +207,13 @@ abstract public class A3esExportService {
         }
 
         final int status = response.getStatus();
-        if (status == HttpStatus.SC_NO_CONTENT) {
+
+        if (status == Response.Status.NO_CONTENT.getStatusCode()) {
             return "-";
         }
 
         final String result = label(String.valueOf(status));
-        return result.contains("!") ? HttpStatus.getStatusText(status) : result;
+        return result.contains("!") ? Response.Status.fromStatusCode(status).getReasonPhrase() : result;
     }
 
     abstract protected String getFormName();
