@@ -1,3 +1,5 @@
+- Refactor: Removes usages of qub docs dependencies [#qubIT-Fenix-5085]
+
 2.18.0 (17-04-2024)
 - Refactor: Updates zip4j logic to version 2.11.5 [#qubIT-Omnis-5739]
 

@@ -1,5 +1,6 @@
 package org.fenixedu.legalpt.ui.a3es;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,8 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Sets;
-
-import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 
 @Component("org.fenixedu.legalpt.ui.a3es.process.teacher")
 @SpringFunctionality(app = FenixeduLegalPTController.class, title = "label.searchA3esProcess", accessGroup = "#managers")
