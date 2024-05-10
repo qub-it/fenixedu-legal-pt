@@ -30,7 +30,6 @@ import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.academic.domain.treasury.TreasuryBridgeAPIFactory;
 import org.fenixedu.academictreasury.domain.event.AcademicTreasuryEvent;
-import org.fenixedu.bennu.SasSpringConfiguration;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.ulisboa.integration.sas.domain.SasIngressionRegimeMapping;
@@ -51,6 +50,8 @@ import com.google.common.collect.Sets;
 public class AbstractFillScholarshipService {
 
     private static final String REGISTRATION_TYPE_CANCELED = "CANCELED";
+
+    public static final String SAS_BUNDLE = "resources/SasResources";
 
     public static class MessageEntry {
 
@@ -631,12 +632,12 @@ public class AbstractFillScholarshipService {
 
     protected void addError(AbstractScholarshipStudentBean bean, boolean publicMessage, String message, String... args) {
         messages.put(bean, new MessageEntry(publicMessage,
-                ERROR_OBSERVATION + ": " + BundleUtil.getString(SasSpringConfiguration.BUNDLE, message, args)));
+                ERROR_OBSERVATION + ": " + BundleUtil.getString(SAS_BUNDLE, message, args)));
     }
 
     protected void addWarning(AbstractScholarshipStudentBean bean, boolean publicMessage, String message, String... args) {
         messages.put(bean, new MessageEntry(publicMessage,
-                WARNING_OBSERVATION + ": " + BundleUtil.getString(SasSpringConfiguration.BUNDLE, message, args)));
+                WARNING_OBSERVATION + ": " + BundleUtil.getString(SAS_BUNDLE, message, args)));
     }
 
     private StudentCurricularPlan getStudentCurricularPlan(Registration registration, ExecutionYear executionYear) {
@@ -748,7 +749,7 @@ public class AbstractFillScholarshipService {
         }
 
         addWarning(bean, false, "message.warning.data.has.changed",
-                BundleUtil.getString(SasSpringConfiguration.BUNDLE, "label.SasScholarshipData." + fieldName));
+                BundleUtil.getString(SAS_BUNDLE, "label.SasScholarshipData." + fieldName));
         return false;
     }
 

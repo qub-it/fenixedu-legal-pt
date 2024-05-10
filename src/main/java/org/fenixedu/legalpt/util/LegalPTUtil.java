@@ -1,12 +1,11 @@
 package org.fenixedu.legalpt.util;
 
-import org.fenixedu.bennu.FenixeduLegalPTSpringConfiguration;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.LocalizedString;
 
 public class LegalPTUtil {
-
-    public static final String BUNDLE = FenixeduLegalPTSpringConfiguration.BUNDLE.replace('/', '.');
+    public final static String BUNDLE_NAME = "resources/FenixeduLegalPTResources";
+    public static final String BUNDLE = BUNDLE_NAME.replace('/', '.');
 
     // @formatter: off
     /**********
