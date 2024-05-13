@@ -1,0 +1,1210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="DadosAcademicos"
+	targetNamespace="http://schemas.dges.pt/services/sicabe/v1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+	xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://schemas.dges.pt/services/sicabe/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+	
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="http://schemas.dges.pt/services/sicabe/v1">
+			<xsd:element name="RegistarMatriculaAluno">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="request"
+							nillable="true" type="q1:RegistarMatriculaAlunoRequest"
+							xmlns:q1="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="RegistarMatriculaAlunoResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							name="RegistarMatriculaAlunoResult" nillable="true"
+							type="q2:RegistarMatriculaAlunoResponse"
+							xmlns:q2="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AlterarCursoInsituicao">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="request"
+							nillable="true" type="q3:AlterarCursoInsituicaoRequest"
+							xmlns:q3="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AlterarCursoInsituicaoResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							name="AlterarCursoInsituicaoResult" nillable="true"
+							type="q4:AlterarCursoInsituicaoResponse"
+							xmlns:q4="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AlterarDadosAcademicosRestantesCasos">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="request"
+							nillable="true"
+							type="q5:AlterarDadosAcademicosRestantesCasosRequest"
+							xmlns:q5="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element
+				name="AlterarDadosAcademicosRestantesCasosResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							name="AlterarDadosAcademicosRestantesCasosResult" nillable="true"
+							type="q6:AlterarDadosAcademicosRestantesCasosResponse"
+							xmlns:q6="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AlterarDadosAcademicosPrimeiraVez">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="request"
+							nillable="true"
+							type="q7:AlterarDadosAcademicosPrimeiraVezRequest"
+							xmlns:q7="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element
+				name="AlterarDadosAcademicosPrimeiraVezResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							name="AlterarDadosAcademicosPrimeiraVezResult" nillable="true"
+							type="q8:AlterarDadosAcademicosPrimeiraVezResponse"
+							xmlns:q8="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ObterEstadoCandidatura">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="request"
+							nillable="true" type="q9:ObterEstadoCandidaturaRequest"
+							xmlns:q9="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ObterEstadoCandidaturaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							name="ObterEstadoCandidaturaResult" nillable="true"
+							type="q10:ObterEstadoCandidaturaResponse"
+							xmlns:q10="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ObterCandidaturasSubmetidas">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="request"
+							nillable="true" type="q11:ObterCandidaturasSubmetidasRequest"
+							xmlns:q11="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ObterCandidaturasSubmetidasResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							name="ObterCandidaturasSubmetidasResult" nillable="true"
+							type="q12:ObterCandidaturasSubmetidasResponse"
+							xmlns:q12="http://schemas.dges.pt/data/sicabe/v1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+		
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="http://schemas.dges.pt/data/sicabe/v1"
+			xmlns:tns="http://schemas.dges.pt/data/sicabe/v1">
+			<xsd:complexType name="RegistarMatriculaAlunoRequest">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseRequest">
+						<xsd:sequence>
+							<xsd:element name="CodigoCurso" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="CodigoInstituicaoEnsino"
+								type="xsd:int" />
+							<xsd:element name="DataMatricula" type="xsd:dateTime" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="RegistarMatriculaAlunoRequest"
+				nillable="true" type="tns:RegistarMatriculaAlunoRequest" />
+			<xsd:complexType name="BaseRequest">
+				<xsd:sequence>
+					<xsd:element name="IdentificadorCandidatura"
+						nillable="true" type="tns:IdentificadorCandidatura" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="BaseRequest" nillable="true"
+				type="tns:BaseRequest" />
+			<xsd:complexType name="IdentificadorCandidatura">
+				<xsd:sequence>
+					<xsd:element name="AnoLectivo" type="xsd:int" />
+					<xsd:element minOccurs="0"
+						name="DocumentoIdentificacao" nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="Nif" nillable="true"
+						type="xsd:string" />
+					<xsd:element minOccurs="0"
+						name="TipoDocumentoIdentificacao"
+						type="tns:TipoDocumentoIdentificacao">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<DefaultValue EmitDefaultValue="false"
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="IdentificadorCandidatura"
+				nillable="true" type="tns:IdentificadorCandidatura" />
+			<xsd:simpleType name="TipoDocumentoIdentificacao">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="BI">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="NIF">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="Passaporte">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="BiNaoNacional">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="AutorizacaoResidencia">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">6</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="Outros">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">7</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:element name="TipoDocumentoIdentificacao"
+				nillable="true" type="tns:TipoDocumentoIdentificacao" />
+			<xsd:complexType
+				name="RegistarMatriculaAlunoResponse">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseResponse">
+						<xsd:sequence />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="RegistarMatriculaAlunoResponse"
+				nillable="true" type="tns:RegistarMatriculaAlunoResponse" />
+			<xsd:complexType name="BaseResponse">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="Error" nillable="true"
+						type="tns:SicabeErrorMessage" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="BaseResponse" nillable="true"
+				type="tns:BaseResponse" />
+			<xsd:complexType name="SicabeErrorMessage">
+				<xsd:sequence>
+					<xsd:element name="ErrorDescription" nillable="true"
+						type="xsd:string" />
+					<xsd:element name="ErrorId" nillable="true"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="SicabeErrorMessage" nillable="true"
+				type="tns:SicabeErrorMessage" />
+			<xsd:complexType name="SicabeValidationMessage">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:SicabeErrorMessage">
+						<xsd:sequence>
+							<xsd:element name="InvalidParameters" nillable="true"
+								type="tns:ArrayOfSicabeValidationEntry" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="SicabeValidationMessage"
+				nillable="true" type="tns:SicabeValidationMessage" />
+			<xsd:complexType name="ArrayOfSicabeValidationEntry">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="unbounded"
+						name="SicabeValidationEntry" nillable="true"
+						type="tns:SicabeValidationEntry" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="ArrayOfSicabeValidationEntry"
+				nillable="true" type="tns:ArrayOfSicabeValidationEntry" />
+			<xsd:complexType name="SicabeValidationEntry">
+				<xsd:sequence>
+					<xsd:element name="ErrorMessage" nillable="true"
+						type="xsd:string" />
+					<xsd:element name="ParameterName" nillable="true"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="SicabeValidationEntry" nillable="true"
+				type="tns:SicabeValidationEntry" />
+			<xsd:complexType name="SicabeBusinessMessage">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:SicabeErrorMessage">
+						<xsd:sequence>
+							<xsd:element name="Messages" nillable="true"
+								type="q13:ArrayOfstring"
+								xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="SicabeBusinessMessage" nillable="true"
+				type="tns:SicabeBusinessMessage" />
+			<xsd:complexType name="AlterarCursoInsituicaoRequest">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseRequest">
+						<xsd:sequence>
+							<xsd:element name="CodigoCurso" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="CodigoInstituicaoEnsino"
+								type="xsd:int" />
+							<xsd:element name="DataMudanca" type="xsd:dateTime" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="AlterarCursoInsituicaoRequest"
+				nillable="true" type="tns:AlterarCursoInsituicaoRequest" />
+			<xsd:complexType
+				name="AlterarCursoInsituicaoResponse">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseResponse">
+						<xsd:sequence />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="AlterarCursoInsituicaoResponse"
+				nillable="true" type="tns:AlterarCursoInsituicaoResponse" />
+			<xsd:complexType
+				name="AlterarDadosAcademicosRestantesCasosRequest">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseRequest">
+						<xsd:sequence>
+							<xsd:element name="AnoInscricaoCurso" type="xsd:int" />
+							<xsd:element name="AnoLectivoActual" type="xsd:int" />
+							<xsd:element name="CodRegimeIngresso" type="xsd:int" />
+							<xsd:element name="CodigoCurso" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="CodigoInstituicaoEnsino"
+								type="xsd:int" />
+							<xsd:element
+								name="DataConclusaoAtosAcademicosUltimoAnoLectivoInscrito"
+								type="xsd:dateTime" />
+							<xsd:element name="DataInscricaoAnoLectivo"
+								type="xsd:dateTime" />
+							<xsd:element name="MesPrimeiroPagamento"
+								type="xsd:int" />
+							<xsd:element name="NumeroAluno" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="NumeroAnosCurso" type="xsd:int" />
+							<xsd:element name="NumeroECTSActualmenteInscrito"
+								type="xsd:decimal" />
+							<xsd:element
+								name="NumeroECTSObtidosUltimoAnoInscrito" type="xsd:decimal" />
+							<xsd:element name="NumeroECTSUltimoAnoInscrito"
+								type="xsd:decimal" />
+							<xsd:element
+								name="NumeroInscricoesCicloEstudosTempoIntegral" type="xsd:int" />
+							<xsd:element name="NumeroMatriculas" type="xsd:int" />
+							<xsd:element name="NumeroMesesPropina" type="xsd:int" />
+							<xsd:element name="NumeroOcorrenciasMudancaCurso"
+								type="xsd:int" />
+							<xsd:element minOccurs="0" name="Observacoes"
+								nillable="true" type="xsd:string" />
+							<xsd:element name="PresenteAnoMudouDeCurso"
+								type="xsd:boolean" />
+							<xsd:element name="Regime" type="tns:TipoRegime" />
+							<xsd:element name="TitularCET" type="xsd:boolean" />
+							<xsd:element name="TitularCSTP" type="xsd:boolean" />
+							<xsd:element name="TitularDoutoramento"
+								type="xsd:boolean" />
+							<xsd:element name="TitularLicenciatura"
+								type="xsd:boolean" />
+							<xsd:element name="TitularMestrado"
+								type="xsd:boolean" />
+							<xsd:element name="UltimoAnoInscrito" type="xsd:int" />
+							<xsd:element name="ValorPropina" type="xsd:decimal" />
+							<xsd:element name="iInscritoAnoLectivoActual"
+								type="xsd:boolean" />
+							<xsd:element name="totalECTScursoAtingirGrau"
+								type="xsd:decimal" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element
+				name="AlterarDadosAcademicosRestantesCasosRequest" nillable="true"
+				type="tns:AlterarDadosAcademicosRestantesCasosRequest" />
+			<xsd:simpleType name="TipoRegime">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="TempoIntegral">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration
+						value="TrabalhadorEstudanteTempoIntegral">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="TempoParcial">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="EstagioProfissional">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration
+						value="TrabalhadorEstudanteTempoParcial">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:element name="TipoRegime" nillable="true"
+				type="tns:TipoRegime" />
+			<xsd:complexType
+				name="AlterarDadosAcademicosRestantesCasosResponse">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseResponse">
+						<xsd:sequence />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element
+				name="AlterarDadosAcademicosRestantesCasosResponse" nillable="true"
+				type="tns:AlterarDadosAcademicosRestantesCasosResponse" />
+			<xsd:complexType
+				name="AlterarDadosAcademicosPrimeiraVezRequest">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseRequest">
+						<xsd:sequence>
+							<xsd:element minOccurs="0" name="AnoInscricaoCurso"
+								type="xsd:int" />
+							<xsd:element name="CodRegimeIngresso" type="xsd:int" />
+							<xsd:element name="CodigoCurso" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="CodigoInstituicaoEnsino"
+								type="xsd:int" />
+							<xsd:element name="DataInscricaoAnoLectivo"
+								type="xsd:dateTime" />
+							<xsd:element name="MesPrimeiroPagamento"
+								type="xsd:int" />
+							<xsd:element name="NumeroAluno" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="NumeroAnosCurso" type="xsd:int" />
+							<xsd:element name="NumeroECTSActualInscrito"
+								type="xsd:decimal" />
+							<xsd:element name="NumeroMatriculas" type="xsd:int" />
+							<xsd:element name="NumeroMesesPropina" type="xsd:int" />
+							<xsd:element minOccurs="0" name="Observacoes"
+								nillable="true" type="xsd:string" />
+							<xsd:element name="Regime" type="tns:TipoRegime" />
+							<xsd:element name="TitularCET" type="xsd:boolean" />
+							<xsd:element name="TitularCSTP" type="xsd:boolean" />
+							<xsd:element name="TitularDoutoramento"
+								type="xsd:boolean" />
+							<xsd:element name="TitularLicenciatura"
+								type="xsd:boolean" />
+							<xsd:element name="TitularMestrado"
+								type="xsd:boolean" />
+							<xsd:element name="ValorPropina" type="xsd:decimal" />
+							<xsd:element name="iInscritoAnoLectivoActual"
+								type="xsd:boolean" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element
+				name="AlterarDadosAcademicosPrimeiraVezRequest" nillable="true"
+				type="tns:AlterarDadosAcademicosPrimeiraVezRequest" />
+			<xsd:complexType
+				name="AlterarDadosAcademicosPrimeiraVezResponse">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseResponse">
+						<xsd:sequence />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element
+				name="AlterarDadosAcademicosPrimeiraVezResponse" nillable="true"
+				type="tns:AlterarDadosAcademicosPrimeiraVezResponse" />
+			<xsd:complexType name="ObterEstadoCandidaturaRequest">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseRequest">
+						<xsd:sequence />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="ObterEstadoCandidaturaRequest"
+				nillable="true" type="tns:ObterEstadoCandidaturaRequest" />
+			<xsd:complexType
+				name="ObterEstadoCandidaturaResponse">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseResponse">
+						<xsd:sequence>
+							<xsd:element name="CodigoCurso" nillable="true"
+								type="xsd:string" />
+							<xsd:element name="CodigoInstituicaoEnsino"
+								type="xsd:int" />
+							<xsd:element name="DataResultadoDefinitivo"
+								type="xsd:dateTime" />
+							<xsd:element name="DataSubmissao" type="xsd:dateTime" />
+							<xsd:element minOccurs="0"
+								name="DescrMotivoIndeferimento" nillable="true"
+								type="xsd:string" />
+							<xsd:element minOccurs="0" name="EmailTecnico"
+								nillable="true" type="xsd:string" />
+							<xsd:element name="EstadoCandidatura" nillable="true"
+								type="tns:Estado" />
+							<xsd:element name="ExistenciaReclamacao"
+								type="xsd:boolean" />
+							<xsd:element name="NomeCandidato" nillable="true"
+								type="xsd:string" />
+							<xsd:element minOccurs="0" name="NomeTecnico"
+								nillable="true" type="xsd:string" />
+							<xsd:element name="NumeroCandidatura" type="xsd:int" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="ObterEstadoCandidaturaResponse"
+				nillable="true" type="tns:ObterEstadoCandidaturaResponse" />
+			<xsd:complexType name="Estado">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="DataAtribuicao"
+						type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<DefaultValue EmitDefaultValue="false"
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="Descricao"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0"
+						name="ResultadoEstadoCandidatura"
+						type="tns:ResultadoEstadoCandidatura" />
+					<xsd:element minOccurs="0" name="ValorBolsa"
+						type="xsd:decimal">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<DefaultValue EmitDefaultValue="false"
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="Estado" nillable="true"
+				type="tns:Estado" />
+			<xsd:simpleType name="ResultadoEstadoCandidatura">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="Indeferida">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="Deferida">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="NaoDeterminado">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<EnumerationValue
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:element name="ResultadoEstadoCandidatura"
+				nillable="true" type="tns:ResultadoEstadoCandidatura" />
+			<xsd:complexType
+				name="ObterCandidaturasSubmetidasRequest">
+				<xsd:sequence>
+					<xsd:element name="AnoLectivo" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="ObterCandidaturasSubmetidasRequest"
+				nillable="true" type="tns:ObterCandidaturasSubmetidasRequest" />
+			<xsd:complexType
+				name="ObterCandidaturasSubmetidasResponse">
+				<xsd:complexContent mixed="false">
+					<xsd:extension base="tns:BaseResponse">
+						<xsd:sequence>
+							<xsd:element name="Candidaturas" nillable="true"
+								type="tns:ArrayOfCandidaturaSubmetida" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="ObterCandidaturasSubmetidasResponse"
+				nillable="true" type="tns:ObterCandidaturasSubmetidasResponse" />
+			<xsd:complexType name="ArrayOfCandidaturaSubmetida">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="unbounded"
+						name="CandidaturaSubmetida" nillable="true"
+						type="tns:CandidaturaSubmetida" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="ArrayOfCandidaturaSubmetida"
+				nillable="true" type="tns:ArrayOfCandidaturaSubmetida" />
+			<xsd:complexType name="CandidaturaSubmetida">
+				<xsd:sequence>
+					<xsd:element name="CodigoCurso" nillable="true"
+						type="xsd:string" />
+					<xsd:element name="CodigoInstituicaoEnsino"
+						type="xsd:int" />
+					<xsd:element name="Curso" nillable="true"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="DataSubmissao"
+						type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<DefaultValue EmitDefaultValue="false"
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="EmailTecnico"
+						nillable="true" type="xsd:string" />
+					<xsd:element name="EstadoCandidatura" nillable="true"
+						type="tns:Estado" />
+					<xsd:element name="InstituicaoEnsino" nillable="true"
+						type="xsd:string" />
+					<xsd:element name="Nif" nillable="true"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="NomeCandidato"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="NomeTecnico"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="NumeroAluno"
+						nillable="true" type="xsd:string" />
+					<xsd:element name="NumeroCandidatura" type="xsd:int" />
+					<xsd:element name="NumeroDocumentoIdentificacao"
+						nillable="true" type="xsd:string" />
+					<xsd:element name="TipoDocumentoIdentificacao"
+						type="tns:TipoDocumentoIdentificacao" />
+					<xsd:element minOccurs="0" name="Titularidade"
+						nillable="true" type="q14:Titularidade"
+						xmlns:q14="http://schemas.datacontract.org/2004/07/SICABE.Contracts" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="CandidaturaSubmetida" nillable="true"
+				type="tns:CandidaturaSubmetida" />
+		</xsd:schema>
+		
+		<xs:schema attributeFormDefault="qualified"
+			elementFormDefault="qualified"
+			targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+			<xs:element name="anyType" nillable="true"
+				type="xs:anyType" />
+			<xs:element name="anyURI" nillable="true" type="xs:anyURI" />
+			<xs:element name="base64Binary" nillable="true"
+				type="xs:base64Binary" />
+			<xs:element name="boolean" nillable="true"
+				type="xs:boolean" />
+			<xs:element name="byte" nillable="true" type="xs:byte" />
+			<xs:element name="dateTime" nillable="true"
+				type="xs:dateTime" />
+			<xs:element name="decimal" nillable="true"
+				type="xs:decimal" />
+			<xs:element name="double" nillable="true" type="xs:double" />
+			<xs:element name="float" nillable="true" type="xs:float" />
+			<xs:element name="int" nillable="true" type="xs:int" />
+			<xs:element name="long" nillable="true" type="xs:long" />
+			<xs:element name="QName" nillable="true" type="xs:QName" />
+			<xs:element name="short" nillable="true" type="xs:short" />
+			<xs:element name="string" nillable="true" type="xs:string" />
+			<xs:element name="unsignedByte" nillable="true"
+				type="xs:unsignedByte" />
+			<xs:element name="unsignedInt" nillable="true"
+				type="xs:unsignedInt" />
+			<xs:element name="unsignedLong" nillable="true"
+				type="xs:unsignedLong" />
+			<xs:element name="unsignedShort" nillable="true"
+				type="xs:unsignedShort" />
+			<xs:element name="char" nillable="true" type="tns:char" />
+			<xs:simpleType name="char">
+				<xs:restriction base="xs:int" />
+			</xs:simpleType>
+			<xs:element name="duration" nillable="true"
+				type="tns:duration" />
+			<xs:simpleType name="duration">
+				<xs:restriction base="xs:duration">
+					<xs:pattern
+						value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+					<xs:minInclusive
+						value="-P10675199DT2H48M5.4775808S" />
+					<xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:element name="guid" nillable="true" type="tns:guid" />
+			<xs:simpleType name="guid">
+				<xs:restriction base="xs:string">
+					<xs:pattern
+						value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:attribute name="FactoryType" type="xs:QName" />
+			<xs:attribute name="Id" type="xs:ID" />
+			<xs:attribute name="Ref" type="xs:IDREF" />
+		</xs:schema>
+		
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"
+			xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+			<xsd:complexType name="ArrayOfstring">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="unbounded"
+						name="string" nillable="true" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="ArrayOfstring" nillable="true"
+				type="tns:ArrayOfstring" />
+		</xsd:schema>
+		
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="http://schemas.datacontract.org/2004/07/SICABE.Contracts"
+			xmlns:tns="http://schemas.datacontract.org/2004/07/SICABE.Contracts">
+			<xsd:complexType name="Titularidade">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="TitularCET"
+						type="xsd:boolean" />
+					<xsd:element minOccurs="0" name="TitularCSTP"
+						type="xsd:boolean" />
+					<xsd:element minOccurs="0" name="TitularDoutoramento"
+						type="xsd:boolean" />
+					<xsd:element minOccurs="0" name="TitularLicenciatura"
+						type="xsd:boolean" />
+					<xsd:element minOccurs="0" name="TitularMestrado"
+						type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="Titularidade" nillable="true"
+				type="tns:Titularidade" />
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message
+		name="DadosAcademicos_RegistarMatriculaAluno_InputMessage">
+		<wsdl:part name="parameters"
+			element="tns:RegistarMatriculaAluno" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_RegistarMatriculaAluno_OutputMessage">
+		<wsdl:part name="parameters"
+			element="tns:RegistarMatriculaAlunoResponse" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_RegistarMatriculaAluno_SicabeErrorMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q15:SicabeErrorMessage"
+			xmlns:q15="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_RegistarMatriculaAluno_SicabeValidationMessageFault_FaultMessage">
+		<wsdl:part name="detail"
+			element="q16:SicabeValidationMessage"
+			xmlns:q16="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_RegistarMatriculaAluno_SicabeBusinessMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q17:SicabeBusinessMessage"
+			xmlns:q17="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarCursoInsituicao_InputMessage">
+		<wsdl:part name="parameters"
+			element="tns:AlterarCursoInsituicao" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarCursoInsituicao_OutputMessage">
+		<wsdl:part name="parameters"
+			element="tns:AlterarCursoInsituicaoResponse" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarCursoInsituicao_SicabeErrorMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q18:SicabeErrorMessage"
+			xmlns:q18="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarCursoInsituicao_SicabeValidationMessageFault_FaultMessage">
+		<wsdl:part name="detail"
+			element="q19:SicabeValidationMessage"
+			xmlns:q19="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarCursoInsituicao_SicabeBusinessMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q20:SicabeBusinessMessage"
+			xmlns:q20="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosRestantesCasos_InputMessage">
+		<wsdl:part name="parameters"
+			element="tns:AlterarDadosAcademicosRestantesCasos" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosRestantesCasos_OutputMessage">
+		<wsdl:part name="parameters"
+			element="tns:AlterarDadosAcademicosRestantesCasosResponse" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosRestantesCasos_SicabeErrorMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q21:SicabeErrorMessage"
+			xmlns:q21="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosRestantesCasos_SicabeValidationMessageFault_FaultMessage">
+		<wsdl:part name="detail"
+			element="q22:SicabeValidationMessage"
+			xmlns:q22="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosRestantesCasos_SicabeBusinessMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q23:SicabeBusinessMessage"
+			xmlns:q23="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_InputMessage">
+		<wsdl:part name="parameters"
+			element="tns:AlterarDadosAcademicosPrimeiraVez" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_OutputMessage">
+		<wsdl:part name="parameters"
+			element="tns:AlterarDadosAcademicosPrimeiraVezResponse" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_SicabeErrorMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q24:SicabeErrorMessage"
+			xmlns:q24="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_SicabeValidationMessageFault_FaultMessage">
+		<wsdl:part name="detail"
+			element="q25:SicabeValidationMessage"
+			xmlns:q25="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_SicabeBusinessMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q26:SicabeBusinessMessage"
+			xmlns:q26="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterEstadoCandidatura_InputMessage">
+		<wsdl:part name="parameters"
+			element="tns:ObterEstadoCandidatura" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterEstadoCandidatura_OutputMessage">
+		<wsdl:part name="parameters"
+			element="tns:ObterEstadoCandidaturaResponse" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterEstadoCandidatura_SicabeErrorMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q27:SicabeErrorMessage"
+			xmlns:q27="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterEstadoCandidatura_SicabeValidationMessageFault_FaultMessage">
+		<wsdl:part name="detail"
+			element="q28:SicabeValidationMessage"
+			xmlns:q28="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterEstadoCandidatura_SicabeBusinessMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q29:SicabeBusinessMessage"
+			xmlns:q29="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterCandidaturasSubmetidas_InputMessage">
+		<wsdl:part name="parameters"
+			element="tns:ObterCandidaturasSubmetidas" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterCandidaturasSubmetidas_OutputMessage">
+		<wsdl:part name="parameters"
+			element="tns:ObterCandidaturasSubmetidasResponse" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterCandidaturasSubmetidas_SicabeErrorMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q30:SicabeErrorMessage"
+			xmlns:q30="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterCandidaturasSubmetidas_SicabeValidationMessageFault_FaultMessage">
+		<wsdl:part name="detail"
+			element="q31:SicabeValidationMessage"
+			xmlns:q31="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:message
+		name="DadosAcademicos_ObterCandidaturasSubmetidas_SicabeBusinessMessageFault_FaultMessage">
+		<wsdl:part name="detail" element="q32:SicabeBusinessMessage"
+			xmlns:q32="http://schemas.dges.pt/data/sicabe/v1" />
+	</wsdl:message>
+	<wsdl:portType name="DadosAcademicos">
+		<wsdl:operation name="RegistarMatriculaAluno">
+			<wsdl:input
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/RegistarMatriculaAluno"
+				message="tns:DadosAcademicos_RegistarMatriculaAluno_InputMessage" />
+			<wsdl:output
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/RegistarMatriculaAlunoResponse"
+				message="tns:DadosAcademicos_RegistarMatriculaAluno_OutputMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/RegistarMatriculaAlunoSicabeErrorMessageFault"
+				name="SicabeErrorMessageFault"
+				message="tns:DadosAcademicos_RegistarMatriculaAluno_SicabeErrorMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/RegistarMatriculaAlunoSicabeValidationMessageFault"
+				name="SicabeValidationMessageFault"
+				message="tns:DadosAcademicos_RegistarMatriculaAluno_SicabeValidationMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/RegistarMatriculaAlunoSicabeBusinessMessageFault"
+				name="SicabeBusinessMessageFault"
+				message="tns:DadosAcademicos_RegistarMatriculaAluno_SicabeBusinessMessageFault_FaultMessage" />
+		</wsdl:operation>
+		<wsdl:operation name="AlterarCursoInsituicao">
+			<wsdl:input
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarCursoInsituicao"
+				message="tns:DadosAcademicos_AlterarCursoInsituicao_InputMessage" />
+			<wsdl:output
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarCursoInsituicaoResponse"
+				message="tns:DadosAcademicos_AlterarCursoInsituicao_OutputMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarCursoInsituicaoSicabeErrorMessageFault"
+				name="SicabeErrorMessageFault"
+				message="tns:DadosAcademicos_AlterarCursoInsituicao_SicabeErrorMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarCursoInsituicaoSicabeValidationMessageFault"
+				name="SicabeValidationMessageFault"
+				message="tns:DadosAcademicos_AlterarCursoInsituicao_SicabeValidationMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarCursoInsituicaoSicabeBusinessMessageFault"
+				name="SicabeBusinessMessageFault"
+				message="tns:DadosAcademicos_AlterarCursoInsituicao_SicabeBusinessMessageFault_FaultMessage" />
+		</wsdl:operation>
+		<wsdl:operation
+			name="AlterarDadosAcademicosRestantesCasos">
+			<wsdl:input
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosRestantesCasos"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosRestantesCasos_InputMessage" />
+			<wsdl:output
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosRestantesCasosResponse"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosRestantesCasos_OutputMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosRestantesCasosSicabeErrorMessageFault"
+				name="SicabeErrorMessageFault"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosRestantesCasos_SicabeErrorMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosRestantesCasosSicabeValidationMessageFault"
+				name="SicabeValidationMessageFault"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosRestantesCasos_SicabeValidationMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosRestantesCasosSicabeBusinessMessageFault"
+				name="SicabeBusinessMessageFault"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosRestantesCasos_SicabeBusinessMessageFault_FaultMessage" />
+		</wsdl:operation>
+		<wsdl:operation
+			name="AlterarDadosAcademicosPrimeiraVez">
+			<wsdl:input
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosPrimeiraVez"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_InputMessage" />
+			<wsdl:output
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosPrimeiraVezResponse"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_OutputMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosPrimeiraVezSicabeErrorMessageFault"
+				name="SicabeErrorMessageFault"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_SicabeErrorMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosPrimeiraVezSicabeValidationMessageFault"
+				name="SicabeValidationMessageFault"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_SicabeValidationMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosPrimeiraVezSicabeBusinessMessageFault"
+				name="SicabeBusinessMessageFault"
+				message="tns:DadosAcademicos_AlterarDadosAcademicosPrimeiraVez_SicabeBusinessMessageFault_FaultMessage" />
+		</wsdl:operation>
+		<wsdl:operation name="ObterEstadoCandidatura">
+			<wsdl:input
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterEstadoCandidatura"
+				message="tns:DadosAcademicos_ObterEstadoCandidatura_InputMessage" />
+			<wsdl:output
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterEstadoCandidaturaResponse"
+				message="tns:DadosAcademicos_ObterEstadoCandidatura_OutputMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterEstadoCandidaturaSicabeErrorMessageFault"
+				name="SicabeErrorMessageFault"
+				message="tns:DadosAcademicos_ObterEstadoCandidatura_SicabeErrorMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterEstadoCandidaturaSicabeValidationMessageFault"
+				name="SicabeValidationMessageFault"
+				message="tns:DadosAcademicos_ObterEstadoCandidatura_SicabeValidationMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterEstadoCandidaturaSicabeBusinessMessageFault"
+				name="SicabeBusinessMessageFault"
+				message="tns:DadosAcademicos_ObterEstadoCandidatura_SicabeBusinessMessageFault_FaultMessage" />
+		</wsdl:operation>
+		<wsdl:operation name="ObterCandidaturasSubmetidas">
+			<wsdl:input
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterCandidaturasSubmetidas"
+				message="tns:DadosAcademicos_ObterCandidaturasSubmetidas_InputMessage" />
+			<wsdl:output
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterCandidaturasSubmetidasResponse"
+				message="tns:DadosAcademicos_ObterCandidaturasSubmetidas_OutputMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterCandidaturasSubmetidasSicabeErrorMessageFault"
+				name="SicabeErrorMessageFault"
+				message="tns:DadosAcademicos_ObterCandidaturasSubmetidas_SicabeErrorMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterCandidaturasSubmetidasSicabeValidationMessageFault"
+				name="SicabeValidationMessageFault"
+				message="tns:DadosAcademicos_ObterCandidaturasSubmetidas_SicabeValidationMessageFault_FaultMessage" />
+			<wsdl:fault
+				wsaw:Action="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterCandidaturasSubmetidasSicabeBusinessMessageFault"
+				name="SicabeBusinessMessageFault"
+				message="tns:DadosAcademicos_ObterCandidaturasSubmetidas_SicabeBusinessMessageFault_FaultMessage" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="CustomBinding_DadosAcademicos"
+		type="tns:DadosAcademicos">
+		<soap:binding
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RegistarMatriculaAluno">
+			<soap:operation
+				soapAction="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/RegistarMatriculaAluno"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SicabeErrorMessageFault">
+				<soap:fault name="SicabeErrorMessageFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeValidationMessageFault">
+				<soap:fault name="SicabeValidationMessageFault"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeBusinessMessageFault">
+				<soap:fault name="SicabeBusinessMessageFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="AlterarCursoInsituicao">
+			<soap:operation
+				soapAction="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarCursoInsituicao"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SicabeErrorMessageFault">
+				<soap:fault name="SicabeErrorMessageFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeValidationMessageFault">
+				<soap:fault name="SicabeValidationMessageFault"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeBusinessMessageFault">
+				<soap:fault name="SicabeBusinessMessageFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation
+			name="AlterarDadosAcademicosRestantesCasos">
+			<soap:operation
+				soapAction="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosRestantesCasos"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SicabeErrorMessageFault">
+				<soap:fault name="SicabeErrorMessageFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeValidationMessageFault">
+				<soap:fault name="SicabeValidationMessageFault"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeBusinessMessageFault">
+				<soap:fault name="SicabeBusinessMessageFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation
+			name="AlterarDadosAcademicosPrimeiraVez">
+			<soap:operation
+				soapAction="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/AlterarDadosAcademicosPrimeiraVez"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SicabeErrorMessageFault">
+				<soap:fault name="SicabeErrorMessageFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeValidationMessageFault">
+				<soap:fault name="SicabeValidationMessageFault"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeBusinessMessageFault">
+				<soap:fault name="SicabeBusinessMessageFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="ObterEstadoCandidatura">
+			<soap:operation
+				soapAction="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterEstadoCandidatura"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SicabeErrorMessageFault">
+				<soap:fault name="SicabeErrorMessageFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeValidationMessageFault">
+				<soap:fault name="SicabeValidationMessageFault"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeBusinessMessageFault">
+				<soap:fault name="SicabeBusinessMessageFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="ObterCandidaturasSubmetidas">
+			<soap:operation
+				soapAction="http://schemas.dges.pt/services/sicabe/v1/DadosAcademicos/ObterCandidaturasSubmetidas"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SicabeErrorMessageFault">
+				<soap:fault name="SicabeErrorMessageFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeValidationMessageFault">
+				<soap:fault name="SicabeValidationMessageFault"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="SicabeBusinessMessageFault">
+				<soap:fault name="SicabeBusinessMessageFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="DadosAcademicos">
+		<wsdl:port name="CustomBinding_DadosAcademicos"
+			binding="tns:CustomBinding_DadosAcademicos">
+			<soap:address
+				location="http://www.dges.gov.pt/SICABE12/instituicaoEnsino/DadosAcademicos.svc" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
