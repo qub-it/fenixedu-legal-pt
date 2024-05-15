@@ -25,13 +25,13 @@
  */
 package org.fenixedu.ulisboa.integration.sas.util;
 
-import org.fenixedu.bennu.SasSpringConfiguration;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.ulisboa.integration.sas.service.process.AbstractFillScholarshipService;
 
 public class SasPTUtil {
 
-    public static final String BUNDLE = SasSpringConfiguration.BUNDLE.replace('/', '.');
+    public static final String BUNDLE = AbstractFillScholarshipService.SAS_BUNDLE.replace('/', '.');
 
     // @formatter: off
     /**********

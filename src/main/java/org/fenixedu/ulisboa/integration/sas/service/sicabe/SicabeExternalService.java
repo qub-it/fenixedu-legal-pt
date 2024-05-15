@@ -20,7 +20,6 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.exceptions.DomainException;
 import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.bennu.SasSpringConfiguration;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.spreadsheet.SheetData;
@@ -234,8 +233,8 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         }
 
         createLogEntry(candidacy,
-                isNewCandidacy ? BundleUtil.getString(SasSpringConfiguration.BUNDLE,
-                        "message.fillCandidacyInfos.new") : BundleUtil.getString(SasSpringConfiguration.BUNDLE,
+                isNewCandidacy ? BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
+                        "message.fillCandidacyInfos.new") : BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                                 "message.fillCandidacyInfos.update"),
                 candidacy.getStateDate(), false, false);
 
@@ -552,11 +551,11 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         }
 
         createLogEntry(candidacy,
-                StringUtils.isNotEmpty(data.getObservations()) ? data
-                        .getObservations() : isNewData ? BundleUtil.getString(SasSpringConfiguration.BUNDLE,
-                                "message.updateSasSchoolarshipCandidacyData.new") : BundleUtil.getString(
-                                        SasSpringConfiguration.BUNDLE, "message.updateSasSchoolarshipCandidacyData.update")
-                                        + (StringUtils.isNotEmpty(data.getObservations()) ? data.getObservations() : ""),
+                StringUtils.isNotEmpty(data.getObservations()) ? data.getObservations() : isNewData ? BundleUtil.getString(
+                        AbstractFillScholarshipService.SAS_BUNDLE,
+                        "message.updateSasSchoolarshipCandidacyData.new") : BundleUtil.getString(
+                                AbstractFillScholarshipService.SAS_BUNDLE, "message.updateSasSchoolarshipCandidacyData.update")
+                                + (StringUtils.isNotEmpty(data.getObservations()) ? data.getObservations() : ""),
                 candidacy.getStateDate(), false, false);
     }
 
@@ -585,8 +584,8 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
     private void sendCandidacyToSicabe(SasScholarshipCandidacy c) {
 
         if (!stateAllowToSendCandicacy(c.getState())) {
-            throw new RuntimeException(BundleUtil.getString(SasSpringConfiguration.BUNDLE, "message.error.sendCandidacy2Sicabe",
-                    c.getState() != null ? c.getState().getLocalizedName() : "-"));
+            throw new RuntimeException(BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
+                    "message.error.sendCandidacy2Sicabe", c.getState() != null ? c.getState().getLocalizedName() : "-"));
         }
 
         try {
@@ -599,7 +598,8 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
             c.changeState(SasScholarshipCandidacyState.SENT);
             final DateTime exportDate = new DateTime();
             c.setExportDate(exportDate);
-            createLogEntry(c, BundleUtil.getString(SasSpringConfiguration.BUNDLE, "message.success.sendCandidacy2Sicabe"),
+            createLogEntry(c,
+                    BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE, "message.success.sendCandidacy2Sicabe"),
                     exportDate, false, true);
         } catch (DadosAcademicosAlterarDadosAcademicosPrimeiraVezSicabeBusinessMessageFaultFaultMessage
                 | DadosAcademicosAlterarDadosAcademicosPrimeiraVezSicabeErrorMessageFaultFaultMessage

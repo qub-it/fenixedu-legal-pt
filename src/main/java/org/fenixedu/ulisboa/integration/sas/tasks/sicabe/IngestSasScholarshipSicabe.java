@@ -16,7 +16,6 @@ import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.util.email.Message;
 import org.fenixedu.academic.domain.util.email.Recipient;
 import org.fenixedu.academic.domain.util.email.ReplyTo;
-import org.fenixedu.bennu.SasSpringConfiguration;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.scheduler.CronTask;
@@ -24,6 +23,7 @@ import org.fenixedu.bennu.scheduler.annotation.Task;
 import org.fenixedu.ulisboa.integration.sas.domain.CandidacyState;
 import org.fenixedu.ulisboa.integration.sas.domain.SasScholarshipCandidacy;
 import org.fenixedu.ulisboa.integration.sas.domain.SocialServicesConfiguration;
+import org.fenixedu.ulisboa.integration.sas.service.process.AbstractFillScholarshipService;
 import org.fenixedu.ulisboa.integration.sas.service.sicabe.SicabeExternalService;
 
 import pt.ist.fenixframework.Atomic;
@@ -57,10 +57,10 @@ public class IngestSasScholarshipSicabe extends CronTask {
 
             if (newCandidaciesProcesses || listOfWarningToReport.size() > 0) {
                 sendEmailForUser(
-                        BundleUtil.getString(SasSpringConfiguration.BUNDLE,
+                        BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                                 "sasScholarship.ingestion.task.message.notification.subject"),
 
-                        (newCandidaciesProcesses ? BundleUtil.getString(SasSpringConfiguration.BUNDLE,
+                        (newCandidaciesProcesses ? BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                                 "sasScholarship.ingestion.task.message.notification.body",
                                 String.valueOf(afterSasCandidacies - beforeSasCandidacies),
                                 String.valueOf(afterWithStateModified - beforeWithStateModified)) : "")
@@ -68,7 +68,7 @@ public class IngestSasScholarshipSicabe extends CronTask {
                                 +
 
                                 (listOfWarningToReport.size() > 0 ? ("\n"
-                                        + BundleUtil.getString(SasSpringConfiguration.BUNDLE,
+                                        + BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                                                 "sasScholarship.ingestion.task.message.notification.body.warnings")
                                         + "\n" + printRegistrationList(listOfWarningToReport)) : "")
 
@@ -77,9 +77,9 @@ public class IngestSasScholarshipSicabe extends CronTask {
 
         } catch (Throwable e) {
             sendEmailForUser(
-                    BundleUtil.getString(SasSpringConfiguration.BUNDLE,
+                    BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                             "sasScholarship.ingestion.task.message.notification.subject.error"),
-                    BundleUtil.getString(SasSpringConfiguration.BUNDLE,
+                    BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                             "sasScholarship.ingestion.task.message.notification.body.error", ExceptionUtils.getStackTrace(e)));
 
             throw e;
@@ -88,9 +88,9 @@ public class IngestSasScholarshipSicabe extends CronTask {
     }
 
     private String printRegistrationList(HashSet<Registration> listOfWarningToReport) {
-        
-        return listOfWarningToReport.stream().map(r -> r.getNumber() + " - " + r.getStudent().getName() + " - "
-                + " [" + r.getDegree().getCode() + " - " + r.getDegree().getPresentationName() + "]").collect(Collectors.joining("\n"));
+
+        return listOfWarningToReport.stream().map(r -> r.getNumber() + " - " + r.getStudent().getName() + " - " + " ["
+                + r.getDegree().getCode() + " - " + r.getDegree().getPresentationName() + "]").collect(Collectors.joining("\n"));
     }
 
     @Atomic

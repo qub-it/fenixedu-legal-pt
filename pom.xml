@@ -197,10 +197,6 @@
 			<artifactId>bennu-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.fenixedu</groupId>
-			<artifactId>bennu-spring</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
 		</dependency>

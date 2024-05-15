@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.legalpt.util.LegalPTUtil;
 
+import org.fenixedu.legalpt.util.LegalPTUtil;
 import pt.ist.fenixWebFramework.rendererExtensions.util.IPresentableEnum;
 
 public enum LegalReportResultFileType implements IPresentableEnum {
