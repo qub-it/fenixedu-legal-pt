@@ -216,9 +216,5 @@
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-academic-treasury-base</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.fenixedu</groupId>
-			<artifactId>fenixedu-academic-treasury-ui</artifactId>
-		</dependency>
 	</dependencies>
 </project>
