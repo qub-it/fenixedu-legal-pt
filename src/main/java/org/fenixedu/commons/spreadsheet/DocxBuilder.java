@@ -14,7 +14,6 @@ import org.apache.poi.ss.formula.Formula;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -30,20 +29,12 @@ import org.fenixedu.commons.spreadsheet.converters.xssf.DateTimeCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.LocalDateCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.MultiLanguageStringCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.YearMonthDayCellConverter;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellAlignment;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellBorder;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellFillForegroundColor;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellFillPattern;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellStyle;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellVerticalAlignment;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellWrapText;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XComposedCellStyle;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XFontColor;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XFontHeight;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XFontWeight;
+import org.fenixedu.styles.xssf.xssf.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonthDay;
+
+import static com.qubit.qubEdu.module.base.util.XLSxUtil.*;
 
 @Deprecated
 class DocxBuilder extends AbstractSheetBuilder {
@@ -88,33 +79,32 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     int usefulAreaEnd;
 
-    protected void setValue(XSSFWorkbook book, XSSFCell cell, Object value, short span) {
+    protected void setValue(XSSFWorkbook book, org.apache.poi.ss.usermodel.Cell cell, Object value, short span) {
         setValue(book, cell, value, span, null);
     }
 
-    private void setValue(XSSFWorkbook book, XSSFCell cell, Object value, short span, XSSFCellStyle style) {
+    private void setValue(XSSFWorkbook book, org. apache.poi.ss.usermodel.Cell cell, Object value, short span, XSSFCellStyle style) {
         if (value != null) {
             Object content = convert(value);
             if (content instanceof Boolean) {
-                cell.setCellValue((Boolean) content);
+                setBooleanCellValue(cell, (Boolean) content);
             } else if (content instanceof Double) {
-                cell.setCellValue((Double) content);
+                setNumberCellValue(cell, (Double) content);
             } else if (content instanceof String) {
-                cell.setCellValue((String) content);
+                setTextCellValue(cell, (String) content);
             } else if (content instanceof GregorianCalendar) {
-                cell.setCellValue((GregorianCalendar) content);
+                setCalendarCellValue(cell, (GregorianCalendar) content);
             } else if (content instanceof Date) {
-                cell.setCellValue((Date) content);
+                setDateCellValue(cell, (Date) content);
             } else if (content instanceof RichTextString) {
-                cell.setCellValue((RichTextString) content);
+                setRichTextCellValue(cell, (RichTextString) content);
             } else if (content instanceof Formula) {
-                // cell.setCellFormula(((Formula) content).getFormula(cell,
-                // usefulAreaStart, usefulAreaEnd));
+                setFormulaCellValue(cell, (Formula) content);
             } else {
-                cell.setCellValue(content.toString());
+                setTextCellValue(cell, content.toString());
             }
         } else {
-            cell.setCellValue((String) null);
+            setTextCellValue(cell, null);
         }
         if (span > 1) {
             CellRangeAddress region = new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(),
@@ -126,7 +116,7 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     public void build(Map<String, SheetData<?>> sheets, final Set<String> sheetNames, OutputStream output) throws IOException {
         try {
-            XSSFWorkbook book = new XSSFWorkbook();
+            XSSFWorkbook book = createWorkbook();
             final XSSFCellStyle xssfHeaderStyle = headerStyle.getStyle(book);
 
             for (final String sheetName : sheetNames) {
@@ -142,7 +132,7 @@ class DocxBuilder extends AbstractSheetBuilder {
                         colnum = 0;
                         final XSSFRow row = sheet.createRow(rownum++);
                         for (Cell cell : headerRow) {
-                            setValue(book, row.createCell(colnum++), cell.value, cell.span, xssfHeaderStyle);
+                            setValue(book, createCell(row, colnum++), cell.value, cell.span, xssfHeaderStyle);
                             colnum = colnum + cell.span - 1;
                         }
                     }
@@ -152,7 +142,7 @@ class DocxBuilder extends AbstractSheetBuilder {
                     colnum = 0;
                     final XSSFRow row = sheet.createRow(rownum++);
                     for (Cell cell : line) {
-                        setValue(book, row.createCell(colnum++), cell.value, cell.span);
+                        setValue(book, createCell(row, colnum++), cell.value, cell.span);
                         colnum = colnum + cell.span - 1;
                     }
                 }
@@ -161,7 +151,7 @@ class DocxBuilder extends AbstractSheetBuilder {
                     colnum = 0;
                     final XSSFRow row = sheet.createRow(rownum++);
                     for (Cell cell : data.footer) {
-                        setValue(book, row.createCell(colnum++), cell.value, cell.span);
+                        setValue(book, createCell(row, colnum++), cell.value, cell.span);
                         colnum = colnum + cell.span - 1;
                     }
                 }
