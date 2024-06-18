@@ -11,13 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.poi.ss.formula.Formula;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.spreadsheet.SheetData.Cell;
@@ -79,11 +76,11 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     int usefulAreaEnd;
 
-    protected void setValue(XSSFWorkbook book, org.apache.poi.ss.usermodel.Cell cell, Object value, short span) {
+    protected void setValue(Workbook book, org.apache.poi.ss.usermodel.Cell cell, Object value, short span) {
         setValue(book, cell, value, span, null);
     }
 
-    private void setValue(XSSFWorkbook book, org. apache.poi.ss.usermodel.Cell cell, Object value, short span, XSSFCellStyle style) {
+    private void setValue(Workbook book, org. apache.poi.ss.usermodel.Cell cell, Object value, short span, CellStyle style) {
         if (value != null) {
             Object content = convert(value);
             if (content instanceof Boolean) {
@@ -116,11 +113,11 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     public void build(Map<String, SheetData<?>> sheets, final Set<String> sheetNames, OutputStream output) throws IOException {
         try {
-            XSSFWorkbook book = createWorkbook();
-            final XSSFCellStyle xssfHeaderStyle = headerStyle.getStyle(book);
+            Workbook book = createWorkbook();
+            final XSSFCellStyle xssfHeaderStyle = headerStyle.getStyle((XSSFWorkbook) book);
 
             for (final String sheetName : sheetNames) {
-                final XSSFSheet sheet = book.createSheet(sheetName);
+                final Sheet sheet = book.createSheet(sheetName);
                 int rownum = 0;
                 int colnum = 0;
 
@@ -130,7 +127,7 @@ class DocxBuilder extends AbstractSheetBuilder {
 
                     for (List<Cell> headerRow : data.headers) {
                         colnum = 0;
-                        final XSSFRow row = sheet.createRow(rownum++);
+                        final Row row = sheet.createRow(rownum++);
                         for (Cell cell : headerRow) {
                             setValue(book, createCell(row, colnum++), cell.value, cell.span, xssfHeaderStyle);
                             colnum = colnum + cell.span - 1;
@@ -140,7 +137,7 @@ class DocxBuilder extends AbstractSheetBuilder {
                 usefulAreaStart = rownum;
                 for (final List<Cell> line : data.matrix) {
                     colnum = 0;
-                    final XSSFRow row = sheet.createRow(rownum++);
+                    final Row row = sheet.createRow(rownum++);
                     for (Cell cell : line) {
                         setValue(book, createCell(row, colnum++), cell.value, cell.span);
                         colnum = colnum + cell.span - 1;
@@ -149,7 +146,7 @@ class DocxBuilder extends AbstractSheetBuilder {
                 usefulAreaEnd = rownum - 1;
                 if (data.hasFooter()) {
                     colnum = 0;
-                    final XSSFRow row = sheet.createRow(rownum++);
+                    final Row row = sheet.createRow(rownum++);
                     for (Cell cell : data.footer) {
                         setValue(book, createCell(row, colnum++), cell.value, cell.span);
                         colnum = colnum + cell.span - 1;
