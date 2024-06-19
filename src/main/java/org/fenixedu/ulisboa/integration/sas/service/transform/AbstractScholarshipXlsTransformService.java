@@ -23,7 +23,7 @@ import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.ulisboa.integration.sas.dto.AbstractScholarshipStudentBean;
 import org.joda.time.LocalDate;
 
-import static com.qubit.qubEdu.module.base.util.XLSxUtil.*;
+import static com.qubit.terra.framework.tools.excel.ExcelUtil.createCellWithValue;
 
 public abstract class AbstractScholarshipXlsTransformService {
 
@@ -132,9 +132,9 @@ public abstract class AbstractScholarshipXlsTransformService {
 
     private static void createNumberCell(HSSFRow row, int column, Number value) {
         if (value != null) {
-            createNumberCellWithValue(row, column, value);
+            createCellWithValue(row, column, value);
         } else {
-            createTextCellWithValue(row, column, null);
+            createCellWithValue(row, column, (Number) null);
         }
     }
 
@@ -152,7 +152,7 @@ public abstract class AbstractScholarshipXlsTransformService {
     }
 
     public void writeCellString(HSSFRow row, int column, String value) {
-        createTextCellWithValue(row, column, value);
+        createCellWithValue(row, column, value);
     }
 
     public void writeCellLocalDate(HSSFRow row, int column, LocalDate date) {
@@ -161,14 +161,14 @@ public abstract class AbstractScholarshipXlsTransformService {
 
     private void writeCellDate(HSSFRow row, int column, Date date, String dateFormat) {
         if (date != null) {
-            Cell cell = createDateCellWithValue(row, column, date);
+            Cell cell = createCellWithValue(row, column, date);
             HSSFWorkbook workbook = row.getSheet().getWorkbook();
             HSSFCreationHelper createHelper = workbook.getCreationHelper();
             CellStyle cellStyle = workbook.createCellStyle();
             cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
             cell.setCellStyle(cellStyle);
         } else {
-            createTextCellWithValue(row, column, null);
+            createCellWithValue(row, column, (Date) null);
         }
     }
 

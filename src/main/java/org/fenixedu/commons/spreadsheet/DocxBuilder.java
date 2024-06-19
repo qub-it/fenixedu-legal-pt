@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.qubit.terra.framework.tools.excel.styles.poi.xssf.*;
 import org.apache.poi.ss.formula.Formula;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -26,12 +27,11 @@ import org.fenixedu.commons.spreadsheet.converters.xssf.DateTimeCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.LocalDateCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.MultiLanguageStringCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.YearMonthDayCellConverter;
-import org.fenixedu.styles.xssf.xssf.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonthDay;
 
-import static com.qubit.qubEdu.module.base.util.XLSxUtil.*;
+import static com.qubit.terra.framework.tools.excel.ExcelUtil.*;
 
 @Deprecated
 class DocxBuilder extends AbstractSheetBuilder {
@@ -84,24 +84,24 @@ class DocxBuilder extends AbstractSheetBuilder {
         if (value != null) {
             Object content = convert(value);
             if (content instanceof Boolean) {
-                setBooleanCellValue(cell, (Boolean) content);
+                setCellValue(cell, (Boolean) content);
             } else if (content instanceof Double) {
-                setNumberCellValue(cell, (Double) content);
+                setCellValue(cell, (Double) content);
             } else if (content instanceof String) {
-                setTextCellValue(cell, (String) content);
+                setCellValue(cell, (String) content);
             } else if (content instanceof GregorianCalendar) {
-                setCalendarCellValue(cell, (GregorianCalendar) content);
+                setCellValue(cell, (GregorianCalendar) content);
             } else if (content instanceof Date) {
-                setDateCellValue(cell, (Date) content);
+                setCellValue(cell, (Date) content);
             } else if (content instanceof RichTextString) {
-                setRichTextCellValue(cell, (RichTextString) content);
+                setCellValue(cell, (RichTextString) content);
             } else if (content instanceof Formula) {
-                setFormulaCellValue(cell, (Formula) content);
+                setCellValue(cell, (Formula) content);
             } else {
-                setTextCellValue(cell, content.toString());
+                setCellValue(cell, content.toString());
             }
         } else {
-            setTextCellValue(cell, null);
+            setCellValue(cell, (String) null);
         }
         if (span > 1) {
             CellRangeAddress region = new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(),
