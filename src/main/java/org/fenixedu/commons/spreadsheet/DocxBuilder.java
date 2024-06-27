@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.qubit.terra.framework.tools.excel.XlsType;
 import com.qubit.terra.framework.tools.excel.styles.poi.xssf.*;
 import org.apache.poi.ss.formula.Formula;
 import org.apache.poi.ss.usermodel.*;
@@ -96,7 +97,8 @@ class DocxBuilder extends AbstractSheetBuilder {
             } else if (content instanceof RichTextString) {
                 setCellValue(cell, (RichTextString) content);
             } else if (content instanceof Formula) {
-                setCellValue(cell, (Formula) content);
+                // cell.setCellFormula(((Formula) content).getFormula(cell,
+                // usefulAreaStart, usefulAreaEnd));
             } else {
                 setCellValue(cell, content.toString());
             }
@@ -113,7 +115,7 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     public void build(Map<String, SheetData<?>> sheets, final Set<String> sheetNames, OutputStream output) throws IOException {
         try {
-            Workbook book = createWorkbook();
+            Workbook book = createWorkbook(XlsType.XLSX);
             final XSSFCellStyle xssfHeaderStyle = headerStyle.getStyle((XSSFWorkbook) book);
 
             for (final String sheetName : sheetNames) {
