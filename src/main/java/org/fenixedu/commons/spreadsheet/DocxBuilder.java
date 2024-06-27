@@ -10,15 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.qubit.terra.framework.tools.excel.styles.poi.xssf.*;
 import org.apache.poi.ss.formula.Formula;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.spreadsheet.SheetData.Cell;
@@ -30,20 +27,11 @@ import org.fenixedu.commons.spreadsheet.converters.xssf.DateTimeCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.LocalDateCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.MultiLanguageStringCellConverter;
 import org.fenixedu.commons.spreadsheet.converters.xssf.YearMonthDayCellConverter;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellAlignment;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellBorder;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellFillForegroundColor;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellFillPattern;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellStyle;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellVerticalAlignment;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XCellWrapText;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XComposedCellStyle;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XFontColor;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XFontHeight;
-import org.fenixedu.commons.spreadsheet.styles.xssf.XFontWeight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonthDay;
+
+import static com.qubit.terra.framework.tools.excel.ExcelUtil.*;
 
 @Deprecated
 class DocxBuilder extends AbstractSheetBuilder {
@@ -88,33 +76,32 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     int usefulAreaEnd;
 
-    protected void setValue(XSSFWorkbook book, XSSFCell cell, Object value, short span) {
+    protected void setValue(Workbook book, org.apache.poi.ss.usermodel.Cell cell, Object value, short span) {
         setValue(book, cell, value, span, null);
     }
 
-    private void setValue(XSSFWorkbook book, XSSFCell cell, Object value, short span, XSSFCellStyle style) {
+    private void setValue(Workbook book, org. apache.poi.ss.usermodel.Cell cell, Object value, short span, CellStyle style) {
         if (value != null) {
             Object content = convert(value);
             if (content instanceof Boolean) {
-                cell.setCellValue((Boolean) content);
+                setCellValue(cell, (Boolean) content);
             } else if (content instanceof Double) {
-                cell.setCellValue((Double) content);
+                setCellValue(cell, (Double) content);
             } else if (content instanceof String) {
-                cell.setCellValue((String) content);
+                setCellValue(cell, (String) content);
             } else if (content instanceof GregorianCalendar) {
-                cell.setCellValue((GregorianCalendar) content);
+                setCellValue(cell, (GregorianCalendar) content);
             } else if (content instanceof Date) {
-                cell.setCellValue((Date) content);
+                setCellValue(cell, (Date) content);
             } else if (content instanceof RichTextString) {
-                cell.setCellValue((RichTextString) content);
+                setCellValue(cell, (RichTextString) content);
             } else if (content instanceof Formula) {
-                // cell.setCellFormula(((Formula) content).getFormula(cell,
-                // usefulAreaStart, usefulAreaEnd));
+                setCellValue(cell, (Formula) content);
             } else {
-                cell.setCellValue(content.toString());
+                setCellValue(cell, content.toString());
             }
         } else {
-            cell.setCellValue((String) null);
+            setCellValue(cell, (String) null);
         }
         if (span > 1) {
             CellRangeAddress region = new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(),
@@ -126,11 +113,11 @@ class DocxBuilder extends AbstractSheetBuilder {
 
     public void build(Map<String, SheetData<?>> sheets, final Set<String> sheetNames, OutputStream output) throws IOException {
         try {
-            XSSFWorkbook book = new XSSFWorkbook();
-            final XSSFCellStyle xssfHeaderStyle = headerStyle.getStyle(book);
+            Workbook book = createWorkbook();
+            final XSSFCellStyle xssfHeaderStyle = headerStyle.getStyle((XSSFWorkbook) book);
 
             for (final String sheetName : sheetNames) {
-                final XSSFSheet sheet = book.createSheet(sheetName);
+                final Sheet sheet = book.createSheet(sheetName);
                 int rownum = 0;
                 int colnum = 0;
 
@@ -140,9 +127,9 @@ class DocxBuilder extends AbstractSheetBuilder {
 
                     for (List<Cell> headerRow : data.headers) {
                         colnum = 0;
-                        final XSSFRow row = sheet.createRow(rownum++);
+                        final Row row = sheet.createRow(rownum++);
                         for (Cell cell : headerRow) {
-                            setValue(book, row.createCell(colnum++), cell.value, cell.span, xssfHeaderStyle);
+                            setValue(book, createCell(row, colnum++), cell.value, cell.span, xssfHeaderStyle);
                             colnum = colnum + cell.span - 1;
                         }
                     }
@@ -150,18 +137,18 @@ class DocxBuilder extends AbstractSheetBuilder {
                 usefulAreaStart = rownum;
                 for (final List<Cell> line : data.matrix) {
                     colnum = 0;
-                    final XSSFRow row = sheet.createRow(rownum++);
+                    final Row row = sheet.createRow(rownum++);
                     for (Cell cell : line) {
-                        setValue(book, row.createCell(colnum++), cell.value, cell.span);
+                        setValue(book, createCell(row, colnum++), cell.value, cell.span);
                         colnum = colnum + cell.span - 1;
                     }
                 }
                 usefulAreaEnd = rownum - 1;
                 if (data.hasFooter()) {
                     colnum = 0;
-                    final XSSFRow row = sheet.createRow(rownum++);
+                    final Row row = sheet.createRow(rownum++);
                     for (Cell cell : data.footer) {
-                        setValue(book, row.createCell(colnum++), cell.value, cell.span);
+                        setValue(book, createCell(row, colnum++), cell.value, cell.span);
                         colnum = colnum + cell.span - 1;
                     }
                 }

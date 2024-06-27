@@ -23,6 +23,8 @@ import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.ulisboa.integration.sas.dto.AbstractScholarshipStudentBean;
 import org.joda.time.LocalDate;
 
+import static com.qubit.terra.framework.tools.excel.ExcelUtil.createCellWithValue;
+
 public abstract class AbstractScholarshipXlsTransformService {
 
     private static final String SHEET_NAME = "Dados Academicos";
@@ -121,24 +123,18 @@ public abstract class AbstractScholarshipXlsTransformService {
     }
 
     public void writeCellBigDecimal(HSSFRow row, int column, BigDecimal value) {
-        HSSFCell cell = row.createCell(column);
-        cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-
-        if (value != null) {
-            cell.setCellValue(value.doubleValue());
-        } else {
-            cell.setCellValue((String) null);
-        }
-
+        createNumberCell(row, column, value);
     }
 
     public void writeCellInteger(HSSFRow row, int column, Integer value) {
-        HSSFCell cell = row.createCell(column);
-        cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+        createNumberCell(row, column, value);
+    }
+
+    private static void createNumberCell(HSSFRow row, int column, Number value) {
         if (value != null) {
-            cell.setCellValue(value);
+            createCellWithValue(row, column, value);
         } else {
-            cell.setCellValue((String) null);
+            createCellWithValue(row, column, (Number) null);
         }
     }
 
@@ -156,13 +152,7 @@ public abstract class AbstractScholarshipXlsTransformService {
     }
 
     public void writeCellString(HSSFRow row, int column, String value) {
-        HSSFCell cell = row.createCell(column);
-        cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-        if (value != null) {
-            cell.setCellValue(value);
-        } else {
-            cell.setCellValue((String) null);
-        }
+        createCellWithValue(row, column, value);
     }
 
     public void writeCellLocalDate(HSSFRow row, int column, LocalDate date) {
@@ -170,19 +160,16 @@ public abstract class AbstractScholarshipXlsTransformService {
     }
 
     private void writeCellDate(HSSFRow row, int column, Date date, String dateFormat) {
-        Cell cell = row.createCell(column);
-
         if (date != null) {
+            Cell cell = createCellWithValue(row, column, date);
             HSSFWorkbook workbook = row.getSheet().getWorkbook();
             HSSFCreationHelper createHelper = workbook.getCreationHelper();
             CellStyle cellStyle = workbook.createCellStyle();
             cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
-            cell.setCellValue(date);
             cell.setCellStyle(cellStyle);
         } else {
-            cell.setCellValue((String) null);
+            createCellWithValue(row, column, (Date) null);
         }
-
     }
 
     protected String booleanToString(Boolean value) {
