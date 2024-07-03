@@ -56,13 +56,13 @@ class DocxBuilder extends AbstractSheetBuilder {
             IndexedColors gray = IndexedColors.GREY_25_PERCENT;
 
             merge(new XFontColor(black));
-            merge(new XFontWeight(XSSFFont.BOLDWEIGHT_BOLD));
+            merge(new XFontWeight(true));
             merge(new XFontHeight((short) 8));
-            merge(new XCellAlignment(XSSFCellStyle.ALIGN_CENTER));
+            merge(new XCellAlignment(HorizontalAlignment.CENTER));
             merge(new XCellFillForegroundColor(gray));
-            merge(new XCellFillPattern(XSSFCellStyle.SOLID_FOREGROUND));
-            merge(new XCellBorder(XSSFCellStyle.BORDER_THIN));
-            merge(new XCellVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER));
+            merge(new XCellFillPattern(FillPatternType.SOLID_FOREGROUND));
+            merge(new XCellBorder(BorderStyle.THIN));
+            merge(new XCellVerticalAlignment(VerticalAlignment.CENTER));
             merge(new XCellWrapText(true));
         }
     };

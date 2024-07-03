@@ -1,3 +1,5 @@
+- Improvement: Refactors code due to poi upgrade [#qubIT-Omnis-6199]
+
 2.23.0 (27-06-2024)
 - Refactor: Moves xls classes to core api [#qubIT-Omnis-6038]
 

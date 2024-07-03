@@ -14,10 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.*;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.ulisboa.integration.sas.dto.AbstractScholarshipStudentBean;
@@ -98,17 +95,17 @@ public abstract class AbstractScholarshipXlsTransformService {
 
     private String getValueFromColumn(HSSFRow row, int i) {
         // check if it's necessary to evaluate the cell
-        if (row.getCell((short) i).getCellType() == Cell.CELL_TYPE_FORMULA) {
+        if (row.getCell((short) i).getCellType() == CellType.FORMULA) {
             FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
             CellValue cellValue = evaluator.evaluate(row.getCell((short) i));
             if (cellValue != null) {
                 switch (cellValue.getCellType()) {
-                case Cell.CELL_TYPE_BOOLEAN:
-                    return String.valueOf(cellValue.getBooleanValue());
-                case Cell.CELL_TYPE_NUMERIC:
-                    return String.valueOf(cellValue.getNumberValue());
-                default:
-                    return cellValue.getStringValue();
+                    case BOOLEAN:
+                        return String.valueOf(cellValue.getBooleanValue());
+                    case NUMERIC:
+                        return String.valueOf(cellValue.getNumberValue());
+                    default:
+                        return cellValue.getStringValue();
                 }
             }
         }
