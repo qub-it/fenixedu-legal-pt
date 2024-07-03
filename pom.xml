@@ -13,7 +13,7 @@
 
 	<groupId>org.fenixedu</groupId>
 	<artifactId>fenixedu-legal-pt</artifactId>
-	<version>2.23.0</version>
+	<version>2.24.0</version>
 	<packaging>jar</packaging>
 
 	<name>FenixEdu Legal PT</name>
@@ -23,7 +23,7 @@
 			<dependency>
 				<groupId>com.qubit.solution.fenixedu</groupId>
 				<artifactId>fenixedu-oss-dependency-management</artifactId>
-				<version>217</version>
+				<version>219</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
