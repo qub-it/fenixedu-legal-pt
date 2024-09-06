@@ -18,7 +18,6 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.readC
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
+import org.fenixedu.academic.domain.BibliographicReference;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.ExecutionInterval;
@@ -34,7 +34,6 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Teacher;
-import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
@@ -250,22 +249,11 @@ public class A3esHarvestCoursesDataService {
         data.addField("9", "bibliographicReferences", getBibliography(course), _1000);
     }
 
-    private String getBibliography(final CompetenceCourse course) {
-        final Set<String> result = new LinkedHashSet<String>();
-
-        final BibliographicReferences data = course.getBibliographicReferences(this.semester);
-        if (data != null) {
-            data.getBibliographicReferencesSortedByOrder().stream().forEach(r -> {
-                result.add(getApaFormat(removeNonPrintableChars(r.getAuthors()), removeNonPrintableChars(r.getYear()),
-                        removeNonPrintableChars(r.getTitle()), removeNonPrintableChars(r.getReference())));
-            });
-        }
-
-        return result.stream().collect(Collectors.joining(PLUS));
-    }
-
-    private String removeNonPrintableChars(String value) {
-        return value /* == null ? null : value.replaceAll("\\P{Print}", "")*/ ;
+    private String getBibliography(final CompetenceCourse competenceCourse) {
+        return competenceCourse.findInformationMostRecentUntil(this.semester).getBibliographiesSet().stream()
+                .sorted(BibliographicReference.COMPARATOR_BY_ORDER)
+                .map(r -> getApaFormat(r.getAuthors(), r.getYear(), r.getTitle(), r.getReference()))
+                .collect(Collectors.joining(PLUS));
     }
 
 }
