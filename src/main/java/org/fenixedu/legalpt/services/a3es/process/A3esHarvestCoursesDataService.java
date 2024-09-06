@@ -251,7 +251,6 @@ public class A3esHarvestCoursesDataService {
 
     private String getBibliography(final CompetenceCourse competenceCourse) {
         return competenceCourse.findInformationMostRecentUntil(this.semester).getBibliographiesSet().stream()
-                .sorted(BibliographicReference.COMPARATOR_BY_ORDER)
                 .map(r -> getApaFormat(r.getAuthors(), r.getYear(), r.getTitle(), r.getReference()))
                 .collect(Collectors.joining(PLUS));
     }
