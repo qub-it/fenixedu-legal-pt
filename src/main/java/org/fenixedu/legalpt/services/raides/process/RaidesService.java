@@ -22,6 +22,7 @@ import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.DistrictSubdivision;
 import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
+import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.candidacy.StudentCandidacy;
@@ -34,7 +35,9 @@ import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.academic.domain.student.RegistrationServices;
+import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
@@ -46,6 +49,7 @@ import org.fenixedu.legalpt.domain.raides.IMatricula;
 import org.fenixedu.legalpt.domain.raides.Raides;
 import org.fenixedu.legalpt.domain.raides.Raides.Ramo;
 import org.fenixedu.legalpt.domain.raides.Raides.SituacaoProfissional;
+import org.fenixedu.legalpt.domain.raides.RaidesInstance;
 import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.TblInscrito;
 import org.fenixedu.legalpt.domain.raides.mapping.BranchMappingType;
@@ -1019,4 +1023,15 @@ public class RaidesService {
         return LegalPTUtil.bundle(key, arguments);
     }
 
+    public static boolean hasOnlyMobilityRegistrations(final Person person, final ExecutionYear executionYear) {
+        final Student student = person.getStudent();
+        if (student == null) {
+            return false;
+        }
+
+        final Collection<RegistrationProtocol> mobilityAggreements = RaidesInstance.getInstance().getMobilityAgreementsSet();
+        return !mobilityAggreements.isEmpty() && student.getRegistrationStream()
+                .filter(r -> r.getLastRegistrationState(executionYear).isActive())
+                .allMatch(r -> mobilityAggreements.contains(r.getRegistrationProtocol()));
+    }
 }
