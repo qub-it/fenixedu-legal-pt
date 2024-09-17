@@ -367,12 +367,22 @@ class raides.RaidesInstance extends report.LegalReport {
 		}
 	}
 	
-	relation RaidesInstanceExcludedDegrees{
+	relation RaidesInstanceExcludedDegrees {
         .org.fenixedu.academic.domain.Degree playsRole excludedDegrees {
             multiplicity *;
         }
         
         raides.RaidesInstance playsRole {
+            multiplicity *;
+        }
+    }
+
+    relation RaidesInstanceDegreeTypes {
+        .org.fenixedu.academic.domain.degree.DegreeType playsRole degreeTypes {
+            multiplicity *;
+        }
+
+        raides.RaidesInstance playsRole raidesInstances {
             multiplicity *;
         }
     }

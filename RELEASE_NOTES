@@ -1,3 +1,5 @@
+- Improvement: Allow to filter registrations for RAIDES survey by degree types [#qubIT-Fenix-5804]
+
 2.24.2 (10-09-2024)
 - Refactor: Migration of bibliographic references from value types to domain entities [#qubIT-Fenix-1595]
 
