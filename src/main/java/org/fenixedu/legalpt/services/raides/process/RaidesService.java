@@ -1023,7 +1023,7 @@ public class RaidesService {
         return LegalPTUtil.bundle(key, arguments);
     }
 
-    public static boolean hasOnlyMobilityRegistrations(final Person person, final ExecutionYear executionYear) {
+    public static boolean isMobilityStudent(final Person person, final ExecutionYear executionYear) {
         final Student student = person.getStudent();
         if (student == null) {
             return false;
@@ -1031,7 +1031,7 @@ public class RaidesService {
 
         final Collection<RegistrationProtocol> mobilityAggreements = RaidesInstance.getInstance().getMobilityAgreementsSet();
         return !mobilityAggreements.isEmpty() && student.getRegistrationStream()
-                .filter(r -> r.getLastRegistrationState(executionYear).isActive())
-                .allMatch(r -> mobilityAggreements.contains(r.getRegistrationProtocol()));
+                .filter(r -> r.getLastRegistrationState(executionYear).isActive() || r.getRegistrationYear() == executionYear)
+                .anyMatch(r -> mobilityAggreements.contains(r.getRegistrationProtocol()));
     }
 }

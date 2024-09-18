@@ -1,3 +1,5 @@
+- Improvement: Allow to remove unnecessary RAIDES survey questions to mobility students [#qubIT-Fenix-5805]
+
 2.24.3 (17-09-2024)
 - Improvement: Allow to filter registrations for RAIDES survey by degree types [#qubIT-Fenix-5804]
 - Improvement: Remove unnecessary RAIDES survey questions to mobility students [#qubIT-Fenix-5805]
