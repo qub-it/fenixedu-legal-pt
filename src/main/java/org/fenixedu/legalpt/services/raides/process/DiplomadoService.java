@@ -78,7 +78,7 @@ public class DiplomadoService extends RaidesService {
                     LegalReportContext.addError(target,
                             i18n("error.Raides.validation.conclution.descriptiveGrade.missing.translate",
                                     registrationConclusionBean.getDescriptiveGrade().getValue()),
-                            i18n("error.Raides.validation.grade.conclution.descriptiveGrade.translate.action",
+                            i18n("error.Raides.validation.conclution.descriptiveGrade.missing.translate.action",
                                     registrationConclusionBean.getDescriptiveGrade().getValue()));
 
                     bean.markAsInvalid();
