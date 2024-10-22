@@ -1,3 +1,5 @@
+- Improvement: Remove RAIDES MOBILITY_SCHOOL_LEVEL mapping [#qubIT-Fenix-6000]
+
 2.24.5 (17-10-2024)
 - Bug fix: RAIDES add action for missing mapping for grade / misspelling action [#qubIT-Fenix-5945]
 

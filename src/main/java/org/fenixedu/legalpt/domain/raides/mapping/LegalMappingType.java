@@ -41,11 +41,11 @@ import com.google.common.collect.Sets;
 import pt.ist.fenixframework.FenixFramework;
 
 public enum LegalMappingType implements ILegalMappingType {
-
+    
     BOOLEAN, GENDER, ID_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE, REGISTRATION_INGRESSION_TYPE, MARITAL_STATUS,
     SCHOOL_LEVEL, PROFESSIONAL_SITUATION_CONDITION, PROFESSION_TYPE, HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION,
     INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR, REGIME_FREQUENCIA, PRECEDENT_SCHOOL_LEVEL,
-    MOBILITY_SCHOOL_LEVEL, INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT, GRADE, INTEGRATED_MASTER_FIRST_CYCLE_CODES,
+    INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT, GRADE, INTEGRATED_MASTER_FIRST_CYCLE_CODES,
     DEGREE_CURRICULAR_PLAN_DEGREE_OFICIAL_CODE;
 
     private static final String ENUMERATION_RESOURCES = "resources.EnumerationResources";
@@ -70,7 +70,6 @@ public enum LegalMappingType implements ILegalMappingType {
             return Sets.newHashSet(MaritalStatus.values());
         case SCHOOL_LEVEL:
         case PRECEDENT_SCHOOL_LEVEL:
-        case MOBILITY_SCHOOL_LEVEL:
             return Sets.newHashSet(SchoolLevelType.values());
         case PROFESSIONAL_SITUATION_CONDITION:
             return Sets.newHashSet(ProfessionalSituationConditionType.values());
@@ -180,7 +179,6 @@ public enum LegalMappingType implements ILegalMappingType {
             return mls;
         case SCHOOL_LEVEL:
         case PRECEDENT_SCHOOL_LEVEL:
-        case MOBILITY_SCHOOL_LEVEL:
             final SchoolLevelType schoolLevel = SchoolLevelType.valueOf(key);
             mls = mls.with(I18N.getLocale(), schoolLevel.getLocalizedName());
             return mls;
