@@ -1,3 +1,4 @@
+- Improvement: Allow to resend scholarship candidacies to SICABE [#UL-FMD-1133]
 - Refactor: Remove ScholarshipShip service to fill old Excel files [#qubIT-Fenix-6330]
 
 2.24.7 (14-11-2024)

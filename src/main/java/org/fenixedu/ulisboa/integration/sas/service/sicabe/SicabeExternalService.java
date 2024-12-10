@@ -210,7 +210,12 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         candidacy.setFiscalNumber(input.getNif());
         candidacy.setCandidacyName(input.getNomeCandidato().getValue());
         candidacy.setTechnicianName(input.getNomeTecnico().getValue());
-        candidacy.setStudentNumber(input.getNumeroAluno().getValue());
+
+        //only update student number if it's connected to registration, otherwse registration number takes precedence
+        if (candidacy.getRegistration() == null) {
+            candidacy.setStudentNumber(input.getNumeroAluno().getValue());
+        }
+
         candidacy.setCandidacyNumber(input.getNumeroCandidatura());
         candidacy.setDocIdNumber(input.getNumeroDocumentoIdentificacao());
         candidacy.setDocIdType(input.getTipoDocumentoIdentificacao().name());
@@ -559,16 +564,16 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
                 candidacy.getStateDate(), false, false);
     }
 
-    public void sendAllSasScholarshipCandidaciesToSicabe(ExecutionYear executionYear) {
-        sendSasScholarshipsCandidaciesToSicabe(executionYear.getSasScholarshipCandidaciesSet());
+    public void sendSasScholarshipsCandidaciesToSicabe(Collection<SasScholarshipCandidacy> list2Process) {
+        sendSasScholarshipsCandidaciesToSicabe(list2Process, false);
     }
 
-    public void sendSasScholarshipsCandidaciesToSicabe(Collection<SasScholarshipCandidacy> list2Process) {
+    public void sendSasScholarshipsCandidaciesToSicabe(Collection<SasScholarshipCandidacy> list2Process, boolean forceSend) {
 
         boolean errors = false;
         for (final SasScholarshipCandidacy candidacy : list2Process) {
             try {
-                sendCandidacyToSicabe(candidacy);
+                sendCandidacyToSicabe(candidacy, forceSend);
             } catch (Throwable e) {
                 errors = true;
                 createLogEntry(candidacy, e.getMessage(), new DateTime(), false, false);
@@ -581,9 +586,9 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
     }
 
     @Atomic
-    private void sendCandidacyToSicabe(SasScholarshipCandidacy c) {
+    private void sendCandidacyToSicabe(SasScholarshipCandidacy c, boolean forceSend) {
 
-        if (!stateAllowToSendCandicacy(c.getState())) {
+        if (!forceSend && !stateAllowToSendCandicacy(c.getState())) {
             throw new RuntimeException(BundleUtil.getString(AbstractFillScholarshipService.SAS_BUNDLE,
                     "message.error.sendCandidacy2Sicabe", c.getState() != null ? c.getState().getLocalizedName() : "-"));
         }
@@ -970,6 +975,10 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         private void addData(final String key, final Object value) {
             addCell(bundle("label." + key), value == null ? "" : value);
         }
+    }
+
+    public boolean isAllowedToSend(final SasScholarshipCandidacy candidacy){
+        return stateAllowToSendCandicacy(candidacy.getState());
     }
 
     @Atomic
