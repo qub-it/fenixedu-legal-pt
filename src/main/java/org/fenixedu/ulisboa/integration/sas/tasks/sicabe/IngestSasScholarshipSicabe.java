@@ -14,8 +14,6 @@ import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.academic.domain.student.StudentStatute;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.util.email.Message;
-import org.fenixedu.academic.domain.util.email.Recipient;
-import org.fenixedu.academic.domain.util.email.ReplyTo;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.scheduler.CronTask;
@@ -171,9 +169,8 @@ public class IngestSasScholarshipSicabe extends CronTask {
             FenixFramework.atomic(() -> {
                 final String emailAddress = Bennu.getInstance().getSocialServicesConfiguration().getEmail();
 
-                new Message(Bennu.getInstance().getSystemSender(), Collections.<ReplyTo> emptyList(),
-                        Collections.<Recipient> emptyList(), subject, body,
-                        new HashSet<String>(Arrays.asList(emailAddress.split(","))));
+                new Message(Bennu.getInstance().getSystemSender(), Collections.emptyList(), Collections.emptyList(), subject,
+                        body, new HashSet<String>(Arrays.asList(emailAddress.split(","))));
             });
         };
 
