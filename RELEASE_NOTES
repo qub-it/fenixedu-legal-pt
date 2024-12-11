@@ -1,4 +1,5 @@
 - Refactor: Remove the IngestSasScholarshipSicabe task [#qubIT-Fenix-6348]
+- Refactor: Refactors code to allow no longer depending on academic-core recipient [#qubIT-Omnis-7758]
 
 2.24.8 (10-12-2024)
 - Improvement: Allow to resend scholarship candidacies to SICABE [#UL-FMD-1133]
