@@ -211,7 +211,7 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         candidacy.setCandidacyName(input.getNomeCandidato().getValue());
         candidacy.setTechnicianName(input.getNomeTecnico().getValue());
 
-        //only update student number if it's connected to registration, otherwse registration number takes precedence
+        //only update student number if it's connected to registration, otherwise registration number takes precedence
         if (candidacy.getRegistration() == null) {
             candidacy.setStudentNumber(input.getNumeroAluno().getValue());
         }

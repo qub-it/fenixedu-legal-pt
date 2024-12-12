@@ -290,14 +290,6 @@ public abstract class AbstractScholarshipStudentBean implements Serializable {
         this.cycleIngressionYear = ingressionYear;
     }
 
-    public Integer getCycleNumberOfEnrolmentYears() {
-        return cycleNumberOfEnrolmentYears;
-    }
-
-    public void setCycleNumberOfEnrolmentYears(Integer cycleNumberOfEnrolmentYears) {
-        this.cycleNumberOfEnrolmentYears = cycleNumberOfEnrolmentYears;
-    }
-
     public String getIngressionRegimeCode() {
         return ingressionRegimeCode;
     }

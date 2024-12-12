@@ -1,3 +1,5 @@
+- Refactor: Remove the IngestSasScholarshipSicabe task [#qubIT-Fenix-6348]
+
 2.24.8 (10-12-2024)
 - Improvement: Allow to resend scholarship candidacies to SICABE [#UL-FMD-1133]
 - Refactor: Remove ScholarshipShip service to fill old Excel files [#qubIT-Fenix-6330]
