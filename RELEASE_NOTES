@@ -1,3 +1,4 @@
+- Refactor: Update XSD to RAIDES24 (phase 1) [UL-REIT-4198]
 - Refactor: Remove the IngestSasScholarshipSicabe task [#qubIT-Fenix-6348]
 
 2.24.8 (10-12-2024)

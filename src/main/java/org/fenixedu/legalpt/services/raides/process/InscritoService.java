@@ -173,7 +173,7 @@ public class InscritoService extends RaidesService {
     private void validaNumInscricoesNoCurso(final RaidesRequestParameter raidesRequestParameter, final TblInscrito bean,
             final ExecutionYear executionYear, final Registration registration) {
 
-        if (!isFirstTimeOnDegree(registration, executionYear) && new Integer(0).equals(bean.getNumInscNesteCurso())) {
+        if (!isFirstTimeOnDegree(registration, executionYear) && Integer.valueOf(0).equals(bean.getNumInscNesteCurso())) {
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear), i18n(
                     "error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero"),
                     i18n("error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero.action"));
@@ -235,7 +235,8 @@ public class InscritoService extends RaidesService {
         if (Strings.isNullOrEmpty(bean.getRegimeFrequencia())) {
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("error.Raides.validation.missing.mapping.for.regime.frequence"),
-                    i18n("error.Raides.validation.missing.mapping.for.regime.frequence.action"));
+                    i18n("error.Raides.validation.missing.mapping.for.regime.frequence.action",
+                            registration.getDegree().getPresentationName() + " [" + registration.getDegree().getCode() + "]"));
 
             bean.markAsInvalid();
         }
