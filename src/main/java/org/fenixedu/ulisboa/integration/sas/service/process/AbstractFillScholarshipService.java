@@ -28,8 +28,8 @@ import org.fenixedu.academic.domain.student.curriculum.CreditsReasonType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
-import org.fenixedu.academic.domain.treasury.TreasuryBridgeAPIFactory;
 import org.fenixedu.academictreasury.domain.event.AcademicTreasuryEvent;
+import org.fenixedu.academictreasury.services.TuitionServices;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.ulisboa.integration.sas.domain.SasIngressionRegimeMapping;
@@ -190,9 +190,9 @@ public class AbstractFillScholarshipService {
     }
 
     private Collection<Degree> findDegree(AbstractScholarshipStudentBean bean) {
-        final Collection<Degree> degrees = Bennu.getInstance().getDegreesSet().stream().filter(
-                d -> Objects.equal(d.getMinistryCode(), bean.getDegreeCode()) || Objects.equal(d.getCode(), bean.getDegreeCode()))
-                .collect(Collectors.toSet());
+        final Collection<Degree> degrees = Bennu.getInstance().getDegreesSet().stream()
+                .filter(d -> Objects.equal(d.getMinistryCode(), bean.getDegreeCode()) || Objects.equal(d.getCode(),
+                        bean.getDegreeCode())).collect(Collectors.toSet());
 
         if (degrees.isEmpty()) {
             addError(bean, false, "message.error.degree.not.found");
@@ -246,8 +246,9 @@ public class AbstractFillScholarshipService {
                 final Collection<Person> withPartialDocumentId = Person.readByDocumentIdNumber(documentIdWithoutCheckDigit);
 
                 if (withPartialDocumentId.size() == 1) {
-                    if ((bean.getDocumentBINumber() == null || !bean.getDocumentBINumber().equals(documentIdWithoutCheckDigit))
-                            && !(hasSameCheckDigitValue(bean.getDocumentNumber(), withPartialDocumentId.iterator().next()))) {
+                    if ((bean.getDocumentBINumber() == null || !bean.getDocumentBINumber()
+                            .equals(documentIdWithoutCheckDigit)) && !(hasSameCheckDigitValue(bean.getDocumentNumber(),
+                            withPartialDocumentId.iterator().next()))) {
                         addWarning(bean, false, "message.warning.input.document.id.not.equals.without.control.digit");
                     }
 
@@ -272,16 +273,16 @@ public class AbstractFillScholarshipService {
                         Person.readByDocumentIdNumber(documentIdWithoutCitizenCardSerial);
 
                 if (withPartialDocumentIdWithoutCCSerial.size() == 1) {
-                    if (bean.getDocumentBINumber() == null
-                            || !bean.getDocumentBINumber().equals(documentIdWithoutCitizenCardSerial)) {
+                    if (bean.getDocumentBINumber() == null || !bean.getDocumentBINumber()
+                            .equals(documentIdWithoutCitizenCardSerial)) {
                         addWarning(bean, false, "message.warning.input.document.id.not.equals.without.control.digit.and.serial");
                     }
                     return ensureDocumentIdType(withPartialDocumentIdWithoutCCSerial.iterator().next(), bean);
                 }
 
                 if (withPartialDocumentIdWithoutCCSerial.size() > 1) {
-                    if (bean.getDocumentBINumber() == null
-                            || !bean.getDocumentBINumber().equals(documentIdWithoutCitizenCardSerial)) {
+                    if (bean.getDocumentBINumber() == null || !bean.getDocumentBINumber()
+                            .equals(documentIdWithoutCitizenCardSerial)) {
                         addWarning(bean, false, "message.warning.input.document.id.not.equals.without.control.digit.and.serial");
                     }
                     addWarning(bean, false,
@@ -290,12 +291,14 @@ public class AbstractFillScholarshipService {
                 }
 
                 // try with student name and student number
-                final Collection<Person> studentsWithSameName = Person.findPerson(bean.getStudentName()).stream()
-                        .filter(p -> p.getStudent() != null).collect(Collectors.toSet());
+                final Collection<Person> studentsWithSameName =
+                        Person.findPerson(bean.getStudentName()).stream().filter(p -> p.getStudent() != null)
+                                .collect(Collectors.toSet());
                 for (Person person : studentsWithSameName) {
                     Registration findRegistration = findRegistration(person.getStudent(), bean, requestYear);
-                    if (findRegistration.getNumber().equals(bean.getStudentNumber()) || (bean.getStudentNumber() != null
-                            && findRegistration.getStudent().getNumber().intValue() == bean.getStudentNumber().intValue())) {
+                    if (findRegistration.getNumber()
+                            .equals(bean.getStudentNumber()) || (bean.getStudentNumber() != null && findRegistration.getStudent()
+                            .getNumber().intValue() == bean.getStudentNumber().intValue())) {
                         addWarning(bean, false, "message.warning.student.not.found.with.id.but.name.and.number.match");
                         return person;
                     }
@@ -325,9 +328,9 @@ public class AbstractFillScholarshipService {
     private boolean hasSameCheckDigitValue(String candidacyIdDocumentNumber, Person person) {
         final String inputDocumentIdCheckDigit = candidacyIdDocumentNumber.substring(candidacyIdDocumentNumber.length() - 1);
 
-        final String personDocumentIdCheckDigit = (person.getIdentificationDocumentSeriesNumber() != null
-                && person.getIdentificationDocumentSeriesNumber().length() > 0) ? person.getIdentificationDocumentSeriesNumber()
-                        .substring(0, 1) : "";
+        final String personDocumentIdCheckDigit =
+                (person.getIdentificationDocumentSeriesNumber() != null && person.getIdentificationDocumentSeriesNumber()
+                        .length() > 0) ? person.getIdentificationDocumentSeriesNumber().substring(0, 1) : "";
 
         return inputDocumentIdCheckDigit.equals(personDocumentIdCheckDigit);
     }
@@ -346,8 +349,8 @@ public class AbstractFillScholarshipService {
 
     private Person ensureDocumentIdType(final Person person, final AbstractScholarshipStudentBean bean) {
 
-        if (person.getIdDocumentType() != ID_DOCUMENT_TYPE_MAPPING.get(bean.getDocumentTypeName())
-                && !person.getIdDocumentType().name().equalsIgnoreCase(bean.getDocumentTypeName())) {
+        if (person.getIdDocumentType() != ID_DOCUMENT_TYPE_MAPPING.get(bean.getDocumentTypeName()) && !person.getIdDocumentType()
+                .name().equalsIgnoreCase(bean.getDocumentTypeName())) {
             addError(bean, false, "message.error.identity.document.type");
             throw new FillScholarshipException("message.error.identity.document.type");
         }
@@ -424,8 +427,8 @@ public class AbstractFillScholarshipService {
     static public boolean isFirstTimeInCycle(Registration registration, ExecutionYear requestYear) {
         final List<ExecutionYear> cycleEnrolmentYears = getCycleEnrolmentYears(registration, requestYear);
 
-        return cycleEnrolmentYears.size() > 1 ? false : cycleEnrolmentYears.isEmpty()
-                || cycleEnrolmentYears.size() == 1 && cycleEnrolmentYears.iterator().next() == requestYear;
+        return cycleEnrolmentYears.size() > 1 ? false : cycleEnrolmentYears.isEmpty() || cycleEnrolmentYears.size() == 1 && cycleEnrolmentYears.iterator()
+                .next() == requestYear;
     }
 
     private void fillCommonInfo(AbstractScholarshipStudentBean bean, Registration registration, ExecutionYear requestYear) {
@@ -508,8 +511,8 @@ public class AbstractFillScholarshipService {
         for (final Registration registration : student.getRegistrationsSet()) {
 
             //TODO: find cleaner solution
-            if (registration.getDegreeType().isIntegratedMasterDegree()
-                    && registration.hasConcludedCycle(CycleType.FIRST_CYCLE)) {
+            if (registration.getDegreeType().isIntegratedMasterDegree() && registration.hasConcludedCycle(
+                    CycleType.FIRST_CYCLE)) {
                 result.add(SchoolLevelType.DEGREE);
             }
 
@@ -533,8 +536,8 @@ public class AbstractFillScholarshipService {
 
     private BigDecimal getTuitionAmount(Registration registration, ExecutionYear requestYear) {
 
-        final AcademicTreasuryEvent treasuryEvent = (AcademicTreasuryEvent) TreasuryBridgeAPIFactory.implementation()
-                .getTuitionForRegistrationTreasuryEvent(registration, requestYear);
+        final AcademicTreasuryEvent treasuryEvent =
+                TuitionServices.findAcademicTreasuryEventTuitionForRegistration(registration, requestYear);
 
         if (treasuryEvent == null) {
             return BigDecimal.ZERO;
@@ -631,13 +634,13 @@ public class AbstractFillScholarshipService {
     }
 
     protected void addError(AbstractScholarshipStudentBean bean, boolean publicMessage, String message, String... args) {
-        messages.put(bean, new MessageEntry(publicMessage,
-                ERROR_OBSERVATION + ": " + BundleUtil.getString(SAS_BUNDLE, message, args)));
+        messages.put(bean,
+                new MessageEntry(publicMessage, ERROR_OBSERVATION + ": " + BundleUtil.getString(SAS_BUNDLE, message, args)));
     }
 
     protected void addWarning(AbstractScholarshipStudentBean bean, boolean publicMessage, String message, String... args) {
-        messages.put(bean, new MessageEntry(publicMessage,
-                WARNING_OBSERVATION + ": " + BundleUtil.getString(SAS_BUNDLE, message, args)));
+        messages.put(bean,
+                new MessageEntry(publicMessage, WARNING_OBSERVATION + ": " + BundleUtil.getString(SAS_BUNDLE, message, args)));
     }
 
     private StudentCurricularPlan getStudentCurricularPlan(Registration registration, ExecutionYear executionYear) {
@@ -734,9 +737,8 @@ public class AbstractFillScholarshipService {
         final BigDecimal beforeNumberOfEnrolledECTS = candidacy.getSasScholarshipData().getNumberOfEnrolledECTS();
         final Registration registration = candidacy.getRegistration();
 
-        if (bean.getNumberOfEnrolledECTS().compareTo(beforeNumberOfEnrolledECTS) != 0
-                && bean.getNumberOfEnrolledECTS().compareTo(BigDecimal.ZERO) == 0
-                && !registration.getActiveStateType().getActive()) {
+        if (bean.getNumberOfEnrolledECTS().compareTo(beforeNumberOfEnrolledECTS) != 0 && bean.getNumberOfEnrolledECTS()
+                .compareTo(BigDecimal.ZERO) == 0 && !registration.getActiveStateType().getActive()) {
             addWarning(bean, true, "message.warning.student.registration.state.inactive",
                     registration.getActiveState().getStateDate().toLocalDate().toString("yyyy-MM-dd"));
         }
