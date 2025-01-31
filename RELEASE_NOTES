@@ -1,4 +1,4 @@
-- Refactor: Remove usage of ITreasuryBrigdeAPI#getTuitionForRegistrationTreasuryEvent [#qubIT-Fenix-6565]
+- Refactor: Remove usage of ITreasuryBridgeAPI#getTuitionForRegistrationTreasuryEvent [#qubIT-Fenix-6565]
 
 2.24.9 (06-01-2025)
 - Refactor: Update XSD to RAIDES24 (phase 1) [UL-REIT-4198]
