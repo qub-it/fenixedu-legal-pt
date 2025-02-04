@@ -1,6 +1,7 @@
 package org.fenixedu.legalpt.services.raides.process;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -163,11 +164,11 @@ public class InscritoService extends RaidesService {
         }
 
         return registration.getStudentCurricularPlan(executionYear).getRoot().getCurriculum(executionYear).getSumEctsCredits()
-                .setScale(1);
+                .setScale(1, RoundingMode.HALF_UP);
     }
 
     private BigDecimal sumEctsAcumulados(final Registration registration, final ExecutionYear executionYear) {
-        return RegistrationServices.getAllPlansCurriculum(registration, executionYear).getSumEctsCredits().setScale(1);
+        return RegistrationServices.getAllPlansCurriculum(registration, executionYear).getSumEctsCredits().setScale(1, RoundingMode.HALF_UP);
     }
 
     private void validaNumInscricoesNoCurso(final RaidesRequestParameter raidesRequestParameter, final TblInscrito bean,

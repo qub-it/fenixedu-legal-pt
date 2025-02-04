@@ -1,3 +1,5 @@
+- Bug fix: Apply rounding to RAIDES accumulated credits [#qubIT-Fenix-6596]
+
 2.24.10 (31-01-2025)
 - Refactor: Remove usage of ITreasuryBridgeAPI#getTuitionForRegistrationTreasuryEvent [#qubIT-Fenix-6565]
 
