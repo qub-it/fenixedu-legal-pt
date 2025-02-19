@@ -275,7 +275,7 @@ public class RaidesService {
     protected void preencheGrauPrecedentCompleto(final IGrauPrecedenteCompleto bean, final ExecutionYear executionYear,
             final Registration registration) {
         final StudentCandidacy studentCandidacy = registration.getStudentCandidacy();
-        final PrecedentDegreeInformation lastCompletedQualification = studentCandidacy.getCompletedDegreeInformation();
+        final PrecedentDegreeInformation lastCompletedQualification = registration.getCompletedDegreeInformation();
 
         final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
 
@@ -391,9 +391,10 @@ public class RaidesService {
 
     private AcademicalInstitutionType highSchoolType(StudentCandidacy studentCandidacy) {
 
-        if (studentCandidacy.getCompletedDegreeInformation() != null
-                && studentCandidacy.getCompletedDegreeInformation().getInstitutionType() != null) {
-            return studentCandidacy.getCompletedDegreeInformation().getInstitutionType();
+        PrecedentDegreeInformation completedDegreeInformation =
+                studentCandidacy.getRegistration().getCompletedDegreeInformation();
+        if (completedDegreeInformation != null && completedDegreeInformation.getInstitutionType() != null) {
+            return completedDegreeInformation.getInstitutionType();
         }
 
         if (studentCandidacy.getPerson().getStudent() != null) {
@@ -449,7 +450,7 @@ public class RaidesService {
             // Se a EscolaridadeAnterior indicada for Ensino secundário[13], Curso de especialização tecnológica[14], Bacharelato[15],
             // Licenciatura[16], Mestrado[17], Doutoramento[18], Curso técnico superior profissional[20] ou Licenciatura 1.º ciclo[30], 
             // o valor a introduzir deve ser igual ou superior ao somatório do ano da data de nascimento do aluno mais 16.
-            
+
             Integer previousConclusionYear = Integer.valueOf(bean.getAnoEscolaridadeAnt());
             
             if(previousConclusionYear < (registration.getPerson().getDateOfBirthYearMonthDay().getYear() + Raides.Idade.MIN)) {
@@ -458,8 +459,7 @@ public class RaidesService {
 
                 bean.markAsInvalid();
             }
-            
-            
+
         }
 
         validaEstabelecimentoAnteriorCompleto(executionYear, registration, lastCompletedQualification, bean);
