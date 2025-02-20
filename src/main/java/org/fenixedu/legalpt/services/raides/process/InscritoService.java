@@ -96,8 +96,7 @@ public class InscritoService extends RaidesService {
 
             if (isDegreeChangeOrTransfer(raidesRequestParameter, registration)) {
 
-                final PrecedentDegreeInformation precedentQualification =
-                        registration.getStudentCandidacy().getPreviousDegreeInformation();
+                final PrecedentDegreeInformation precedentQualification = registration.getPreviousDegreeInformation();
 
                 if (precedentQualification != null && precedentQualification.getInstitution() != null) {
                     if (!Strings.isNullOrEmpty(precedentQualification.getInstitution().getCode())) {

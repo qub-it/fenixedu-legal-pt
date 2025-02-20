@@ -529,9 +529,8 @@ public class AbstractFillScholarshipService {
     }
 
     private Collection<SchoolLevelType> getCompletedQualificationsSchoolLevelTypes(final Person person) {
-        return person.getStudent().getRegistrationsSet().stream().map(r -> r.getStudentCandidacy()).filter(o -> o != null)
-                .map(sc -> sc.getCompletedDegreeInformation().getSchoolLevel()).filter(o -> o != null)
-                .collect(Collectors.toSet());
+        return person.getStudent().getRegistrationsSet().stream().filter(r -> r.getStudentCandidacy() != null)
+                .map(r -> r.getCompletedDegreeInformation().getSchoolLevel()).filter(o -> o != null).collect(Collectors.toSet());
     }
 
     private BigDecimal getTuitionAmount(Registration registration, ExecutionYear requestYear) {

@@ -183,8 +183,7 @@ public class XlsxExporter {
                 addCell("Reportar como Diplomado", raides.isInGraduated(registration));
                 addCell("Reportar como Mobilidade", raides.isInInternacionalMobility(registration));
 
-                final PrecedentDegreeInformation lastCompletedQualification =
-                        registration.getStudentCandidacy().getCompletedDegreeInformation();
+                final PrecedentDegreeInformation lastCompletedQualification = registration.getCompletedDegreeInformation();
 
                 addCell(pdiLabel("schoolLevel"), lastCompletedQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
                         lastCompletedQualification.getSchoolLevel()) : "");
@@ -199,8 +198,7 @@ public class XlsxExporter {
                         lastCompletedQualification.getConclusionYear() != null ? lastCompletedQualification
                                 .getConclusionYear() : "");
 
-                final PrecedentDegreeInformation previousQualification =
-                        registration.getStudentCandidacy().getPreviousDegreeInformation();
+                final PrecedentDegreeInformation previousQualification = registration.getPreviousDegreeInformation();
 
                 addCell(pdiLabel("precedentSchoolLevel"),
                         previousQualification != null
