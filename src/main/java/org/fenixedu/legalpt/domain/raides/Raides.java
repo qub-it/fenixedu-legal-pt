@@ -116,6 +116,9 @@ public class Raides {
     }
 
     public static class Bolseiro {
+
+        public static final String NO_GRANT_OWNER = "10";
+
         public static final GrantOwnerType NAO_BOLSEIRO = GrantOwnerType.STUDENT_WITHOUT_SCHOLARSHIP;
         public static final GrantOwnerType CANDIDATO_BOLSEIRO_ACCAO_SOCIAL =
                 GrantOwnerType.HIGHER_EDUCATION_SAS_GRANT_OWNER_CANDIDATE;

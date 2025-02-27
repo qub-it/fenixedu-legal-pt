@@ -1,3 +1,5 @@
+- Refactor: RAIDES: Allow to report grant owner information only by student statute [#ISCTE-FENIXEDU-1012]
+
 2.24.12 (24-02-2025)
 - Refactor: Move PrecedentDegreeInformation relations from the StudentCandidacy to Registration [#qubIT-Fenix-6617]
 

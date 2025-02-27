@@ -83,7 +83,7 @@ public class RaidesInstance extends RaidesInstance_Base {
             final String institutionCode, final String interlocutorPhone,
             final IntegratedMasterFirstCycleGraduatedReportOption integratedMasterFirstCycleGraduatedReportOption,
             final District defaultDistrictOfResidence, final boolean reportGraduatedWithoutConclusionProcess,
-            final Set<StatuteType> grantOwnerStatuteTypes) {
+            final Set<StatuteType> grantOwnerStatuteTypes, final boolean reportGrantOwnerOnlyByStatutes) {
         edit(name, group, synchronous, hasMappings);
 
         setPasswordToZip(passwordToZip);
@@ -111,6 +111,8 @@ public class RaidesInstance extends RaidesInstance_Base {
 
         getGrantOwnerStatuteTypesSet().clear();
         getGrantOwnerStatuteTypesSet().addAll(grantOwnerStatuteTypes);
+
+        setReportGrantOwnerOnlyByStatutes(reportGrantOwnerOnlyByStatutes);
     }
 
     public boolean isToReportAllIntegratedMasterFirstCycleGraduatedStudents() {

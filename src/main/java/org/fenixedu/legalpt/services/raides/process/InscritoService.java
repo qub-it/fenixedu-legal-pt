@@ -5,7 +5,11 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.google.common.base.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -15,11 +19,14 @@ import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationServices;
+import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.academic.domain.student.Student;
+import org.fenixedu.academic.domain.student.StudentStatute;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
+import org.fenixedu.legalpt.domain.raides.Raides.Bolseiro;
 import org.fenixedu.legalpt.domain.raides.RaidesInstance;
 import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.TblInscrito;
@@ -293,10 +300,41 @@ public class InscritoService extends RaidesService {
 
     protected String bolseiro(final Registration registration, final ExecutionYear executionYear) {
 
+        if (RaidesInstance.getInstance().getReportGrantOwnerOnlyByStatutes()) {
+
+            final Predicate<StudentStatute> withGrantOwnerMapping =
+                    s -> LegalMapping.find(report, LegalMappingType.GRANT_OWNER_BY_STATUTE_TYPE).translate(s.getType()) != null;
+
+            final Set<StatuteType> grantOwnerStatutes =
+                    registration.getStudentStatutesSet().stream().filter(s -> s.isValidOnAnyExecutionPeriodFor(executionYear))
+                            .filter(withGrantOwnerMapping)
+                            .map(StudentStatute::getType)
+                            .collect(Collectors.toSet());
+
+            if (grantOwnerStatutes.isEmpty()) {
+                return Bolseiro.NO_GRANT_OWNER;
+            }
+
+            if (grantOwnerStatutes.size() > 1) {
+                // invalid number of active grant owner statutes
+                LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
+                        i18n("error.Raides.grantOwner.multiple.statutes"),
+                        i18n("error.Raides.grantOwner.multiple.statutes.action"));
+
+                return null;
+            }
+
+            final String result = LegalMapping.find(report, LegalMappingType.GRANT_OWNER_BY_STATUTE_TYPE)
+                    .translate(grantOwnerStatutes.iterator().next());
+
+            return Objects.requireNonNullElse(result, Bolseiro.NO_GRANT_OWNER);
+        }
+
+        // to be deleteted...
+
         final PersonalIngressionData pid = registration.getStudent().getPersonalIngressionDataByExecutionYear(executionYear);
-        if (pid == null || pid.getGrantOwnerType() == null
-                || pid.getGrantOwnerType() == GrantOwnerType.STUDENT_WITHOUT_SCHOLARSHIP) {
-            return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Raides.Bolseiro.NAO_BOLSEIRO);
+        if (pid == null || pid.getGrantOwnerType() == null || pid.getGrantOwnerType() == GrantOwnerType.STUDENT_WITHOUT_SCHOLARSHIP) {
+            return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Bolseiro.NAO_BOLSEIRO);
         }
 
         if (!hasOtherActiveRegistrationWhichRequiresStatuteToReportGrantOwner(registration, executionYear)) {
@@ -307,14 +345,14 @@ public class InscritoService extends RaidesService {
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("error.Raides.grantOwner.requires.statute"), i18n("error.Raides.grantOwner.requires.statute.action"));
 
-            return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Raides.Bolseiro.NAO_BOLSEIRO);
+            return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Bolseiro.NAO_BOLSEIRO);
         }
 
         if (hasGrantOwnerStatute(registration, executionYear)) {
             return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(pid.getGrantOwnerType());
         }
 
-        return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Raides.Bolseiro.NAO_BOLSEIRO);
+        return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Bolseiro.NAO_BOLSEIRO);
 
     }
 

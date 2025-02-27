@@ -21,6 +21,7 @@ import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.academic.domain.person.MaritalStatus;
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
 import org.fenixedu.academic.domain.student.RegistrationRegimeType;
+import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.academic.domain.student.mobility.MobilityActivityType;
 import org.fenixedu.academic.domain.student.mobility.MobilityProgramType;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -42,7 +43,7 @@ import pt.ist.fenixframework.FenixFramework;
 
 public enum LegalMappingType implements ILegalMappingType {
     
-    BOOLEAN, GENDER, ID_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE, REGISTRATION_INGRESSION_TYPE, MARITAL_STATUS,
+    BOOLEAN, GENDER, ID_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE, GRANT_OWNER_BY_STATUTE_TYPE, REGISTRATION_INGRESSION_TYPE, MARITAL_STATUS,
     SCHOOL_LEVEL, PROFESSIONAL_SITUATION_CONDITION, PROFESSION_TYPE, HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION,
     INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR, REGIME_FREQUENCIA, PRECEDENT_SCHOOL_LEVEL,
     INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT, GRADE, INTEGRATED_MASTER_FIRST_CYCLE_CODES,
@@ -64,6 +65,8 @@ public enum LegalMappingType implements ILegalMappingType {
             return Sets.newHashSet(RegistrationRegimeType.values());
         case GRANT_OWNER_TYPE:
             return Sets.newHashSet(GrantOwnerType.values());
+        case GRANT_OWNER_BY_STATUTE_TYPE:
+            return Sets.newHashSet(StatuteType.findAll());
         case REGISTRATION_INGRESSION_TYPE:
             return Sets.newHashSet(Bennu.getInstance().getIngressionTypesSet());
         case MARITAL_STATUS:
@@ -95,7 +98,6 @@ public enum LegalMappingType implements ILegalMappingType {
         case INTEGRATED_MASTER_FIRST_CYCLE_CODES:
             return Sets.newHashSet(Bennu.getInstance().getDegreesSet().stream()
                     .filter(d -> d.getDegreeType().isIntegratedMasterDegree()).collect(Collectors.toSet()));
-
         case DEGREE_CURRICULAR_PLAN_DEGREE_OFICIAL_CODE:
             return Bennu.getInstance().getDegreesSet().stream().flatMap(d -> d.getDegreeCurricularPlansSet().stream())
                     .collect(Collectors.toSet());
@@ -136,6 +138,7 @@ public enum LegalMappingType implements ILegalMappingType {
         case INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT:
         case INTEGRATED_MASTER_FIRST_CYCLE_CODES:
         case DEGREE_CURRICULAR_PLAN_DEGREE_OFICIAL_CODE:
+        case GRANT_OWNER_BY_STATUTE_TYPE:
             return new DomainObjectLegalMapping(report, this);
         case BOOLEAN:
         case CURRICULAR_YEAR:
@@ -171,6 +174,8 @@ public enum LegalMappingType implements ILegalMappingType {
             return mls;
         case GRANT_OWNER_TYPE:
             return Raides.Bolseiro.LOCALIZED_NAME(key);
+        case GRANT_OWNER_BY_STATUTE_TYPE:
+            return ((StatuteType) FenixFramework.getDomainObject(key)).getName();
         case REGISTRATION_INGRESSION_TYPE:
             return ((IngressionType) FenixFramework.getDomainObject(key)).getDescription();
         case MARITAL_STATUS:

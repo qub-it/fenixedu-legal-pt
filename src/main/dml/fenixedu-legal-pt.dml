@@ -285,6 +285,7 @@ class raides.RaidesInstance extends report.LegalReport {
 	boolean sumEctsCreditsBetweenPlans;
 	boolean reportGraduatedWithoutConclusionProcess;
 	boolean hideQualificationViewOnPostLogin;
+	boolean reportGrantOwnerOnlyByStatutes;
 }
 
 	relation RaidesInstanceMobilityAgreement {
