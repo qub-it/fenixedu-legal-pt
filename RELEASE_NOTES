@@ -1,3 +1,5 @@
+- Improvement: Add new attributes to RAIDES log [#ISCTE-FENIXEDU-1021]
+
 2.24.13 (27-02-2025)
 - Refactor: RAIDES: Allow to report grant owner information only by student statute [#ISCTE-FENIXEDU-1012]
 

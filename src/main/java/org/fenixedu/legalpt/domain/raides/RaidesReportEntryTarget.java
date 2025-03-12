@@ -1,10 +1,12 @@
 package org.fenixedu.legalpt.domain.raides;
 
+import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.legalpt.domain.ReportEntryTarget;
 
 public class RaidesReportEntryTarget implements ReportEntryTarget {
@@ -31,6 +33,9 @@ public class RaidesReportEntryTarget implements ReportEntryTarget {
         result.put("Código de Curso", registration.getDegree().getCode());
         result.put("Curso", registration.getDegree().getPresentationName());
         result.put("Ano", executionYear.getQualifiedName());
+        result.put("ECTS realizados", registration.getStudentCurricularPlan(executionYear).getRoot().getCurriculum(executionYear).getSumEctsCredits()
+                .setScale(1, RoundingMode.HALF_UP).toString());
+        result.put("Ano Curricular", String.valueOf(RegistrationServices.getCurricularYear(registration, executionYear).getResult()));
 
         return result;
     }
@@ -44,6 +49,8 @@ public class RaidesReportEntryTarget implements ReportEntryTarget {
             result.put("Código de Curso", "");
             result.put("Curso", "");
             result.put("Ano", "");
+            result.put("ECTS realizados", "");
+            result.put("Ano Curricular", "");
 
             return result;
 
