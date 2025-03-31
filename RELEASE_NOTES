@@ -1,3 +1,5 @@
+- Bug fix: PRIES salary bonus (update XSD) [#UL-FF-3543]
+
 2.24.14 (12-03-2025)
 - Improvement: Add new attributes to RAIDES log [#ISCTE-FENIXEDU-1021]
 

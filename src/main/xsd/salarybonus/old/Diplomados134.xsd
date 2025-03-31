@@ -39,6 +39,37 @@
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
+                            <xs:element name="NumeroID">
+                                <!-- caracteres alfanumericos, ponto e traço; mínimo de 4 e máximo de 20 caracteres -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:pattern value="[A-Za-z0-9.\-]+" />
+                                        <xs:minLength value="4" />
+                                        <xs:maxLength value="20" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Controlo" >
+                                <!-- Caracteres de controlo do BI/CC -->
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:maxLength value="4" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Tipo">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="1" />
+                                        <xs:enumeration value="2" />
+                                        <xs:enumeration value="3" />
+                                        <xs:enumeration value="4" />
+                                        <xs:enumeration value="5" />
+                                        <xs:enumeration value="6" />
+                                        <xs:enumeration value="7" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                             <xs:element name="NIF">
                                 <!-- 9 caracteres numéricos -->
                                 <xs:simpleType>
@@ -50,9 +81,7 @@
                             <xs:element name="DataNascimento">
                                 <!-- yyyy-mm-dd / norma NP EN 28601 (critério usado no RAIDES,IEESP e IECDES) -->
                                 <xs:simpleType>
-                                    <xs:restriction base="xs:date">
-                                        <xs:pattern value="\d{4}-\d{2}-\d{2}" />
-                                    </xs:restriction>
+                                    <xs:restriction base="xs:string"/>
                                 </xs:simpleType>
                             </xs:element>
                             <xs:element name="diplomas">
@@ -127,9 +156,7 @@
           </xs:element>
             <xs:element name="DataDiploma">
                 <xs:simpleType>
-                    <xs:restriction base="xs:date">
-                        <xs:pattern value="\d{4}-\d{2}-\d{2}" />
-                    </xs:restriction>
+                    <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:element>
         </xs:sequence>
