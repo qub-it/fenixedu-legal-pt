@@ -1,3 +1,5 @@
+- Improvement: RAIDES - Add a warning when the completed qualification degree has the same code as registration degree code (or precedent degree code) [#UL-ISA-5580]
+
 2.24.15 (31-03-2025)
 - Bug fix: add missing labels (RAIDES) [#ISCTE-FENIXEDU-1087]
 - Bug fix: PRIES salary bonus (update XSD) [#UL-FF-3543]
