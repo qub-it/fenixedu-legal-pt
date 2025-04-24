@@ -3,7 +3,9 @@ package org.fenixedu.legalpt.services.raides.export;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.ProfessionType;
 import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
 import org.fenixedu.academic.domain.SchoolLevelType;
@@ -143,11 +145,10 @@ public class XlsxExporter {
                     @Override
                     protected void makeLine(final TblMobilidadeInternacional tblMobilidadeInternacional) {
                         addCell("IdAluno", tblMobilidadeInternacional.getIdAluno());
-                        addCell("Curso",
-                                !Strings.isNullOrEmpty(tblMobilidadeInternacional.getCurso()) ? tblMobilidadeInternacional
-                                        .getCurso() : "");
-                        addCell("Ramo", !Strings.isNullOrEmpty(tblMobilidadeInternacional.getRamo()) ? tblMobilidadeInternacional
-                                .getRamo() : "");
+                        addCell("Curso", !Strings.isNullOrEmpty(
+                                tblMobilidadeInternacional.getCurso()) ? tblMobilidadeInternacional.getCurso() : "");
+                        addCell("Ramo", !Strings.isNullOrEmpty(
+                                tblMobilidadeInternacional.getRamo()) ? tblMobilidadeInternacional.getRamo() : "");
                         addCell("AnoLetivo", tblMobilidadeInternacional.getAnoLectivo());
                         addCell("AreaCientifica", tblMobilidadeInternacional.getAreaCientifica());
                         addCell("AnoCurricular", tblMobilidadeInternacional.getAnoCurricular());
@@ -173,10 +174,12 @@ public class XlsxExporter {
                 addCell("Nº Aluno", registration.getStudent().getNumber());
                 addCell(pdiLabel("executionYear"), registration.getStudentCandidacy().getExecutionYear().getQualifiedName());
                 addCell("Curso", registration.getDegree().getPresentationName());
-                addCell("Acordo", registration.getRegistrationProtocol() != null ? registration.getRegistrationProtocol()
-                        .getDescription().getContent() : "");
-                addCell("Ingresso", registration.getStudentCandidacy().getIngressionType() != null ? registration
-                        .getIngressionType().getDescription().getContent() : "");
+                addCell("Acordo",
+                        registration.getRegistrationProtocol() != null ? registration.getRegistrationProtocol().getDescription()
+                                .getContent() : "");
+                addCell("Ingresso",
+                        registration.getStudentCandidacy().getIngressionType() != null ? registration.getIngressionType()
+                                .getDescription().getContent() : "");
                 addCell("Nome", registration.getStudent().getName());
 
                 addCell("Reportar como Inscrito", raides.isInEnrolledData(registration));
@@ -190,33 +193,31 @@ public class XlsxExporter {
                 addCell(pdiLabel("otherSchoolLevel"), lastCompletedQualification.getOtherSchoolLevel());
                 addCell(pdiLabel("country"),
                         lastCompletedQualification.getCountry() != null ? lastCompletedQualification.getCountry().getCode() : "");
-                addCell(pdiLabel("institution"), lastCompletedQualification.getInstitution() != null ? lastCompletedQualification
-                        .getInstitution().getName() : "");
+                addCell(pdiLabel("institution"),
+                        lastCompletedQualification.getInstitution() != null ? lastCompletedQualification.getInstitution()
+                                .getName() : "");
                 addCell(pdiLabel("degreeDesignation"), lastCompletedQualification.getDegreeDesignation());
                 addCell(pdiLabel("conclusionGrade"), lastCompletedQualification.getConclusionGrade());
-                addCell(pdiLabel("conclusionYear"),
-                        lastCompletedQualification.getConclusionYear() != null ? lastCompletedQualification
-                                .getConclusionYear() : "");
+                addCell(pdiLabel("conclusionYear"), lastCompletedQualification.getConclusionYear()
+                        != null ? lastCompletedQualification.getConclusionYear() : "");
 
                 final PrecedentDegreeInformation previousQualification = registration.getPreviousDegreeInformation();
 
-                addCell(pdiLabel("precedentSchoolLevel"),
-                        previousQualification != null
-                                && previousQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
-                                        previousQualification.getSchoolLevel()) : "");
+                addCell(pdiLabel("precedentSchoolLevel"), previousQualification != null
+                        && previousQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
+                        previousQualification.getSchoolLevel()) : "");
                 addCell(pdiLabel("otherPrecedentSchoolLevel"),
                         previousQualification != null ? previousQualification.getOtherSchoolLevel() : "");
                 addCell(pdiLabel("precedentCountry"), previousQualification != null
                         && previousQualification.getCountry() != null ? previousQualification.getCountry().getCode() : "");
-                addCell(pdiLabel("precedentInstitution"),
-                        previousQualification != null && previousQualification.getInstitution() != null ? previousQualification
-                                .getInstitution().getName() : "");
+                addCell(pdiLabel("precedentInstitution"), previousQualification != null
+                        && previousQualification.getInstitution() != null ? previousQualification.getInstitution()
+                        .getName() : "");
                 addCell(pdiLabel("precedentDegreeDesignation"),
                         previousQualification != null ? previousQualification.getDegreeDesignation() : "");
-                addCell(pdiLabel("numberOfEnrolmentsInPreviousDegrees"),
-                        previousQualification != null
-                                && previousQualification.getNumberOfEnrolmentsInPreviousDegrees() != null ? previousQualification
-                                        .getNumberOfEnrolmentsInPreviousDegrees() : "");
+                addCell(pdiLabel("numberOfEnrolmentsInPreviousDegrees"), previousQualification != null
+                        && previousQualification.getNumberOfEnrolmentsInPreviousDegrees()
+                        != null ? previousQualification.getNumberOfEnrolmentsInPreviousDegrees() : "");
 
             }
 
@@ -228,49 +229,41 @@ public class XlsxExporter {
                     @Override
                     protected void makeLine(final Registration registration) {
 
-                        Set<PersonalIngressionData> personalIngressionsDataSet =
-                                registration.getStudent().getPersonalIngressionsDataSet();
-                        for (final PersonalIngressionData personalIngressionData : personalIngressionsDataSet) {
+                        final ExecutionYear currentYear = ExecutionYear.findCurrent(registration.getDegree().getCalendar());
+                        registration.getStudent().getPersonalIngressionsDataSet().stream()
+                                .filter(pid -> pid.getExecutionYear() == currentYear).forEach(pid -> {
+                                    addCell("Nº Aluno", registration.getStudent().getNumber());
+                                    addCell(pdiLabel("executionYear"), pid.getExecutionYear().getQualifiedName());
 
-                            addCell("Nº Aluno", registration.getStudent().getNumber());
-                            addCell(pdiLabel("executionYear"), personalIngressionData.getExecutionYear().getQualifiedName());
-
-                            addCell(pidLabel("countryOfResidence"),
-                                    personalIngressionData.getCountryOfResidence() != null ? personalIngressionData
-                                            .getCountryOfResidence().getName() : "");
-                            addCell(pidLabel("districtSubdivisionOfResidence"),
-                                    personalIngressionData.getDistrictSubdivisionOfResidence() != null ? personalIngressionData
-                                            .getDistrictSubdivisionOfResidence().getName() : "");
-                            addCell(pidLabel("dislocatedFromPermanentResidence"),
-                                    personalIngressionData.getDislocatedFromPermanentResidence() != null ? personalIngressionData
-                                            .getDislocatedFromPermanentResidence() : "");
-                            addCell(pidLabel("professionType"),
-                                    personalIngressionData.getProfessionType() != null ? professionTypeLocalizedName(
-                                            personalIngressionData.getProfessionType()) : "");
-                            addCell(pidLabel("professionalCondition"),
-                                    personalIngressionData
-                                            .getProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
-                                                    personalIngressionData.getProfessionalCondition()) : "");
-                            addCell(pidLabel("motherSchoolLevel"),
-                                    personalIngressionData.getMotherSchoolLevel() != null ? schoolLevelLocalizedName(
-                                            personalIngressionData.getMotherSchoolLevel()) : "");
-                            addCell(pidLabel("motherProfessionType"),
-                                    personalIngressionData.getMotherProfessionType() != null ? professionTypeLocalizedName(
-                                            personalIngressionData.getMotherProfessionType()) : "");
-                            addCell(pidLabel("motherProfessionalCondition"), personalIngressionData
-                                    .getMotherProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
-                                            personalIngressionData.getMotherProfessionalCondition()) : "");
-                            addCell(pidLabel("fatherSchoolLevel"),
-                                    personalIngressionData.getFatherSchoolLevel() != null ? schoolLevelLocalizedName(
-                                            personalIngressionData.getFatherSchoolLevel()) : "");
-                            addCell(pidLabel("fatherProfessionType"),
-                                    personalIngressionData.getFatherProfessionType() != null ? professionTypeLocalizedName(
-                                            personalIngressionData.getFatherProfessionType()) : "");
-                            addCell(pidLabel("fatherProfessionalCondition"), personalIngressionData
-                                    .getFatherProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
-                                            personalIngressionData.getFatherProfessionalCondition()) : "");
-                        }
-
+                                    addCell(pidLabel("countryOfResidence"),
+                                            pid.getCountryOfResidence() != null ? pid.getCountryOfResidence().getName() : "");
+                                    addCell(pidLabel("districtSubdivisionOfResidence"),
+                                            pid.getDistrictSubdivisionOfResidence() != null ? pid.getDistrictSubdivisionOfResidence()
+                                                    .getName() : "");
+                                    addCell(pidLabel("dislocatedFromPermanentResidence"), pid.getDislocatedFromPermanentResidence()
+                                            != null ? pid.getDislocatedFromPermanentResidence() : "");
+                                    addCell(pidLabel("professionType"),
+                                            pid.getProfessionType() != null ? professionTypeLocalizedName(pid.getProfessionType()) : "");
+                                    addCell(pidLabel("professionalCondition"),
+                                            pid.getProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
+                                                    pid.getProfessionalCondition()) : "");
+                                    addCell(pidLabel("motherSchoolLevel"), pid.getMotherSchoolLevel() != null ? schoolLevelLocalizedName(
+                                            pid.getMotherSchoolLevel()) : "");
+                                    addCell(pidLabel("motherProfessionType"),
+                                            pid.getMotherProfessionType() != null ? professionTypeLocalizedName(
+                                                    pid.getMotherProfessionType()) : "");
+                                    addCell(pidLabel("motherProfessionalCondition"), pid.getMotherProfessionalCondition()
+                                            != null ? professionalSituationConditionTypeLocalizedName(
+                                            pid.getMotherProfessionalCondition()) : "");
+                                    addCell(pidLabel("fatherSchoolLevel"), pid.getFatherSchoolLevel() != null ? schoolLevelLocalizedName(
+                                            pid.getFatherSchoolLevel()) : "");
+                                    addCell(pidLabel("fatherProfessionType"),
+                                            pid.getFatherProfessionType() != null ? professionTypeLocalizedName(
+                                                    pid.getFatherProfessionType()) : "");
+                                    addCell(pidLabel("fatherProfessionalCondition"), pid.getFatherProfessionalCondition()
+                                            != null ? professionalSituationConditionTypeLocalizedName(
+                                            pid.getFatherProfessionalCondition()) : "");
+                                });
                     }
                 };
 
