@@ -2,21 +2,16 @@ package org.fenixedu.legalpt.services.raides.export;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.ProfessionType;
 import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
 import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.SchoolPeriodDuration;
-import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.commons.spreadsheet.SheetData;
-import org.fenixedu.commons.spreadsheet.SpreadsheetBuilder;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
-import org.fenixedu.commons.spreadsheet.WorkbookExportFormat;
 import org.fenixedu.legalpt.domain.raides.Raides;
 import org.fenixedu.legalpt.domain.raides.TblDiplomado;
 import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
@@ -172,7 +167,7 @@ public class XlsxExporter {
             @Override
             protected void makeLine(final Registration registration) {
                 addCell("Nº Aluno", registration.getStudent().getNumber());
-                addCell(pdiLabel("executionYear"), registration.getStudentCandidacy().getExecutionYear().getQualifiedName());
+                addCell(pdiLabel("executionYear"), registration.getRegistrationYear().getQualifiedName());
                 addCell("Curso", registration.getDegree().getPresentationName());
                 addCell("Acordo",
                         registration.getRegistrationProtocol() != null ? registration.getRegistrationProtocol().getDescription()
