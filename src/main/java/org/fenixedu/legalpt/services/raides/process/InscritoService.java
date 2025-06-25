@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -35,6 +34,7 @@ import org.fenixedu.legalpt.domain.raides.report.RaidesRequestParameter;
 import org.fenixedu.legalpt.domain.report.LegalReport;
 import org.joda.time.DateTime;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
@@ -117,12 +117,12 @@ public class InscritoService extends RaidesService {
                 bean.setNumInscCursosAnt(precedentQualification.getNumberOfEnrolmentsInPreviousDegrees());
 
             } else if (isGeneralAccessRegime(raidesRequestParameter, registration)) {
-                if (registration.getStudentCandidacy().getEntryGrade() != null) {
-                    bean.setNotaIngresso(registration.getStudentCandidacy().getEntryGrade().toString());
+                if (registration.getEntryGrade() != null) {
+                    bean.setNotaIngresso(registration.getEntryGrade().toString());
                 }
 
-                if (registration.getStudentCandidacy().getPlacingOption() != null) {
-                    bean.setOpcaoIngresso(registration.getStudentCandidacy().getPlacingOption().toString());
+                if (registration.getPlacingOption() != null) {
+                    bean.setOpcaoIngresso(registration.getPlacingOption().toString());
                 }
             }
         }

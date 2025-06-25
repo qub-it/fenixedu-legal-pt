@@ -1,3 +1,5 @@
+- Refactor: Moves Placing Option from StudentCandidacy to Registration [#qubIT-Fenix-6559]
+
 2.24.17 (12-06-2025)
 - Refactor: Remove references to the execution degree of StudentCandidacy [#qubIT-Fenix-6559]
 
