@@ -4,12 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.ProfessionType;
-import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
-import org.fenixedu.academic.domain.SchoolLevelType;
-import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
+import org.fenixedu.academic.domain.student.personaldata.ProfessionCategoryType;
+import org.fenixedu.academic.domain.student.personaldata.ProfessionalStatusType;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
 import org.fenixedu.legalpt.domain.raides.Raides;
@@ -183,8 +183,9 @@ public class XlsxExporter {
 
                 final PrecedentDegreeInformation lastCompletedQualification = registration.getCompletedDegreeInformation();
 
-                addCell(pdiLabel("schoolLevel"), lastCompletedQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
-                        lastCompletedQualification.getSchoolLevel()) : "");
+                addCell(pdiLabel("educationLevel"),
+                        lastCompletedQualification.getEducationLevelType() != null ? educationLevelLocalizedName(
+                                lastCompletedQualification.getEducationLevelType()) : "");
                 addCell(pdiLabel("otherSchoolLevel"), lastCompletedQualification.getOtherSchoolLevel());
                 addCell(pdiLabel("country"),
                         lastCompletedQualification.getCountry() != null ? lastCompletedQualification.getCountry().getCode() : "");
@@ -198,9 +199,9 @@ public class XlsxExporter {
 
                 final PrecedentDegreeInformation previousQualification = registration.getPreviousDegreeInformation();
 
-                addCell(pdiLabel("precedentSchoolLevel"), previousQualification != null
-                        && previousQualification.getSchoolLevel() != null ? schoolLevelLocalizedName(
-                        previousQualification.getSchoolLevel()) : "");
+                addCell(pdiLabel("precedentEducationLevel"), previousQualification != null
+                        && previousQualification.getEducationLevelType() != null ? educationLevelLocalizedName(
+                        previousQualification.getEducationLevelType()) : "");
                 addCell(pdiLabel("otherPrecedentSchoolLevel"),
                         previousQualification != null ? previousQualification.getOtherSchoolLevel() : "");
                 addCell(pdiLabel("precedentCountry"), previousQualification != null
@@ -237,27 +238,30 @@ public class XlsxExporter {
                                                     .getName() : "");
                                     addCell(pidLabel("dislocatedFromPermanentResidence"), pid.getDislocatedFromPermanentResidence()
                                             != null ? pid.getDislocatedFromPermanentResidence() : "");
-                                    addCell(pidLabel("professionType"),
-                                            pid.getProfessionType() != null ? professionTypeLocalizedName(pid.getProfessionType()) : "");
-                                    addCell(pidLabel("professionalCondition"),
-                                            pid.getProfessionalCondition() != null ? professionalSituationConditionTypeLocalizedName(
-                                                    pid.getProfessionalCondition()) : "");
-                                    addCell(pidLabel("motherSchoolLevel"), pid.getMotherSchoolLevel() != null ? schoolLevelLocalizedName(
-                                            pid.getMotherSchoolLevel()) : "");
-                                    addCell(pidLabel("motherProfessionType"),
-                                            pid.getMotherProfessionType() != null ? professionTypeLocalizedName(
-                                                    pid.getMotherProfessionType()) : "");
-                                    addCell(pidLabel("motherProfessionalCondition"), pid.getMotherProfessionalCondition()
-                                            != null ? professionalSituationConditionTypeLocalizedName(
-                                            pid.getMotherProfessionalCondition()) : "");
-                                    addCell(pidLabel("fatherSchoolLevel"), pid.getFatherSchoolLevel() != null ? schoolLevelLocalizedName(
-                                            pid.getFatherSchoolLevel()) : "");
-                                    addCell(pidLabel("fatherProfessionType"),
-                                            pid.getFatherProfessionType() != null ? professionTypeLocalizedName(
-                                                    pid.getFatherProfessionType()) : "");
-                                    addCell(pidLabel("fatherProfessionalCondition"), pid.getFatherProfessionalCondition()
-                                            != null ? professionalSituationConditionTypeLocalizedName(
-                                            pid.getFatherProfessionalCondition()) : "");
+                                    addCell(pidLabel("professionCategoryType"),
+                                            pid.getProfessionCategoryType() != null ? professionCategoryTypeLocalizedName(
+                                                    pid.getProfessionCategoryType()) : "");
+                                    addCell(pidLabel("professionalStatusType"),
+                                            pid.getProfessionalStatusType() != null ? professionalStatusTypeLocalizedName(
+                                                    pid.getProfessionalStatusType()) : "");
+                                    addCell(pidLabel("motherEducationLevel"),
+                                            pid.getMotherEducationLevelType() != null ? educationLevelLocalizedName(
+                                                    pid.getMotherEducationLevelType()) : "");
+                                    addCell(pidLabel("motherProfessionCategoryType"),
+                                            pid.getMotherProfessionCategoryType() != null ? professionCategoryTypeLocalizedName(
+                                                    pid.getMotherProfessionCategoryType()) : "");
+                                    addCell(pidLabel("motherProfessionalStatusType"),
+                                            pid.getMotherProfessionalStatusType() != null ? professionalStatusTypeLocalizedName(
+                                                    pid.getMotherProfessionalStatusType()) : "");
+                                    addCell(pidLabel("fatherEducationLevel"),
+                                            pid.getFatherEducationLevelType() != null ? educationLevelLocalizedName(
+                                                    pid.getFatherEducationLevelType()) : "");
+                                    addCell(pidLabel("fatherProfessionCategoryType"),
+                                            pid.getFatherProfessionCategoryType() != null ? professionCategoryTypeLocalizedName(
+                                                    pid.getFatherProfessionCategoryType()) : "");
+                                    addCell(pidLabel("fatherProfessionalStatusType"),
+                                            pid.getFatherProfessionalStatusType() != null ? professionalStatusTypeLocalizedName(
+                                                    pid.getFatherProfessionalStatusType()) : "");
                                 });
                     }
                 };
@@ -305,20 +309,18 @@ public class XlsxExporter {
         return LegalPTUtil.bundle("label.org.fenixedu.academic.domain.student.PersonalIngressionData." + key);
     }
 
-    protected static String schoolLevelLocalizedName(final SchoolLevelType schoolLevel) {
-        return schoolLevel.getLocalizedName();
+    protected static String educationLevelLocalizedName(final EducationLevelType educationLevelType) {
+        LocalizedString name = educationLevelType.getName();
+        return name != null ? name.getContent() : "";
     }
 
-    protected static String professionTypeLocalizedName(final ProfessionType profession) {
-        return profession.getLocalizedName();
+    protected static String professionCategoryTypeLocalizedName(final ProfessionCategoryType professionCategoryType) {
+        LocalizedString name = professionCategoryType.getName();
+        return name != null ? name.getContent() : "";
     }
 
-    protected static String professionalSituationConditionTypeLocalizedName(
-            final ProfessionalSituationConditionType conditionType) {
-        return conditionType.getLocalizedName();
-    }
-
-    protected static String schoolPeriodDurationLocalizedName(final SchoolPeriodDuration duration) {
-        return LegalPTUtil.bundle("label.SchoolPeriodDuration." + duration.name());
+    protected static String professionalStatusTypeLocalizedName(final ProfessionalStatusType professionalStatusType) {
+        LocalizedString name = professionalStatusType.getName();
+        return name != null ? name.getContent() : "";
     }
 }
