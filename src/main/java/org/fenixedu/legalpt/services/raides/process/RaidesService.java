@@ -42,6 +42,7 @@ import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
+import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
 import org.fenixedu.academic.domain.studentCurriculum.CycleCurriculumGroup;
 import org.fenixedu.legalpt.domain.LegalReportContext;
@@ -341,8 +342,8 @@ public class RaidesService {
             }
 
             final DegreeDesignation degreeDesignation =
-                    DegreeDesignation.readByNameAndSchoolLevel(lastCompletedQualification.getDegreeDesignation(),
-                            lastCompletedQualification.getSchoolLevel());
+                    DegreeDesignation.readByNameAndEducationLevelType(lastCompletedQualification.getDegreeDesignation(),
+                            lastCompletedQualification.getEducationLevelType());
 
             if (degreeDesignation != null) {
                 bean.setCursoEscolarAnt(degreeDesignation.getCode());
@@ -538,16 +539,16 @@ public class RaidesService {
         }
 
         final DegreeDesignation degreeDesignation =
-                DegreeDesignation.readByNameAndSchoolLevel(lastCompletedQualification.getDegreeDesignation(),
-                        lastCompletedQualification.getSchoolLevel());
+                DegreeDesignation.readByNameAndEducationLevelType(lastCompletedQualification.getDegreeDesignation(),
+                        lastCompletedQualification.getEducationLevelType());
 
         if (degreeDesignation == null) {
             return;
         }
 
         boolean degreeDesignationContainsInstitution = false;
-        for (final DegreeDesignation it : readByNameAndSchoolLevel(lastCompletedQualification.getDegreeDesignation(),
-                lastCompletedQualification.getSchoolLevel())) {
+        for (final DegreeDesignation it : readByNameAndEducationLevelType(lastCompletedQualification.getDegreeDesignation(),
+                lastCompletedQualification.getEducationLevelType())) {
             degreeDesignationContainsInstitution |=
                     it.getInstitutionUnitSet().contains(lastCompletedQualification.getInstitution());
         }
@@ -603,15 +604,13 @@ public class RaidesService {
         }
     }
 
-    protected Set<DegreeDesignation> readByNameAndSchoolLevel(String degreeDesignationName, SchoolLevelType schoolLevel) {
-        if ((schoolLevel == null) || (degreeDesignationName == null)) {
+    protected Set<DegreeDesignation> readByNameAndEducationLevelType(String degreeDesignationName,
+            EducationLevelType educationLevelType) {
+        if ((educationLevelType == null) || (degreeDesignationName == null)) {
             return null;
         }
 
-        List<DegreeClassification> possibleClassifications = new ArrayList<DegreeClassification>();
-        for (String code : schoolLevel.getEquivalentDegreeClassifications()) {
-            possibleClassifications.add(DegreeClassification.readByCode(code));
-        }
+        Set<DegreeClassification> possibleClassifications = educationLevelType.getDegreeClassificationsSet();
 
         List<DegreeDesignation> possibleDesignations = new ArrayList<DegreeDesignation>();
         for (DegreeClassification classification : possibleClassifications) {
