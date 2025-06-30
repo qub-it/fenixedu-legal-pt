@@ -8,7 +8,6 @@ import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
@@ -16,8 +15,8 @@ import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
-import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.Raides.Idade;
+import org.fenixedu.legalpt.domain.raides.RaidesReportEntryTarget;
 import org.fenixedu.legalpt.domain.raides.TblIdentificacao;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
 import org.fenixedu.legalpt.domain.report.LegalReport;
@@ -112,11 +111,11 @@ public class IdentificacaoService extends RaidesService {
                 bean.setSexo(value);
             }
         } else {
-            
+
             LegalReportContext.addError(target,
                     i18n("error.Raides.validation.gender.missing"),
                     i18n("error.Raides.validation.gender.missing.action"));
-            
+
             bean.markAsInvalid();
         }
 
@@ -226,7 +225,8 @@ public class IdentificacaoService extends RaidesService {
 
         final PrecedentDegreeInformation pid = registration.getCompletedDegreeInformation();
 
-        if (pid != null && pid.getSchoolLevel() == SchoolLevelType.HIGH_SCHOOL_OR_EQUIVALENT && pid.getCountry() != null) {
+        if (pid != null && pid.getEducationLevelType() != null && pid.getEducationLevelType().getHighSchoolOrEquivalent()
+                && pid.getCountry() != null) {
             return pid.getCountry().getCode();
         }
 
