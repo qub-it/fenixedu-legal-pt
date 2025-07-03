@@ -289,7 +289,7 @@ public class RaidesService {
 
         if (lastCompletedQualification.getSchoolLevel() != null) {
 
-            String value = LegalMapping.find(report, LegalMappingType.PRECEDENT_SCHOOL_LEVEL)
+            String value = LegalMapping.find(report, LegalMappingType.PRECEDENT_EDUCATION_LEVEL)
                     .translate(lastCompletedQualification.getSchoolLevel());
 
             if (StringUtils.isBlank(value)) {
@@ -670,8 +670,8 @@ public class RaidesService {
         if (ingressionData != null) {
             if (ingressionData.getFatherSchoolLevel() != null) {
 
-                String value =
-                        LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL).translate(ingressionData.getFatherSchoolLevel());
+                String value = LegalMapping.find(report, LegalMappingType.EDUCATION_LEVEL)
+                        .translate(ingressionData.getFatherSchoolLevel());
 
                 if (StringUtils.isBlank(value)) {
                     LegalReportContext.addError(target, i18n("error.Raides.validation.fatherSchoolLevel.missing.translate",
@@ -689,8 +689,8 @@ public class RaidesService {
 
             if (ingressionData.getMotherSchoolLevel() != null) {
 
-                String value =
-                        LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL).translate(ingressionData.getMotherSchoolLevel());
+                String value = LegalMapping.find(report, LegalMappingType.EDUCATION_LEVEL)
+                        .translate(ingressionData.getMotherSchoolLevel());
 
                 if (StringUtils.isBlank(value)) {
                     LegalReportContext.addError(target, i18n("error.Raides.validation.motherSchoolLevel.missing.translate",
@@ -708,7 +708,7 @@ public class RaidesService {
 
             if (ingressionData.getFatherProfessionalCondition() != null) {
 
-                String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
+                String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS)
                         .translate(ingressionData.getFatherProfessionalCondition());
 
                 if (StringUtils.isBlank(value)) {
@@ -730,7 +730,7 @@ public class RaidesService {
 
         if (ingressionData.getMotherProfessionalCondition() != null) {
 
-            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS)
                     .translate(ingressionData.getMotherProfessionalCondition());
 
             if (StringUtils.isBlank(value)) {
@@ -749,7 +749,7 @@ public class RaidesService {
 
         if (ingressionData.getProfessionalCondition() != null) {
 
-            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION)
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS)
                     .translate(ingressionData.getProfessionalCondition());
 
             if (StringUtils.isBlank(value)) {
@@ -768,7 +768,7 @@ public class RaidesService {
 
         if (ingressionData.getFatherProfessionType() != null) {
 
-            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY)
                     .translate(ingressionData.getFatherProfessionType());
 
             if (StringUtils.isBlank(value)) {
@@ -787,7 +787,7 @@ public class RaidesService {
 
         if (ingressionData.getMotherProfessionType() != null) {
 
-            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE)
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY)
                     .translate(ingressionData.getMotherProfessionType());
 
             if (StringUtils.isBlank(value)) {
@@ -807,7 +807,7 @@ public class RaidesService {
         if (ingressionData.getProfessionType() != null) {
 
             String value =
-                    LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE).translate(ingressionData.getProfessionType());
+                    LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY).translate(ingressionData.getProfessionType());
 
             if (StringUtils.isBlank(value)) {
                 LegalReportContext.addError(target, i18n("error.Raides.validation.studentProfession.missing.translate",

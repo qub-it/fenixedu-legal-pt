@@ -8,9 +8,6 @@ import java.util.stream.Collectors;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.GrantOwnerType;
-import org.fenixedu.academic.domain.ProfessionType;
-import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
-import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.academic.domain.candidacy.IngressionType;
 import org.fenixedu.academic.domain.curriculum.grade.GradeScale;
@@ -24,6 +21,9 @@ import org.fenixedu.academic.domain.student.RegistrationRegimeType;
 import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.academic.domain.student.mobility.MobilityActivityType;
 import org.fenixedu.academic.domain.student.mobility.MobilityProgramType;
+import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
+import org.fenixedu.academic.domain.student.personaldata.ProfessionCategoryType;
+import org.fenixedu.academic.domain.student.personaldata.ProfessionalStatusType;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.I18N;
@@ -44,8 +44,9 @@ import pt.ist.fenixframework.FenixFramework;
 public enum LegalMappingType implements ILegalMappingType {
     
     BOOLEAN, GENDER, ID_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE, GRANT_OWNER_BY_STATUTE_TYPE, REGISTRATION_INGRESSION_TYPE, MARITAL_STATUS,
-    SCHOOL_LEVEL, PROFESSIONAL_SITUATION_CONDITION, PROFESSION_TYPE, HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION,
-    INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR, REGIME_FREQUENCIA, PRECEDENT_SCHOOL_LEVEL,
+    EDUCATION_LEVEL, PROFESSIONAL_STATUS, PROFESSION_CATEGORY, HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION,
+    INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR, REGIME_FREQUENCIA,
+    PRECEDENT_EDUCATION_LEVEL,
     INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT, GRADE, INTEGRATED_MASTER_FIRST_CYCLE_CODES,
     DEGREE_CURRICULAR_PLAN_DEGREE_OFICIAL_CODE;
 
@@ -71,13 +72,13 @@ public enum LegalMappingType implements ILegalMappingType {
             return Sets.newHashSet(Bennu.getInstance().getIngressionTypesSet());
         case MARITAL_STATUS:
             return Sets.newHashSet(MaritalStatus.values());
-        case SCHOOL_LEVEL:
-        case PRECEDENT_SCHOOL_LEVEL:
-            return Sets.newHashSet(SchoolLevelType.values());
-        case PROFESSIONAL_SITUATION_CONDITION:
-            return Sets.newHashSet(ProfessionalSituationConditionType.values());
-        case PROFESSION_TYPE:
-            return Sets.newHashSet(ProfessionType.values());
+        case EDUCATION_LEVEL:
+        case PRECEDENT_EDUCATION_LEVEL:
+            return EducationLevelType.findAll().collect(Collectors.toSet());
+        case PROFESSIONAL_STATUS:
+            return ProfessionalStatusType.findAll().collect(Collectors.toSet());
+        case PROFESSION_CATEGORY:
+            return ProfessionCategoryType.findAll().collect(Collectors.toSet());
         case HIGH_SCHOOL_TYPE:
             return Sets.newHashSet(AcademicalInstitutionType.values());
         case SCHOOL_PERIOD_DURATION:
@@ -182,19 +183,22 @@ public enum LegalMappingType implements ILegalMappingType {
             final MaritalStatus maritalStatus = MaritalStatus.valueOf(key);
             mls = mls.with(I18N.getLocale(), maritalStatus.getLocalizedName());
             return mls;
-        case SCHOOL_LEVEL:
-        case PRECEDENT_SCHOOL_LEVEL:
-            final SchoolLevelType schoolLevel = SchoolLevelType.valueOf(key);
-            mls = mls.with(I18N.getLocale(), schoolLevel.getLocalizedName());
-            return mls;
-        case PROFESSIONAL_SITUATION_CONDITION:
-            final ProfessionalSituationConditionType condition = ProfessionalSituationConditionType.valueOf(key);
-            mls = mls.with(I18N.getLocale(), condition.getLocalizedName());
-            return mls;
-        case PROFESSION_TYPE:
-            final ProfessionType professionType = ProfessionType.valueOf(key);
-            mls = mls.with(I18N.getLocale(), professionType.getLocalizedName());
-            return mls;
+        case EDUCATION_LEVEL:
+        case PRECEDENT_EDUCATION_LEVEL:
+            EducationLevelType educationLevelType = EducationLevelType.findByCode(key).orElseThrow(
+                    () -> new IllegalArgumentException(LegalPTUtil.bundleI18N("error.educationLevelType.doesnt.exist") + key));
+            return educationLevelType.getName();
+        case PROFESSIONAL_STATUS:
+            ProfessionalStatusType professionalStatusType = ProfessionalStatusType.findByCode(key).orElseThrow(
+                    () -> new IllegalArgumentException(
+                            LegalPTUtil.bundleI18N("error.professionalStatusType.doesnt.exist") + key));
+
+            return professionalStatusType.getName();
+        case PROFESSION_CATEGORY:
+            ProfessionCategoryType professionCategoryType = ProfessionCategoryType.findByCode(key).orElseThrow(
+                    () -> new IllegalArgumentException(
+                            LegalPTUtil.bundleI18N("error.professionCategoryType.doesnt.exist") + key));
+            return professionCategoryType.getName();
         case HIGH_SCHOOL_TYPE:
             final AcademicalInstitutionType academicalInstitutionType = AcademicalInstitutionType.valueOf(key);
             return localizedName(academicalInstitutionType, I18N.getLocale());
@@ -224,34 +228,9 @@ public enum LegalMappingType implements ILegalMappingType {
         }
     }
 
-    private LocalizedString localizedName(final SchoolLevelType schoolLevel, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES, schoolLevel.getQualifiedName(), locales);
-    }
-
-    private LocalizedString localizedName(final SchoolPeriodDuration schoolPeriodDuration, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES,
-                schoolPeriodDuration.getClass().getSimpleName() + "." + schoolPeriodDuration.name(), locales);
-    }
-
     private LocalizedString localizedName(final AcademicalInstitutionType academicalInstitutionType, final Locale... locales) {
         return localizedName(ENUMERATION_RESOURCES,
                 academicalInstitutionType.getClass().getSimpleName() + "." + academicalInstitutionType.name(), locales);
-    }
-
-    private LocalizedString localizedName(final ProfessionType professionType, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES, professionType.getQualifiedName(), locales);
-    }
-
-    private LocalizedString localizedName(final ProfessionalSituationConditionType condition, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES, condition.getQualifiedName(), locales);
-    }
-
-    private LocalizedString localizedName(final MaritalStatus maritalStatus, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES, maritalStatus.getClass().getName() + "." + maritalStatus.name(), locales);
-    }
-
-    private LocalizedString localizedName(final RegistrationRegimeType registrationRegimeType, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES, registrationRegimeType.getQualifiedName(), locales);
     }
 
     private LocalizedString localizedName(final String bundle, final String key, final Locale... locales) {
