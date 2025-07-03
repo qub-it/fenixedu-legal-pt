@@ -172,9 +172,8 @@ public class XlsxExporter {
                 addCell("Acordo",
                         registration.getRegistrationProtocol() != null ? registration.getRegistrationProtocol().getDescription()
                                 .getContent() : "");
-                addCell("Ingresso",
-                        registration.getStudentCandidacy().getIngressionType() != null ? registration.getIngressionType()
-                                .getDescription().getContent() : "");
+                addCell("Ingresso", registration.getIngressionType() != null ? //
+                        registration.getIngressionType().getDescription().getContent() : "");
                 addCell("Nome", registration.getStudent().getName());
 
                 addCell("Reportar como Inscrito", raides.isInEnrolledData(registration));
