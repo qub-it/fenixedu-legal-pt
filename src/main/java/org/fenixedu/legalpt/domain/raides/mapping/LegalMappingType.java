@@ -47,8 +47,9 @@ import pt.ist.fenixframework.FenixFramework;
 public enum LegalMappingType implements ILegalMappingType {
     
     BOOLEAN, GENDER, ID_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE, GRANT_OWNER_BY_STATUTE_TYPE, REGISTRATION_INGRESSION_TYPE, MARITAL_STATUS,
-    SCHOOL_LEVEL, PROFESSIONAL_SITUATION_CONDITION, PROFESSION_TYPE, HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION,
-    INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR, REGIME_FREQUENCIA, PRECEDENT_SCHOOL_LEVEL,
+    SCHOOL_LEVEL, EDUCATION_LEVEL, PROFESSIONAL_SITUATION_CONDITION, PROFESSIONAL_STATUS, PROFESSION_TYPE, PROFESSION_CATEGORY,
+    HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION, INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR,
+    REGIME_FREQUENCIA, PRECEDENT_SCHOOL_LEVEL, PRECEDENT_EDUCATION_LEVEL,
     INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT, GRADE, INTEGRATED_MASTER_FIRST_CYCLE_CODES,
     DEGREE_CURRICULAR_PLAN_DEGREE_OFICIAL_CODE;
 
@@ -77,10 +78,17 @@ public enum LegalMappingType implements ILegalMappingType {
         case SCHOOL_LEVEL:
         case PRECEDENT_SCHOOL_LEVEL:
             return Sets.newHashSet(SchoolLevelType.values());
+        case EDUCATION_LEVEL:
+        case PRECEDENT_EDUCATION_LEVEL:
+            return EducationLevelType.findAll().collect(Collectors.toSet());
         case PROFESSIONAL_SITUATION_CONDITION:
             return Sets.newHashSet(ProfessionalSituationConditionType.values());
+        case PROFESSIONAL_STATUS:
+            return ProfessionalStatusType.findAll().collect(Collectors.toSet());
         case PROFESSION_TYPE:
             return Sets.newHashSet(ProfessionType.values());
+        case PROFESSION_CATEGORY:
+            return ProfessionCategoryType.findAll().collect(Collectors.toSet());
         case HIGH_SCHOOL_TYPE:
             return Sets.newHashSet(AcademicalInstitutionType.values());
         case SCHOOL_PERIOD_DURATION:
@@ -191,17 +199,24 @@ public enum LegalMappingType implements ILegalMappingType {
                     () -> new IllegalArgumentException(
                             LegalPTUtil.bundleI18N("error.educationLevelType.doesnt.exist", key).getContent()));
             return educationLevelType.getName();
+        case EDUCATION_LEVEL:
+        case PRECEDENT_EDUCATION_LEVEL:
+            return ((EducationLevelType) FenixFramework.getDomainObject(key)).getName();
         case PROFESSIONAL_SITUATION_CONDITION:
             ProfessionalStatusType professionalStatusType = ProfessionalStatusType.findByCode(key).orElseThrow(
                     () -> new IllegalArgumentException(
                             LegalPTUtil.bundleI18N("error.professionalStatusType.doesnt.exist", key).getContent()));
 
             return professionalStatusType.getName();
+        case PROFESSIONAL_STATUS:
+            return ((ProfessionalStatusType) FenixFramework.getDomainObject(key)).getName();
         case PROFESSION_TYPE:
             ProfessionCategoryType professionCategoryType = ProfessionCategoryType.findByCode(key).orElseThrow(
                     () -> new IllegalArgumentException(
                             LegalPTUtil.bundleI18N("error.professionCategoryType.doesnt.exist", key).getContent()));
             return professionCategoryType.getName();
+        case PROFESSION_CATEGORY:
+            return ((ProfessionCategoryType) FenixFramework.getDomainObject(key)).getName();
         case HIGH_SCHOOL_TYPE:
             final AcademicalInstitutionType academicalInstitutionType = AcademicalInstitutionType.valueOf(key);
             return localizedName(academicalInstitutionType, I18N.getLocale());
