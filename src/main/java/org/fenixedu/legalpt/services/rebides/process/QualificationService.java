@@ -1,7 +1,6 @@
 package org.fenixedu.legalpt.services.rebides.process;
 
 import org.fenixedu.academic.domain.Qualification;
-import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
@@ -41,50 +40,50 @@ public class QualificationService {
 
     public QualificationBean getQualificationData() {
         QualificationBean bean = new QualificationBean();
-        fillSchoolLevel(bean); // required
-        fillSchoolLevelDegree(bean); // required
+        // fillSchoolLevel(bean); // required
+        // fillSchoolLevelDegree(bean); // required
         fillInstituition(bean); // required
         fillOtherInstituition(bean); // optional
         fillDegree(bean); // required
         fillOtherDegree(bean); // optional
-        fillExpertiseArea(bean); // required
+        // fillExpertiseArea(bean); // required
         fillOtherExpertiseArea(bean); // optional
         fillScientificArea(bean); // required
 
         return bean;
     }
 
-    private void fillSchoolLevel(QualificationBean bean) {
-        // TODO add all values defined at REBIDES report
-        if (getQualificationSchoolLevel() != null) {
-            if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL).translate(getQualificationSchoolLevel()) != null) {
-                bean.setSchoolLevel(
-                        LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL).translate(getQualificationSchoolLevel()));
-            } else {
-                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
-                        .createMissingMappingMessage("label.schoolLevel", getQualificationSchoolLevel().getLocalizedName()));
-            }
-        } else {
-            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
-                    RebidesService.createMissingFieldMessage("label.schoolLevel"));
-        }
-    }
-
-    private void fillSchoolLevelDegree(QualificationBean bean) {
-        if (getQualificationSchoolLevelOrigin() != null) {
-            if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN)
-                    .translate(getQualificationSchoolLevelOrigin()) != null) {
-                bean.setSchoolLevelOrigin(LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN)
-                        .translate(getQualificationSchoolLevelOrigin()));
-            } else {
-                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
-                        .createMissingMappingMessage("label.schoolLevelOrigin", getQualificationSchoolLevelOrigin()));
-            }
-        } else {
-            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
-                    RebidesService.createMissingFieldMessage("label.schoolLevelType"));
-        }
-    }
+    //    private void fillSchoolLevel(QualificationBean bean) {
+    //        // TODO add all values defined at REBIDES report
+    //        if (getQualificationSchoolLevel() != null) {
+    //            if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL).translate(getQualificationSchoolLevel()) != null) {
+    //                bean.setSchoolLevel(
+    //                        LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL).translate(getQualificationSchoolLevel()));
+    //            } else {
+    //                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
+    //                        .createMissingMappingMessage("label.schoolLevel", getQualificationSchoolLevel().getLocalizedName()));
+    //            }
+    //        } else {
+    //            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
+    //                    RebidesService.createMissingFieldMessage("label.schoolLevel"));
+    //        }
+    //    }
+    //
+    //    private void fillSchoolLevelDegree(QualificationBean bean) {
+    //        if (getQualificationSchoolLevelOrigin() != null) {
+    //            if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN)
+    //                    .translate(getQualificationSchoolLevelOrigin()) != null) {
+    //                bean.setSchoolLevelOrigin(LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN)
+    //                        .translate(getQualificationSchoolLevelOrigin()));
+    //            } else {
+    //                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService
+    //                        .createMissingMappingMessage("label.schoolLevelOrigin", getQualificationSchoolLevelOrigin()));
+    //            }
+    //        } else {
+    //            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
+    //                    RebidesService.createMissingFieldMessage("label.schoolLevelType"));
+    //        }
+    //    }
 
     private void fillInstituition(QualificationBean bean) {
         if (getQualificationInstitution() != null) {
@@ -135,14 +134,14 @@ public class QualificationService {
         }
     }
 
-    private void fillExpertiseArea(QualificationBean bean) {
-        if (qualification.getCountry() != null && qualification.getCountry().isDefaultCountry()
-                && getQualificationSchoolLevel() != null && getQualificationSchoolLevel().isHigherEducation()) {
-            bean.setExpertiseArea(ExpertiseArea.OTHER);
-        } else {
-            bean.setExpertiseArea(ExpertiseArea.NOT_DEFINED);
-        }
-    }
+    //    private void fillExpertiseArea(QualificationBean bean) {
+    //        if (qualification.getCountry() != null && qualification.getCountry().isDefaultCountry()
+    //                && getQualificationSchoolLevel() != null && getQualificationSchoolLevel().isHigherEducation()) {
+    //            bean.setExpertiseArea(ExpertiseArea.OTHER);
+    //        } else {
+    //            bean.setExpertiseArea(ExpertiseArea.NOT_DEFINED);
+    //        }
+    //    }
 
     private void fillOtherExpertiseArea(QualificationBean bean) {
         if (bean.getExpertiseArea() != null && bean.getExpertiseArea().equals(ExpertiseArea.OTHER)) {
@@ -166,15 +165,15 @@ public class QualificationService {
         }
     }
 
-    private SchoolLevelType getQualificationSchoolLevel() {
-        //TODO: finish
-        return null;
-    }
-
-    private String getQualificationSchoolLevelOrigin() {
-        //TODO: finish
-        return null;
-    }
+    //    private SchoolLevelType getQualificationSchoolLevel() {
+    //        //TODO: finish
+    //        return null;
+    //    }
+    //
+    //    private String getQualificationSchoolLevelOrigin() {
+    //        //TODO: finish
+    //        return null;
+    //    }
 
     private Unit getQualificationInstitution() {
         //TODO: finish
