@@ -1,9 +1,12 @@
 package org.fenixedu.ulisboa.integration.sas.servlet;
 
+import java.util.Optional;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.student.personaldata.ProfessionCategoryType;
 import org.fenixedu.academic.domain.student.personaldata.ProfessionalStatusType;
@@ -11,6 +14,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.legalpt.domain.mapping.DomainObjectLegalMapping;
 import org.fenixedu.legalpt.domain.mapping.EnumerationLegalMapping;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
+import org.fenixedu.ulisboa.integration.sas.domain.EducationLevelTypeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SchoolLevelTypeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SocialServicesConfiguration;
 import org.fenixedu.ulisboa.integration.sas.service.sicabe.SicabeExternalService;
@@ -33,9 +37,11 @@ public class SasInitializer implements ServletContextListener {
         }
 
         SchoolLevelTypeMapping.registerEvents();
+        EducationLevelTypeMapping.registerEvents();
         
         SicabeExternalService.init();
         createNewDomainMappingsFromEnumerationMappings();
+        createEducationLevelTypeMappings();
     }
 
     @Override
@@ -97,5 +103,28 @@ public class SasInitializer implements ServletContextListener {
                 targetMapping.addEntry(key, e.getMappingValue());
             }
         });
+    }
+
+    private static void createEducationLevelTypeMappings() {
+        SchoolLevelTypeMapping.findAll().forEach(m -> {
+            EducationLevelType educationLevelType = EducationLevelType.findByCode(m.getSchoolLevel().getName()).orElseThrow(
+                    () -> new IllegalArgumentException("Invalid School Level Code: " + m.getSchoolLevel().getName()));
+
+            if (findMapping(m.getDegreeType(), educationLevelType).isEmpty()) {
+                Log.warn(
+                        "Creating new EducationLevelTypeMapping with code: " + educationLevelType.getCode() + " and degree type: "
+                                + m.getDegreeType().getCode());
+
+                EducationLevelTypeMapping.create(educationLevelType, m.getDegreeType());
+                
+                Log.warn("New EducationLevelTypeMapping created for code: " + educationLevelType.getCode() + " and degree type: "
+                        + m.getDegreeType().getCode());
+            }
+        });
+    }
+
+    private static Optional<EducationLevelTypeMapping> findMapping(DegreeType degreeType, EducationLevelType educationLevelType) {
+        return EducationLevelTypeMapping.findAll()
+                .filter(m -> m.getDegreeType() == degreeType && m.getEducationLevelType() == educationLevelType).findFirst();
     }
 }
