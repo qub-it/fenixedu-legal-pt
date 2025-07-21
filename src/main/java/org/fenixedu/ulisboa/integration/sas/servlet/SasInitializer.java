@@ -11,6 +11,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.legalpt.domain.mapping.DomainObjectLegalMapping;
 import org.fenixedu.legalpt.domain.mapping.EnumerationLegalMapping;
 import org.fenixedu.legalpt.domain.raides.mapping.LegalMappingType;
+import org.fenixedu.ulisboa.integration.sas.domain.EducationLevelTypeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SchoolLevelTypeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SocialServicesConfiguration;
 import org.fenixedu.ulisboa.integration.sas.service.sicabe.SicabeExternalService;
@@ -33,9 +34,11 @@ public class SasInitializer implements ServletContextListener {
         }
 
         SchoolLevelTypeMapping.registerEvents();
+        EducationLevelTypeMapping.registerEvents();
         
         SicabeExternalService.init();
         createNewDomainMappingsFromEnumerationMappings();
+        createEducationLevelTypeMappings();
     }
 
     @Override
@@ -90,11 +93,28 @@ public class SasInitializer implements ServletContextListener {
                         () -> new IllegalArgumentException("Invalid Professional Status Code: " + e.getMappingKey()));
                 break;
             default:
-                Log.warn("Unsupported targetType: " + targetType);
+                Log.error("Unsupported targetType: " + targetType);
             }
 
             if (key != null) {
                 targetMapping.addEntry(key, e.getMappingValue());
+            }
+        });
+    }
+
+    private static void createEducationLevelTypeMappings() {
+        SchoolLevelTypeMapping.findAll().forEach(m -> {
+            EducationLevelType educationLevelType = EducationLevelType.findByCode(m.getSchoolLevel().getName()).orElseThrow(
+                    () -> new IllegalArgumentException("Invalid School Level Code: " + m.getSchoolLevel().getName()));
+
+            if (EducationLevelTypeMapping.find(m.getDegreeType()).isEmpty()) {
+                Log.warn(
+                        "Creating new EducationLevelTypeMapping with code: " + educationLevelType.getCode() + " and degree type: "
+                                + m.getDegreeType().getCode());
+
+                EducationLevelTypeMapping.create(educationLevelType, m.getDegreeType());
+                Log.warn("New EducationLevelTypeMapping created for code: " + educationLevelType.getCode() + " and degree type: "
+                        + m.getDegreeType().getCode());
             }
         });
     }

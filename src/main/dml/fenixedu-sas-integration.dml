@@ -4,6 +4,7 @@ external class .org.fenixedu.academic.domain.ExecutionYear;
 external class .org.fenixedu.academic.domain.student.Registration;
 external class .org.fenixedu.academic.domain.person.IDDocumentType;
 external class .org.fenixedu.academic.domain.candidacy.IngressionType;
+external class .org.fenixedu.academic.domain.student.personaldata;
 
 enum org.fenixedu.ulisboa.integration.sas.domain.CandidacyState										as CandidacyState;
 enum org.fenixedu.ulisboa.integration.sas.domain.SasScholarshipCandidacyState							as SasScholarshipCandidacyState;
@@ -146,6 +147,9 @@ class SchoolLevelTypeMapping {
 	SchoolLevelType schoolLevel;
 }
 
+class EducationLevelTypeMapping {
+}
+
 class SasIngressionRegimeMapping {
 	String regimeCode;
 	String regimeCodeWithDescription;
@@ -244,6 +248,33 @@ relation SchoolLevelTypeMappingBennu{
 		multiplicity 1..1;
 	}
 	SchoolLevelTypeMapping playsRole schoolLevelTypeMapping {
+		multiplicity *;
+	}
+}
+
+relation EducationLevelTypeMappingDegreeType {
+	.org.fenixedu.academic.domain.degree.DegreeType playsRole degreeType {
+		multiplicity 1;
+	}
+	EducationLevelTypeMapping playsRole educationLevelTypeMapping {
+	    multiplicity 0..1;
+	}
+}
+
+relation EducationLevelTypeMappingEducationLevelType {
+	.org.fenixedu.academic.domain.student.personaldata.EducationLevelType playsRole educationLevelType {
+		multiplicity 1;
+	}
+	EducationLevelTypeMapping playsRole educationLevelTypeMappings {
+	    multiplicity *;
+	}
+}
+
+relation EducationLevelTypeMappingBennu{
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	EducationLevelTypeMapping playsRole educationLevelTypeMappings {
 		multiplicity *;
 	}
 }
