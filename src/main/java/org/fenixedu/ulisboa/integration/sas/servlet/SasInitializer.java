@@ -96,7 +96,7 @@ public class SasInitializer implements ServletContextListener {
                         () -> new IllegalArgumentException("Invalid Professional Status Code: " + e.getMappingKey()));
                 break;
             default:
-                Log.warn("Unsupported targetType: " + targetType);
+                Log.error("Unsupported targetType: " + targetType);
             }
 
             if (key != null) {
@@ -116,7 +116,6 @@ public class SasInitializer implements ServletContextListener {
                                 + m.getDegreeType().getCode());
 
                 EducationLevelTypeMapping.create(educationLevelType, m.getDegreeType());
-                
                 Log.warn("New EducationLevelTypeMapping created for code: " + educationLevelType.getCode() + " and degree type: "
                         + m.getDegreeType().getCode());
             }
