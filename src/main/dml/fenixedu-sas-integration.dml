@@ -143,10 +143,6 @@ class ScholarshipReportRequest {
 class ScholarshipReportFile extends .org.fenixedu.bennu.io.domain.GenericFile{
 }
 
-class SchoolLevelTypeMapping {
-	SchoolLevelType schoolLevel;
-}
-
 class EducationLevelTypeMapping {
 }
 
@@ -234,22 +230,6 @@ relation ScholarshipReportRequestResultFile{
 	//Default multiply (0..1) since before the processing, there will be no result file
 	protected ScholarshipReportFile playsRole resultFile;
 	protected ScholarshipReportRequest playsRole scholarshipReportRequestForWhichIsResult;
-}
-
-relation SchoolLevelTypeMappingDegreeType{
-	.org.fenixedu.academic.domain.degree.DegreeType playsRole degreeType{
-		multiplicity 1;
-	}
-	SchoolLevelTypeMapping playsRole schoolLevelTypeMapping;
-}
-
-relation SchoolLevelTypeMappingBennu{
-	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
-		multiplicity 1..1;
-	}
-	SchoolLevelTypeMapping playsRole schoolLevelTypeMapping {
-		multiplicity *;
-	}
 }
 
 relation EducationLevelTypeMappingDegreeType {
