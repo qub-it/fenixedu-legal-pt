@@ -8,32 +8,49 @@ import java.util.stream.Stream;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.ulisboa.integration.sas.util.SasPTUtil;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.DeletionListener;
 
 public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
 
-    protected static final String TECHNICAL_SPECIALIZATION = "TECHNICAL_SPECIALIZATION";
-    protected static final String DEGREE = "DEGREE";
-    protected static final String DEGREE_PRE_BOLOGNA = "DEGREE_PRE_BOLOGNA";
-    protected static final String BACHELOR_DEGREE_PRE_BOLOGNA = "BACHELOR_DEGREE_PRE_BOLOGNA";
-    protected static final String FIRST_CYCLE_INTEGRATED_MASTER_DEGREE = "FIRST_CYCLE_INTEGRATED_MASTER_DEGREE";
-    protected static final String MASTER_DEGREE = "MASTER_DEGREE";
-    protected static final String MASTER_DEGREE_PRE_BOLOGNA = "MASTER_DEGREE_PRE_BOLOGNA";
-    protected static final String MASTER_DEGREE_INTEGRATED = "MASTER_DEGREE_INTEGRATED";
-    protected static final String DOCTORATE_DEGREE = "DOCTORATE_DEGREE";
-    protected static final String DOCTORATE_DEGREE_PRE_BOLOGNA = "DOCTORATE_DEGREE_PRE_BOLOGNA";
+    private static final String TECHNICAL_SPECIALIZATION = "TECHNICAL_SPECIALIZATION";
+    private static final String DEGREE = "DEGREE";
+    private static final String DEGREE_PRE_BOLOGNA = "DEGREE_PRE_BOLOGNA";
+    private static final String BACHELOR_DEGREE_PRE_BOLOGNA = "BACHELOR_DEGREE_PRE_BOLOGNA";
+    private static final String FIRST_CYCLE_INTEGRATED_MASTER_DEGREE = "FIRST_CYCLE_INTEGRATED_MASTER_DEGREE";
+    private static final String MASTER_DEGREE = "MASTER_DEGREE";
+    private static final String MASTER_DEGREE_PRE_BOLOGNA = "MASTER_DEGREE_PRE_BOLOGNA";
+    private static final String MASTER_DEGREE_INTEGRATED = "MASTER_DEGREE_INTEGRATED";
+    private static final String DOCTORATE_DEGREE = "DOCTORATE_DEGREE";
+    private static final String DOCTORATE_DEGREE_PRE_BOLOGNA = "DOCTORATE_DEGREE_PRE_BOLOGNA";
 
     protected EducationLevelTypeMapping() {
         super();
     }
 
     public void delete() {
-        setDegreeType(null);
-        setEducationLevelType(null);
+        super.setDegreeType(null);
+        super.setEducationLevelType(null);
         setBennu(null);
         super.deleteDomainObject();
+    }
+
+    @Override
+    public void setEducationLevelType(final EducationLevelType educationLevelType) {
+        if (educationLevelType == null) {
+            throw new RuntimeException(SasPTUtil.bundle("error.educationLevel.cannot.be.null"));
+        }
+        super.setEducationLevelType(educationLevelType);
+    }
+
+    @Override
+    public void setDegreeType(final DegreeType degreeType) {
+        if (degreeType == null) {
+            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.cannot.be.null"));
+        }
+        super.setDegreeType(degreeType);
     }
 
     public static Stream<EducationLevelTypeMapping> findAll() {
@@ -53,13 +70,21 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
     }
 
     public void edit(EducationLevelType educationLevelType, DegreeType degreeType) {
-        checkPreConditions(this, educationLevelType, degreeType);
+        if (findMapping(degreeType).isPresent() && degreeType != getDegreeType()) {
+            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.already.has.associated.education.level",
+                    degreeType.getName().getContent()));
+        }
+
         setEducationLevelType(educationLevelType);
         setDegreeType(degreeType);
     }
 
     public static EducationLevelTypeMapping create(EducationLevelType educationLevelType, DegreeType degreeType) {
-        checkPreConditions(null, educationLevelType, degreeType);
+        if (findMapping(degreeType).isPresent()) {
+            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.already.has.associated.education.level",
+                    degreeType.getName().getContent()));
+        }
+
         EducationLevelTypeMapping educationLevelTypeMapping = new EducationLevelTypeMapping();
         educationLevelTypeMapping.setEducationLevelType(educationLevelType);
         educationLevelTypeMapping.setDegreeType(degreeType);
@@ -69,22 +94,11 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
 
     // Check if the arguments are not null, and if the degree type has no associated educationlevel.
     // First argument can be null (for constructor case)
-    public static void checkPreConditions(EducationLevelTypeMapping educationLevelTypeMapping, EducationLevelType educationLevelType,
-            DegreeType degreeType) {
-
-        //TODO localize messages
+    public static Optional<EducationLevelTypeMapping> findMapping(DegreeType degreeType) {
         if (degreeType == null) {
-            throw new RuntimeException("Degree Type cannot be null");
+            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.cannot.be.null"));
         }
-        if (educationLevelType == null) {
-            throw new RuntimeException("Education Level cannot be null");
-        }
-        EducationLevelTypeMapping degreeTypeCurrentEducationLevelTypeMapping = degreeType.getEducationLevelTypeMapping();
-        if (degreeTypeCurrentEducationLevelTypeMapping != null
-                && degreeTypeCurrentEducationLevelTypeMapping != educationLevelTypeMapping) {
-            throw new RuntimeException("Degree type already has associated education level");
-        }
-
+        return Optional.ofNullable(degreeType.getEducationLevelTypeMapping());
     }
 
     private static final List<String> CTSP_SCHOOL_LEVELS = new ArrayList<>();

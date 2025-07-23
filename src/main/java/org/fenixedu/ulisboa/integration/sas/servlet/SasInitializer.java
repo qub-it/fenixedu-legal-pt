@@ -1,12 +1,9 @@
 package org.fenixedu.ulisboa.integration.sas.servlet;
 
-import java.util.Optional;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.student.personaldata.ProfessionCategoryType;
 import org.fenixedu.academic.domain.student.personaldata.ProfessionalStatusType;
@@ -110,7 +107,7 @@ public class SasInitializer implements ServletContextListener {
             EducationLevelType educationLevelType = EducationLevelType.findByCode(m.getSchoolLevel().getName()).orElseThrow(
                     () -> new IllegalArgumentException("Invalid School Level Code: " + m.getSchoolLevel().getName()));
 
-            if (findMapping(m.getDegreeType(), educationLevelType).isEmpty()) {
+            if (EducationLevelTypeMapping.findMapping(m.getDegreeType()).isEmpty()) {
                 Log.warn(
                         "Creating new EducationLevelTypeMapping with code: " + educationLevelType.getCode() + " and degree type: "
                                 + m.getDegreeType().getCode());
@@ -120,10 +117,5 @@ public class SasInitializer implements ServletContextListener {
                         + m.getDegreeType().getCode());
             }
         });
-    }
-
-    private static Optional<EducationLevelTypeMapping> findMapping(DegreeType degreeType, EducationLevelType educationLevelType) {
-        return EducationLevelTypeMapping.findAll()
-                .filter(m -> m.getDegreeType() == degreeType && m.getEducationLevelType() == educationLevelType).findFirst();
     }
 }

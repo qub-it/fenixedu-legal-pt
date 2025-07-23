@@ -52,7 +52,7 @@ public class AbstractFillScholarshipService {
     private static final String REGISTRATION_TYPE_CANCELED = "CANCELED";
 
     public static final String SAS_BUNDLE = "resources/SasResources";
-    protected static final String DEGREE = "DEGREE";
+    private static final String DEGREE = "DEGREE";
 
     public static class MessageEntry {
 
