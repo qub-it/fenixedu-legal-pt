@@ -160,14 +160,14 @@ public class RebidesService {
             throw new DomainException("rebides.message.error.mapping.is.empty",
                     i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.GENDER.name"));
         }
-        if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL) == null) {
-            throw new DomainException("rebides.message.error.mapping.is.empty",
-                    i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.SCHOOL_LEVEL.name"));
-        }
-        if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN) == null) {
-            throw new DomainException("rebides.message.error.mapping.is.empty",
-                    i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.SCHOOL_LEVEL_ORIGIN.name"));
-        }
+        //        if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL) == null) {
+        //            throw new DomainException("rebides.message.error.mapping.is.empty",
+        //                    i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.SCHOOL_LEVEL.name"));
+        //        }
+        //        if (LegalMapping.find(report, RebidesMappingType.SCHOOL_LEVEL_ORIGIN) == null) {
+        //            throw new DomainException("rebides.message.error.mapping.is.empty",
+        //                    i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.SCHOOL_LEVEL_ORIGIN.name"));
+        //        }
         if (LegalMapping.find(report, RebidesMappingType.SCIENTIFIC_AREA) == null) {
             throw new DomainException("rebides.message.error.mapping.is.empty",
                     i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.SCIENTIFIC_AREA.name"));

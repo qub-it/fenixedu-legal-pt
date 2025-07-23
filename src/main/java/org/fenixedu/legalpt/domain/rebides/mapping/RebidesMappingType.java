@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
-import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.organizationalStructure.PartyTypeEnum;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.person.Gender;
@@ -59,11 +58,11 @@ public enum RebidesMappingType implements ILegalMappingType {
             return Sets.newHashSet(Boolean.TRUE, Boolean.FALSE);
         case GENDER:
             return Sets.newHashSet(Gender.values());
-        case SCHOOL_LEVEL:
-            return Sets.newHashSet(SchoolLevelType.values());
-        case SCHOOL_LEVEL_ORIGIN:
+        //        case SCHOOL_LEVEL:
+        //            return Sets.newHashSet(SchoolLevelType.values());
+        //        case SCHOOL_LEVEL_ORIGIN:
 //            return RootDomainObject.getInstance().getSchoolLevelsOriginSet();
-            return Collections.emptySet();
+        //            return Collections.emptySet();
         case DEPARTMENT:
             Collection<Unit> departments = Collections2.filter(Bennu.getInstance().getInstitutionUnit().getAllSubUnits(),
                     new Predicate<org.fenixedu.academic.domain.organizationalStructure.Unit>() {
@@ -87,7 +86,7 @@ public enum RebidesMappingType implements ILegalMappingType {
         case CONTRACT_BINDING_REGIME:
         case CONTRACT_WAGE_LEVEL:
         case SCIENTIFIC_AREA:
-        case SCHOOL_LEVEL_ORIGIN:
+            // case SCHOOL_LEVEL_ORIGIN:
         case DEPARTMENT:
             return new DomainObjectLegalMapping(report, this);
         case BOOLEAN:
@@ -130,12 +129,12 @@ public enum RebidesMappingType implements ILegalMappingType {
         case SCIENTIFIC_AREA:
             return ((Unit) FenixFramework.getDomainObject(key)).getPartyName();
 
-        case SCHOOL_LEVEL:
-            final SchoolLevelType schoolLevel = SchoolLevelType.valueOf(key);
-            return localizedName(schoolLevel, I18N.getLocale());
-
-        case SCHOOL_LEVEL_ORIGIN:
-            return new LocalizedString(I18N.getLocale(), "TODO_SCHOOL_LEVEL_ORIGIN");// ((SchoolLevelOrigin) FenixFramework.getDomainObject(key)).getName());
+        //        case SCHOOL_LEVEL:
+        //            final SchoolLevelType schoolLevel = SchoolLevelType.valueOf(key);
+        //            return localizedName(schoolLevel, I18N.getLocale());
+        //
+        //        case SCHOOL_LEVEL_ORIGIN:
+        //            return new LocalizedString(I18N.getLocale(), "TODO_SCHOOL_LEVEL_ORIGIN");// ((SchoolLevelOrigin) FenixFramework.getDomainObject(key)).getName());
 
         case DEPARTMENT:
             return ((Unit) FenixFramework.getDomainObject(key)).getPartyName();
@@ -168,9 +167,9 @@ public enum RebidesMappingType implements ILegalMappingType {
         return this.getClass().getName() + "." + name() + ".name";
     }
 
-    private LocalizedString localizedName(final SchoolLevelType schoolLevel, final Locale... locales) {
-        return localizedName(ENUMERATION_RESOURCES, schoolLevel.getQualifiedName(), locales);
-    }
+    //    private LocalizedString localizedName(final SchoolLevelType schoolLevel, final Locale... locales) {
+    //        return localizedName(ENUMERATION_RESOURCES, schoolLevel.getQualifiedName(), locales);
+    //    }
 
     private LocalizedString localizedName(final String bundle, final String key, final Locale... locales) {
         return BundleUtil.getLocalizedString(ENUMERATION_RESOURCES, key);

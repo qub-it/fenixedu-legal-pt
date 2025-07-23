@@ -4,10 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.fenixedu.academic.domain.ProfessionType;
-import org.fenixedu.academic.domain.ProfessionalSituationConditionType;
-import org.fenixedu.academic.domain.SchoolLevelType;
-import org.fenixedu.academic.domain.SchoolPeriodDuration;
 import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
 import org.fenixedu.legalpt.domain.LegalReportContext.LegalReportEntryData;
@@ -84,22 +80,4 @@ public class XlsExporterLog {
     protected static String pidLabel(final String key) {
         return LegalPTUtil.bundle("label.org.fenixedu.academic.domain.student.PersonalIngressionData." + key);
     }
-
-    protected static String schoolLevelLocalizedName(final SchoolLevelType schoolLevel) {
-        return schoolLevel.getLocalizedName();
-    }
-
-    protected static String professionTypeLocalizedName(final ProfessionType profession) {
-        return profession.getLocalizedName();
-    }
-
-    protected static String professionalSituationConditionTypeLocalizedName(
-            final ProfessionalSituationConditionType conditionType) {
-        return conditionType.getLocalizedName();
-    }
-
-    protected static String schoolPeriodDurationLocalizedName(final SchoolPeriodDuration duration) {
-        return LegalPTUtil.bundle("label.SchoolPeriodDuration." + duration.name());
-    }
-
 }
