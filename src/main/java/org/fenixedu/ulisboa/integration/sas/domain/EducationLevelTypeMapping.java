@@ -50,6 +50,10 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
         if (degreeType == null) {
             throw new RuntimeException(SasPTUtil.bundle("error.degreeType.cannot.be.null"));
         }
+        if (degreeType != getDegreeType() && find(degreeType).isPresent()) {
+            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.already.has.associated.education.level",
+                    degreeType.getName().getContent()));
+        }
         super.setDegreeType(degreeType);
     }
 
@@ -70,21 +74,11 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
     }
 
     public void edit(EducationLevelType educationLevelType, DegreeType degreeType) {
-        if (findMapping(degreeType).isPresent() && degreeType != getDegreeType()) {
-            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.already.has.associated.education.level",
-                    degreeType.getName().getContent()));
-        }
-
         setEducationLevelType(educationLevelType);
         setDegreeType(degreeType);
     }
 
     public static EducationLevelTypeMapping create(EducationLevelType educationLevelType, DegreeType degreeType) {
-        if (findMapping(degreeType).isPresent()) {
-            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.already.has.associated.education.level",
-                    degreeType.getName().getContent()));
-        }
-
         EducationLevelTypeMapping educationLevelTypeMapping = new EducationLevelTypeMapping();
         educationLevelTypeMapping.setEducationLevelType(educationLevelType);
         educationLevelTypeMapping.setDegreeType(degreeType);
@@ -94,11 +88,8 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
 
     // Check if the arguments are not null, and if the degree type has no associated educationlevel.
     // First argument can be null (for constructor case)
-    public static Optional<EducationLevelTypeMapping> findMapping(DegreeType degreeType) {
-        if (degreeType == null) {
-            throw new RuntimeException(SasPTUtil.bundle("error.degreeType.cannot.be.null"));
-        }
-        return Optional.ofNullable(degreeType.getEducationLevelTypeMapping());
+    public static Optional<EducationLevelTypeMapping> find(DegreeType degreeType) {
+        return Optional.ofNullable(degreeType).map(DegreeType::getEducationLevelTypeMapping);
     }
 
     private static final List<String> CTSP_SCHOOL_LEVELS = new ArrayList<>();

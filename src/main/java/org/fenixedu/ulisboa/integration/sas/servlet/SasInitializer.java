@@ -107,7 +107,7 @@ public class SasInitializer implements ServletContextListener {
             EducationLevelType educationLevelType = EducationLevelType.findByCode(m.getSchoolLevel().getName()).orElseThrow(
                     () -> new IllegalArgumentException("Invalid School Level Code: " + m.getSchoolLevel().getName()));
 
-            if (EducationLevelTypeMapping.findMapping(m.getDegreeType()).isEmpty()) {
+            if (EducationLevelTypeMapping.find(m.getDegreeType()).isEmpty()) {
                 Log.warn(
                         "Creating new EducationLevelTypeMapping with code: " + educationLevelType.getCode() + " and degree type: "
                                 + m.getDegreeType().getCode());
