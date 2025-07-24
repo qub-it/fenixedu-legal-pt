@@ -265,7 +265,7 @@ relation EducationLevelTypeMappingEducationLevelType {
 	.org.fenixedu.academic.domain.student.personaldata.EducationLevelType playsRole educationLevelType {
 		multiplicity 1;
 	}
-	EducationLevelTypeMapping playsRole educationLevelTypeMapping {
+	EducationLevelTypeMapping playsRole educationLevelTypeMappings {
 	    multiplicity *;
 	}
 }
@@ -274,7 +274,7 @@ relation EducationLevelTypeMappingBennu{
 	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
 		multiplicity 1..1;
 	}
-	EducationLevelTypeMapping playsRole educationLevelTypeMapping {
+	EducationLevelTypeMapping playsRole educationLevelTypeMappings {
 		multiplicity *;
 	}
 }

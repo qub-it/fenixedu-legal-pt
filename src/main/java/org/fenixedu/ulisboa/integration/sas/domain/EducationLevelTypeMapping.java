@@ -28,13 +28,19 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
 
     protected EducationLevelTypeMapping() {
         super();
+        super.setBennu(Bennu.getInstance());
     }
 
-    public void delete() {
-        super.setDegreeType(null);
-        super.setEducationLevelType(null);
-        setBennu(null);
-        super.deleteDomainObject();
+    public static EducationLevelTypeMapping create(EducationLevelType educationLevelType, DegreeType degreeType) {
+        EducationLevelTypeMapping educationLevelTypeMapping = new EducationLevelTypeMapping();
+        educationLevelTypeMapping.setEducationLevelType(educationLevelType);
+        educationLevelTypeMapping.setDegreeType(degreeType);
+        return educationLevelTypeMapping;
+    }
+
+    public void edit(EducationLevelType educationLevelType, DegreeType degreeType) {
+        setEducationLevelType(educationLevelType);
+        setDegreeType(degreeType);
     }
 
     @Override
@@ -57,8 +63,19 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
         super.setDegreeType(degreeType);
     }
 
+    public static Optional<EducationLevelTypeMapping> find(DegreeType degreeType) {
+        return Optional.ofNullable(degreeType).map(DegreeType::getEducationLevelTypeMapping);
+    }
+
     public static Stream<EducationLevelTypeMapping> findAll() {
-        return Bennu.getInstance().getEducationLevelTypeMappingSet().stream();
+        return Bennu.getInstance().getEducationLevelTypeMappingsSet().stream();
+    }
+
+    public void delete() {
+        super.setDegreeType(null);
+        super.setEducationLevelType(null);
+        setBennu(null);
+        super.deleteDomainObject();
     }
 
     public static void registerEvents() {
@@ -71,25 +88,6 @@ public class EducationLevelTypeMapping extends EducationLevelTypeMapping_Base {
                 Optional.ofNullable(object.getEducationLevelTypeMapping()).ifPresent(EducationLevelTypeMapping::delete);
             }
         });
-    }
-
-    public void edit(EducationLevelType educationLevelType, DegreeType degreeType) {
-        setEducationLevelType(educationLevelType);
-        setDegreeType(degreeType);
-    }
-
-    public static EducationLevelTypeMapping create(EducationLevelType educationLevelType, DegreeType degreeType) {
-        EducationLevelTypeMapping educationLevelTypeMapping = new EducationLevelTypeMapping();
-        educationLevelTypeMapping.setEducationLevelType(educationLevelType);
-        educationLevelTypeMapping.setDegreeType(degreeType);
-        educationLevelTypeMapping.setBennu(Bennu.getInstance());
-        return educationLevelTypeMapping;
-    }
-
-    // Check if the arguments are not null, and if the degree type has no associated educationlevel.
-    // First argument can be null (for constructor case)
-    public static Optional<EducationLevelTypeMapping> find(DegreeType degreeType) {
-        return Optional.ofNullable(degreeType).map(DegreeType::getEducationLevelTypeMapping);
     }
 
     private static final List<String> CTSP_SCHOOL_LEVELS = new ArrayList<>();
