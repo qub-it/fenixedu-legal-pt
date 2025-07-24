@@ -14,7 +14,6 @@ import org.fenixedu.academic.FenixEduAcademicConfiguration;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
-import org.fenixedu.academic.domain.SchoolLevelType;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
@@ -25,6 +24,7 @@ import org.fenixedu.academic.domain.student.RegistrationRegimeType;
 import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.CreditsReasonType;
+import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
@@ -32,9 +32,9 @@ import org.fenixedu.academictreasury.domain.event.AcademicTreasuryEvent;
 import org.fenixedu.academictreasury.services.TuitionServices;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
+import org.fenixedu.ulisboa.integration.sas.domain.EducationLevelTypeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SasIngressionRegimeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SasScholarshipCandidacy;
-import org.fenixedu.ulisboa.integration.sas.domain.SchoolLevelTypeMapping;
 import org.fenixedu.ulisboa.integration.sas.domain.SocialServicesConfiguration;
 import org.fenixedu.ulisboa.integration.sas.dto.AbstractScholarshipStudentBean;
 import org.fenixedu.ulisboa.integration.sas.service.SasDataShareAuthorizationServices;
@@ -52,6 +52,7 @@ public class AbstractFillScholarshipService {
     private static final String REGISTRATION_TYPE_CANCELED = "CANCELED";
 
     public static final String SAS_BUNDLE = "resources/SasResources";
+    private static final String DEGREE = "DEGREE";
 
     public static class MessageEntry {
 
@@ -497,29 +498,33 @@ public class AbstractFillScholarshipService {
         return getStudentCurricularPlan(registration, requestYear).getDegreeCurricularPlan().getDurationInYears();
     }
 
-    private Collection<SchoolLevelType> getPersonSchoolLevelTypes(final Person person) {
-        final Set<SchoolLevelType> result = Sets.newHashSet();
-        result.addAll(getCompletedQualificationsSchoolLevelTypes(person));
-        result.addAll(getCompletedRegistrationSchoolLevelTypes(person.getStudent()));
+    private Collection<EducationLevelType> getPersonEducationLevelTypes(final Person person) {
+        final Set<EducationLevelType> result = Sets.newHashSet();
+        result.addAll(getCompletedQualificationsEducationLevelTypes(person));
+        result.addAll(getCompletedRegistrationEducationLevelTypes(person.getStudent()));
 
         return result;
 
     }
 
-    private Collection<SchoolLevelType> getCompletedRegistrationSchoolLevelTypes(final Student student) {
-        final Set<SchoolLevelType> result = Sets.newHashSet();
+    private Collection<EducationLevelType> getCompletedRegistrationEducationLevelTypes(final Student student) {
+        EducationLevelType degree = EducationLevelType.findByCode(DEGREE)
+                .orElseThrow(() -> new FillScholarshipException("message.error.education.level.type.not.found", DEGREE));
+
+        final Set<EducationLevelType> result = Sets.newHashSet();
         for (final Registration registration : student.getRegistrationsSet()) {
 
             //TODO: find cleaner solution
             if (registration.getDegreeType().isIntegratedMasterDegree() && registration.hasConcludedCycle(
                     CycleType.FIRST_CYCLE)) {
-                result.add(SchoolLevelType.DEGREE);
+                result.add(degree);
             }
 
             if (registration.isConcluded() || registration.hasConcluded()) {
-                final SchoolLevelTypeMapping schoolLevelTypeMapping = registration.getDegreeType().getSchoolLevelTypeMapping();
-                if (schoolLevelTypeMapping != null) {
-                    result.add(schoolLevelTypeMapping.getSchoolLevel());
+                final EducationLevelTypeMapping educationLevelTypeMapping =
+                        registration.getDegreeType().getEducationLevelTypeMapping();
+                if (educationLevelTypeMapping != null) {
+                    result.add(educationLevelTypeMapping.getEducationLevelType());
                 }
             }
 
@@ -528,9 +533,10 @@ public class AbstractFillScholarshipService {
         return result;
     }
 
-    private Collection<SchoolLevelType> getCompletedQualificationsSchoolLevelTypes(final Person person) {
+    private Collection<EducationLevelType> getCompletedQualificationsEducationLevelTypes(final Person person) {
         return person.getStudent().getRegistrationsSet().stream().filter(r -> r.getStudentCandidacy() != null)
-                .map(r -> r.getCompletedDegreeInformation().getSchoolLevel()).filter(o -> o != null).collect(Collectors.toSet());
+                .map(r -> r.getCompletedDegreeInformation().getEducationLevelType()).filter(o -> o != null)
+                .collect(Collectors.toSet());
     }
 
     private BigDecimal getTuitionAmount(Registration registration, ExecutionYear requestYear) {
@@ -674,53 +680,51 @@ public class AbstractFillScholarshipService {
     }
 
     private Boolean isCETQualificationOwner(Registration registration) {
-        return getPersonSchoolLevelTypes(registration.getPerson()).stream().filter(SchoolLevelTypeMapping::isCET).findAny()
-                .isPresent();
+        return getPersonEducationLevelTypes(registration.getPerson()).stream().anyMatch(EducationLevelTypeMapping::isCET);
     }
 
     private Boolean isCTSPQualificationOwner(Registration registration) {
-        return getPersonSchoolLevelTypes(registration.getPerson()).stream().filter(SchoolLevelTypeMapping::isCTSP).findAny()
-                .isPresent();
+        return getPersonEducationLevelTypes(registration.getPerson()).stream().anyMatch(EducationLevelTypeMapping::isCTSP);
     }
 
     private Boolean isDegreeQualificationOwner(Registration registration) {
-        return getPersonSchoolLevelTypes(registration.getPerson()).stream().filter(SchoolLevelTypeMapping::isDegree).findAny()
-                .isPresent();
+        return getPersonEducationLevelTypes(registration.getPerson()).stream().anyMatch(EducationLevelTypeMapping::isDegree);
     }
 
     private Boolean isMasterQualificationOwner(Registration registration) {
-        return getPersonSchoolLevelTypes(registration.getPerson()).stream().filter(SchoolLevelTypeMapping::isMasterDegree)
-                .findAny().isPresent();
+        return getPersonEducationLevelTypes(registration.getPerson()).stream()
+                .anyMatch(EducationLevelTypeMapping::isMasterDegree);
     }
 
     private Boolean isPhdQualificationOwner(Registration registration) {
-        return getPersonSchoolLevelTypes(registration.getPerson()).stream().filter(SchoolLevelTypeMapping::isPhd).findAny()
-                .isPresent();
+        return getPersonEducationLevelTypes(registration.getPerson()).stream().anyMatch(EducationLevelTypeMapping::isPhd);
     }
 
     private void checkIfRegistrationDegreeIsCompleted(AbstractScholarshipStudentBean bean, Registration registration) {
-        SchoolLevelTypeMapping schoolLevelTypeMapping = registration.getDegreeType().getSchoolLevelTypeMapping();
-        SchoolLevelType schoolLevelType = schoolLevelTypeMapping == null ? null : schoolLevelTypeMapping.getSchoolLevel();
-        if (bean.getCetQualificationOwner() && SchoolLevelTypeMapping.isCET(schoolLevelType)) {
+        EducationLevelTypeMapping educationLevelTypeMapping = registration.getDegreeType().getEducationLevelTypeMapping();
+        EducationLevelType educationLevelType =
+                educationLevelTypeMapping == null ? null : educationLevelTypeMapping.getEducationLevelType();
+
+        if (bean.getCetQualificationOwner() && EducationLevelTypeMapping.isCET(educationLevelType)) {
             addWarning(bean, false, "message.warning.cet.level");
         }
 
-        if (bean.getCtspQualificationOwner() && SchoolLevelTypeMapping.isCTSP(schoolLevelType)) {
+        if (bean.getCtspQualificationOwner() && EducationLevelTypeMapping.isCTSP(educationLevelType)) {
             // check if current registration degree is the same of completed qualification
             addWarning(bean, false, "message.warning.ctsp.level");
         }
 
-        if (bean.getDegreeQualificationOwner() && SchoolLevelTypeMapping.isDegree(schoolLevelType)) {
+        if (bean.getDegreeQualificationOwner() && EducationLevelTypeMapping.isDegree(educationLevelType)) {
             // check if current registration degree is the same of completed qualification
             addWarning(bean, false, "message.warning.degree.level");
         }
 
-        if (bean.getMasterQualificationOwner() && SchoolLevelTypeMapping.isMasterDegree(schoolLevelType)) {
+        if (bean.getMasterQualificationOwner() && EducationLevelTypeMapping.isMasterDegree(educationLevelType)) {
             // check if current registration degree is the same of completed qualification
             addWarning(bean, false, "message.warning.master.level");
         }
 
-        if (bean.getPhdQualificationOwner() && SchoolLevelTypeMapping.isPhd(schoolLevelType)) {
+        if (bean.getPhdQualificationOwner() && EducationLevelTypeMapping.isPhd(educationLevelType)) {
             // check if current registration degree is the same of completed qualification
             addWarning(bean, false, "message.warning.phd.level");
         }

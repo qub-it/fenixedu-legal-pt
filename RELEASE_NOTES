@@ -1,3 +1,4 @@
+- Refactor: Replaces SchoolLevelTypeMappings with EducationLevelTypeMappings [#qubIT-Fenix-7009]
 - Refactor: Refactors SchoolLevelType, ProfessionalSituationConditionType and ProfessionType enums [#qubIT-Fenix-7009]
 
 2.24.18 (09-07-2025)
