@@ -1,3 +1,4 @@
+2.25.0 (29-07-2025)
 - Refactor: Creates RAIDES domain object legal mappings and replaces references [#qubIT-Fenix-7009]
 - Refactor: Replaces SchoolLevelTypeMappings with EducationLevelTypeMappings [#qubIT-Fenix-7009]
 
