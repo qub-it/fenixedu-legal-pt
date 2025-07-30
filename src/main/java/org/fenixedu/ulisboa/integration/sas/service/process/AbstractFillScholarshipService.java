@@ -534,7 +534,7 @@ public class AbstractFillScholarshipService {
     }
 
     private Collection<EducationLevelType> getCompletedQualificationsEducationLevelTypes(final Person person) {
-        return person.getStudent().getRegistrationsSet().stream().filter(r -> r.getStudentCandidacy() != null)
+        return person.getStudent().getRegistrationsSet().stream()
                 .map(r -> r.getCompletedDegreeInformation().getEducationLevelType()).filter(o -> o != null)
                 .collect(Collectors.toSet());
     }
