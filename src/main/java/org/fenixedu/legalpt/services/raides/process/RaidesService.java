@@ -26,7 +26,6 @@ import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
-import org.fenixedu.academic.domain.candidacy.StudentCandidacy;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.degreeStructure.RootCourseGroup;
 import org.fenixedu.academic.domain.organizationalStructure.AcademicalInstitutionType;
@@ -278,7 +277,6 @@ public class RaidesService {
 
     protected void preencheGrauPrecedentCompleto(final IGrauPrecedenteCompleto bean, final ExecutionYear executionYear,
             final Registration registration) {
-        final StudentCandidacy studentCandidacy = registration.getStudentCandidacy();
         final PrecedentDegreeInformation lastCompletedQualification = registration.getCompletedDegreeInformation();
 
         final RaidesReportEntryTarget target = RaidesReportEntryTarget.of(registration, executionYear);
@@ -369,16 +367,16 @@ public class RaidesService {
             if (lastCompletedQualification.getEducationLevelType() != null && lastCompletedQualification.getEducationLevelType()
                     .getHighSchoolOrEquivalent()) {
 
-                if (highSchoolType(studentCandidacy) != null) {
+                if (highSchoolType(registration) != null) {
 
                     String value = LegalMapping.find(report, LegalMappingType.HIGH_SCHOOL_TYPE)
-                            .translate(highSchoolType(studentCandidacy));
+                            .translate(highSchoolType(registration));
 
                     if (StringUtils.isBlank(value)) {
                         LegalReportContext.addError(target, i18n("error.Raides.validation.highSchoolType.missing.translate",
-                                        highSchoolType(studentCandidacy).getName()),
+                                        highSchoolType(registration).getName()),
                                 i18n("error.Raides.validation.highSchoolType.missing.translate.action",
-                                        highSchoolType(studentCandidacy).getName()));
+                                        highSchoolType(registration).getName()));
 
                         bean.markAsInvalid();
                     } else {
@@ -406,16 +404,15 @@ public class RaidesService {
         validaCursoOficialInstituicaoOficial(executionYear, registration, lastCompletedQualification, bean);
     }
 
-    private AcademicalInstitutionType highSchoolType(StudentCandidacy studentCandidacy) {
+    private AcademicalInstitutionType highSchoolType(Registration registration) {
 
-        PrecedentDegreeInformation completedDegreeInformation =
-                studentCandidacy.getRegistration().getCompletedDegreeInformation();
+        PrecedentDegreeInformation completedDegreeInformation = registration.getCompletedDegreeInformation();
         if (completedDegreeInformation != null && completedDegreeInformation.getInstitutionType() != null) {
             return completedDegreeInformation.getInstitutionType();
         }
 
-        if (studentCandidacy.getPerson().getStudent() != null) {
-            for (final PersonalIngressionData pid : studentCandidacy.getPerson().getStudent().getPersonalIngressionsDataSet()) {
+        if (registration.getPerson().getStudent() != null) {
+            for (final PersonalIngressionData pid : registration.getPerson().getStudent().getPersonalIngressionsDataSet()) {
                 if (pid.getHighSchoolType() != null) {
                     return pid.getHighSchoolType();
                 }
