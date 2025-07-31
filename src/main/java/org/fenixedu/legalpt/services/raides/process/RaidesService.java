@@ -288,8 +288,7 @@ public class RaidesService {
         }
 
         if (lastCompletedQualification.getEducationLevelType() != null) {
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PRECEDENT_EDUCATION_LEVEL),
-                            LegalMapping.find(report, LegalMappingType.PRECEDENT_SCHOOL_LEVEL))
+            String value = LegalMapping.find(report, LegalMappingType.PRECEDENT_EDUCATION_LEVEL)
                     .translate(lastCompletedQualification.getEducationLevelType());
 
             if (StringUtils.isBlank(value)) {
@@ -672,8 +671,7 @@ public class RaidesService {
         if (ingressionData != null) {
             if (ingressionData.getFatherEducationLevelType() != null) {
 
-                String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.EDUCATION_LEVEL),
-                                LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL))
+                String value = LegalMapping.find(report, LegalMappingType.EDUCATION_LEVEL)
                         .translate(ingressionData.getFatherEducationLevelType());
 
                 if (StringUtils.isBlank(value)) {
@@ -692,8 +690,7 @@ public class RaidesService {
 
             if (ingressionData.getMotherEducationLevelType() != null) {
 
-                String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.EDUCATION_LEVEL),
-                                LegalMapping.find(report, LegalMappingType.SCHOOL_LEVEL))
+                String value = LegalMapping.find(report, LegalMappingType.EDUCATION_LEVEL)
                         .translate(ingressionData.getMotherEducationLevelType());
 
                 if (StringUtils.isBlank(value)) {
@@ -712,8 +709,7 @@ public class RaidesService {
 
             if (ingressionData.getFatherProfessionalStatusType() != null) {
 
-                String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS),
-                                LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION))
+                String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS)
                         .translate(ingressionData.getFatherProfessionalStatusType());
 
                 if (StringUtils.isBlank(value)) {
@@ -735,8 +731,7 @@ public class RaidesService {
 
         if (ingressionData.getMotherProfessionalStatusType() != null) {
 
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS),
-                            LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION))
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS)
                     .translate(ingressionData.getMotherProfessionalStatusType());
 
             if (StringUtils.isBlank(value)) {
@@ -754,8 +749,7 @@ public class RaidesService {
 
         if (ingressionData.getProfessionalStatusType() != null) {
 
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS),
-                            LegalMapping.find(report, LegalMappingType.PROFESSIONAL_SITUATION_CONDITION))
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSIONAL_STATUS)
                     .translate(ingressionData.getProfessionalStatusType());
 
             if (StringUtils.isBlank(value)) {
@@ -775,8 +769,7 @@ public class RaidesService {
 
         if (ingressionData.getFatherProfessionCategoryType() != null) {
 
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY),
-                            LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE))
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY)
                     .translate(ingressionData.getFatherProfessionCategoryType());
 
             if (StringUtils.isBlank(value)) {
@@ -795,8 +788,7 @@ public class RaidesService {
 
         if (ingressionData.getMotherProfessionCategoryType() != null) {
 
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY),
-                            LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE))
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY)
                     .translate(ingressionData.getMotherProfessionCategoryType());
 
             if (StringUtils.isBlank(value)) {
@@ -815,8 +807,7 @@ public class RaidesService {
 
         if (ingressionData.getProfessionCategoryType() != null) {
 
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY),
-                            LegalMapping.find(report, LegalMappingType.PROFESSION_TYPE))
+            String value = LegalMapping.find(report, LegalMappingType.PROFESSION_CATEGORY)
                     .translate(ingressionData.getProfessionCategoryType());
 
             if (StringUtils.isBlank(value)) {
