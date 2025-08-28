@@ -52,7 +52,6 @@ public class AbstractFillScholarshipService {
     private static final String REGISTRATION_TYPE_CANCELED = "CANCELED";
 
     public static final String SAS_BUNDLE = "resources/SasResources";
-    private static final String DEGREE = "DEGREE";
 
     public static class MessageEntry {
 
@@ -508,8 +507,8 @@ public class AbstractFillScholarshipService {
     }
 
     private Collection<EducationLevelType> getCompletedRegistrationEducationLevelTypes(final Student student) {
-        EducationLevelType degree = EducationLevelType.findByCode(DEGREE)
-                .orElseThrow(() -> new FillScholarshipException("message.error.education.level.type.not.found", DEGREE));
+        EducationLevelType degree = EducationLevelType.findByCode(EducationLevelType.DEGREE).orElseThrow(
+                () -> new FillScholarshipException("message.error.education.level.type.not.found", EducationLevelType.DEGREE));
 
         final Set<EducationLevelType> result = Sets.newHashSet();
         for (final Registration registration : student.getRegistrationsSet()) {
