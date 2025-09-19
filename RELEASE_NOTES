@@ -1,3 +1,5 @@
+- Refactor: Remove deprecated degreeInfo and extendedDegreeInfo fields and replace them with dynamic fields [#qubIT-Fenix-6512]
+
 2.26.1 (28-08-2025)
 - Refactor: Use static RAIDES code constants [#qubIT-Fenix-7009]
 

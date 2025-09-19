@@ -23,6 +23,7 @@ import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.degreeStructure.BranchType;
+import org.fenixedu.academic.domain.dml.DynamicField;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -153,7 +154,7 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillMainScientificArea(final A3esDegreeBean data) {
-        final LocalizedString source = this.info.getPrevailingScientificArea();
+        final LocalizedString source = DynamicField.getFieldValue(this.info, DegreeInfo.PREVAILING_SCIENTIFIC_AREA);
         data.addField("q-II.1.6_pt", "mainScientificArea", PT, source, _UNLIMITED);
         data.addField("q-II.1.6_en", "mainScientificArea", EN, source, _UNLIMITED);
     }
@@ -164,32 +165,35 @@ public class A3esHarvestDegreeDataService {
     }
 
     private void fillDegreeDuration(final A3esDegreeBean data) {
-        final LocalizedString source = this.info.getExtendedDegreeInfo().getStudyProgrammeDuration();
+        final LocalizedString source = DynamicField.getFieldValue(this.info, DegreeInfo.STUDY_PROGRAMME_DURATION);
         data.addField("q-II.1.9_pt", "degreeDuration", PT, source, _UNLIMITED);
         data.addField("q-II.1.9_en", "degreeDuration", EN, source, _UNLIMITED);
     }
 
     private void fillNumerusClausus(final A3esDegreeBean data) {
-        final Integer drifts = this.info.getDriftsInitial();
+        final Integer drifts = DynamicField.getFieldValue(this.info, DegreeInfo.DRIFTS_INITIAL);
         final String source = drifts == null ? null : String.valueOf(drifts);
         data.addField("q-II.1.10", "numerusClausus", source, _100);
     }
 
     private void fillIngressionSpecificConditions(final A3esDegreeBean data) {
 
-        data.addField("testIngression_pt", "testIngression", PT, this.info.getTestIngression(), _1000);
-        data.addField("testIngression_en", "testIngression", EN, this.info.getTestIngression(), _1000);
+        final LocalizedString testIngression = DynamicField.getFieldValue(this.info, DegreeInfo.TEST_INGRESSION);
+        data.addField("testIngression_pt", "testIngression", PT, testIngression, _1000);
+        data.addField("testIngression_en", "testIngression", EN, testIngression, _1000);
 
-        data.addField("accessRequisites_pt", "accessRequisites", PT, this.info.getAccessRequisites(), _1000);
-        data.addField("accessRequisites_en", "accessRequisites", EN, this.info.getAccessRequisites(), _1000);
+        final LocalizedString accessRequisites = DynamicField.getFieldValue(this.info, DegreeInfo.ACCESS_REQUISITES);
 
-        final LocalizedString source = this.info.getClassifications();
-        data.addField("q-II.1.11_pt", "ingressionSpecificConditions", PT, source, _1000);
-        data.addField("q-II.1.11_en", "ingressionSpecificConditions", EN, source, _1000);
+        data.addField("accessRequisites_pt", "accessRequisites", PT, accessRequisites, _1000);
+        data.addField("accessRequisites_en", "accessRequisites", EN, accessRequisites, _1000);
+
+        final LocalizedString classifications = DynamicField.getFieldValue(this.info, DegreeInfo.CLASSIFICATIONS);
+        data.addField("q-II.1.11_pt", "ingressionSpecificConditions", PT, classifications, _1000);
+        data.addField("q-II.1.11_en", "ingressionSpecificConditions", EN, classifications, _1000);
     }
 
     private void fillRegistrationRegime(final A3esDegreeBean data) {
-        final LocalizedString source = this.info.getExtendedDegreeInfo().getStudyRegime();
+        final LocalizedString source = DynamicField.getFieldValue(this.info, DegreeInfo.STUDY_REGIME);
         data.addField("q-II.1.12.1_pt", "registrationRegime", PT, source, _100);
         data.addField("q-II.1.12.1_en", "registrationRegime", EN, source, _100);
     }
