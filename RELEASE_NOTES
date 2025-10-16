@@ -1,3 +1,4 @@
+2.26.3 (16-10-2025)
 - Bug fix: An error occurs when generating the RAIDES report if the student's country of residence is not filled in. [#qubIT-Fenix-7639]
 - Bug fix: Empty lines at XLS RAIDES report (Sheet: Personal Ingression Data) [#UCP-FENIXEDU-519]
 
