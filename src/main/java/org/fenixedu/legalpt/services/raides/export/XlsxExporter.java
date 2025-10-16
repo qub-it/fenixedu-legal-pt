@@ -32,7 +32,7 @@ public class XlsxExporter {
 
     public static LegalReportResultFile write(final LegalReportRequest reportRequest, final Raides raides) {
 
-        final SheetData<TblIdentificacao> identificationData = new SheetData<TblIdentificacao>(raides.getAllIdentifications()) {
+        final SheetData<TblIdentificacao> identificationData = new SheetData<>(raides.getAllIdentifications()) {
 
             @Override
             protected void makeLine(final TblIdentificacao tblIdentificacao) {
@@ -52,7 +52,7 @@ public class XlsxExporter {
             }
         };
 
-        final SheetData<TblInscrito> inscritoData = new SheetData<TblInscrito>(raides.getAllInscritos()) {
+        final SheetData<TblInscrito> inscritoData = new SheetData<>(raides.getAllInscritos()) {
 
             @Override
             protected void makeLine(final TblInscrito tblInscrito) {
@@ -102,7 +102,7 @@ public class XlsxExporter {
 
         };
 
-        final SheetData<TblDiplomado> diplomadoData = new SheetData<TblDiplomado>(raides.getAllDiplomados()) {
+        final SheetData<TblDiplomado> diplomadoData = new SheetData<>(raides.getAllDiplomados()) {
 
             @Override
             protected void makeLine(final TblDiplomado tblDiplomado) {
@@ -136,7 +136,7 @@ public class XlsxExporter {
         };
 
         final SheetData<TblMobilidadeInternacional> mobilidadeInternacionalData =
-                new SheetData<TblMobilidadeInternacional>(raides.getAllMobilidadeInternacional()) {
+                new SheetData<>(raides.getAllMobilidadeInternacional()) {
 
                     @Override
                     protected void makeLine(final TblMobilidadeInternacional tblMobilidadeInternacional) {
@@ -163,7 +163,7 @@ public class XlsxExporter {
                     }
                 };
 
-        final SheetData<Registration> precedentDegreeInformationData = new SheetData<Registration>(raides.getAllRegistrations()) {
+        final SheetData<Registration> precedentDegreeInformationData = new SheetData<>(raides.getAllRegistrations()) {
 
             @Override
             protected void makeLine(final Registration registration) {
@@ -217,44 +217,32 @@ public class XlsxExporter {
 
         };
 
-        final SheetData<Registration> personalIngressionDataSheetData =
-                new SheetData<Registration>(raides.getAllRegistrations()) {
+        final SheetData<Registration> personalIngressionDataSheetData = new SheetData<>(raides.getAllRegistrations()) {
 
-                    @Override
-                    protected void makeLine(final Registration registration) {
+            @Override
+            protected void makeLine(final Registration registration) {
 
-                        final ExecutionYear currentYear = ExecutionYear.findCurrent(registration.getDegree().getCalendar());
-                        registration.getStudent().getPersonalIngressionsDataSet().stream()
-                                .filter(pid -> pid.getExecutionYear() == currentYear).forEach(pid -> {
-                                    addCell("Nº Aluno", registration.getStudent().getNumber());
-                                    addCell(pdiLabel("executionYear"), pid.getExecutionYear().getQualifiedName());
+                final ExecutionYear currentYear = ExecutionYear.findCurrent(registration.getDegree().getCalendar());
 
-                                    addCell(pidLabel("countryOfResidence"),
-                                            pid.getCountryOfResidence() != null ? pid.getCountryOfResidence().getName() : "");
-                                    addCell(pidLabel("districtSubdivisionOfResidence"),
-                                            pid.getDistrictSubdivisionOfResidence() != null ? pid.getDistrictSubdivisionOfResidence()
-                                                    .getName() : "");
-                                    addCell(pidLabel("dislocatedFromPermanentResidence"), pid.getDislocatedFromPermanentResidence()
-                                            != null ? pid.getDislocatedFromPermanentResidence() : "");
-                                    addCell(pidLabel("professionCategoryType"),
-                                            professionCategoryTypeLocalizedName(pid.getProfessionCategoryType()));
-                                    addCell(pidLabel("professionalStatusType"),
-                                            professionalStatusTypeLocalizedName(pid.getProfessionalStatusType()));
-                                    addCell(pidLabel("motherEducationLevel"),
-                                            educationLevelLocalizedName(pid.getMotherEducationLevelType()));
-                                    addCell(pidLabel("motherProfessionCategoryType"),
-                                            professionCategoryTypeLocalizedName(pid.getMotherProfessionCategoryType()));
-                                    addCell(pidLabel("motherProfessionalStatusType"),
-                                            professionalStatusTypeLocalizedName(pid.getMotherProfessionalStatusType()));
-                                    addCell(pidLabel("fatherEducationLevel"),
-                                            educationLevelLocalizedName(pid.getFatherEducationLevelType()));
-                                    addCell(pidLabel("fatherProfessionCategoryType"),
-                                            professionCategoryTypeLocalizedName(pid.getFatherProfessionCategoryType()));
-                                    addCell(pidLabel("fatherProfessionalStatusType"),
-                                            professionalStatusTypeLocalizedName(pid.getFatherProfessionalStatusType()));
-                                });
-                    }
-                };
+                addCell("Nº Aluno", registration.getStudent().getNumber());
+                addCell(pdiLabel("executionYear"), currentYear.getQualifiedName());
+
+                registration.getStudent().getPersonalIngressionsDataSet().stream().filter(pid -> pid.getExecutionYear() == currentYear).forEach(pid -> {
+                    addCell(pidLabel("countryOfResidence"), pid.getCountryOfResidence() != null ? pid.getCountryOfResidence().getName() : "");
+                    addCell(pidLabel("districtSubdivisionOfResidence"),
+                            pid.getDistrictSubdivisionOfResidence() != null ? pid.getDistrictSubdivisionOfResidence().getName() : "");
+                    addCell(pidLabel("dislocatedFromPermanentResidence"), pid.getDislocatedFromPermanentResidence() != null ? pid.getDislocatedFromPermanentResidence() : "");
+                    addCell(pidLabel("professionCategoryType"), professionCategoryTypeLocalizedName(pid.getProfessionCategoryType()));
+                    addCell(pidLabel("professionalStatusType"), professionalStatusTypeLocalizedName(pid.getProfessionalStatusType()));
+                    addCell(pidLabel("motherEducationLevel"), educationLevelLocalizedName(pid.getMotherEducationLevelType()));
+                    addCell(pidLabel("motherProfessionCategoryType"), professionCategoryTypeLocalizedName(pid.getMotherProfessionCategoryType()));
+                    addCell(pidLabel("motherProfessionalStatusType"), professionalStatusTypeLocalizedName(pid.getMotherProfessionalStatusType()));
+                    addCell(pidLabel("fatherEducationLevel"), educationLevelLocalizedName(pid.getFatherEducationLevelType()));
+                    addCell(pidLabel("fatherProfessionCategoryType"), professionCategoryTypeLocalizedName(pid.getFatherProfessionCategoryType()));
+                    addCell(pidLabel("fatherProfessionalStatusType"), professionalStatusTypeLocalizedName(pid.getFatherProfessionalStatusType()));
+                });
+            }
+        };
 
         ByteArrayOutputStream outputStream = null;
         try {

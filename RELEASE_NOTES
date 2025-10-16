@@ -1,3 +1,5 @@
+- Bug fix: Empty lines at XLS RAIDES report (Sheet: Personal Ingression Data) [#UCP-FENIXEDU-519]
+
 2.26.2 (24-09-2025)
 - Refactor: Remove deprecated degreeInfo and extendedDegreeInfo fields and replace them with dynamic fields [#qubIT-Fenix-6512]
 
