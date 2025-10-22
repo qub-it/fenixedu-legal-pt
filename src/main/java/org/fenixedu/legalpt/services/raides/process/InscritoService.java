@@ -88,8 +88,7 @@ public class InscritoService extends RaidesService {
 
                 if (StringUtils.isBlank(value)) {
 
-                    LegalReportContext.addError(target,
-                            i18n("error.Raides.validation.ingression.missing.translate",
+                    LegalReportContext.addError(target, i18n("error.Raides.validation.ingression.missing.translate",
                                     registration.getIngressionType().getLocalizedName()),
                             i18n("error.Raides.validation.ingression.missing.translate.action",
                                     registration.getIngressionType().getLocalizedName()));
@@ -129,8 +128,9 @@ public class InscritoService extends RaidesService {
 
         if (!isFirstTimeOnDegree(registration, executionYear)) {
 
-            final List<ExecutionYear> enrolmentsExecutionYears = Lists.newArrayList(RegistrationServices
-                    .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear.getPreviousExecutionYear()));
+            final List<ExecutionYear> enrolmentsExecutionYears = Lists.newArrayList(
+                    RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration,
+                            executionYear.getPreviousExecutionYear()));
 
             if (enrolmentsExecutionYears.size() >= 1) {
                 bean.setAnoUltimaInscricao(
@@ -161,8 +161,8 @@ public class InscritoService extends RaidesService {
      */
 
     private BigDecimal ectsAcumulados(final Registration registration, final ExecutionYear executionYear) {
-        if (((RaidesInstance) report).isSumEctsCreditsBetweenPlans()
-                && RegistrationServices.canCollectAllPlansForCurriculum(registration)) {
+        if (((RaidesInstance) report).isSumEctsCreditsBetweenPlans() && RegistrationServices.canCollectAllPlansForCurriculum(
+                registration)) {
             LegalReportContext.addWarn(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("warn.Raides.ects.acumulados.sum.of.student.curricular.plans"));
 
@@ -174,15 +174,16 @@ public class InscritoService extends RaidesService {
     }
 
     private BigDecimal sumEctsAcumulados(final Registration registration, final ExecutionYear executionYear) {
-        return RegistrationServices.getAllPlansCurriculum(registration, executionYear).getSumEctsCredits().setScale(1, RoundingMode.HALF_UP);
+        return RegistrationServices.getAllPlansCurriculum(registration, executionYear).getSumEctsCredits()
+                .setScale(1, RoundingMode.HALF_UP);
     }
 
     private void validaNumInscricoesNoCurso(final RaidesRequestParameter raidesRequestParameter, final TblInscrito bean,
             final ExecutionYear executionYear, final Registration registration) {
 
         if (!isFirstTimeOnDegree(registration, executionYear) && Integer.valueOf(0).equals(bean.getNumInscNesteCurso())) {
-            LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear), i18n(
-                    "error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero"),
+            LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
+                    i18n("error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero"),
                     i18n("error.Raides.validation.is.not.first.time.student.but.number.previous.enrolments.in.registration.is.zero.action"));
             bean.markAsInvalid();
         }
@@ -228,8 +229,8 @@ public class InscritoService extends RaidesService {
 
     protected void validaFormaIngresso(final TblInscrito bean, final Registration registration, ExecutionYear executionYear) {
 
-        if (isFirstCycle(registration) && isFirstTimeOnDegree(registration, executionYear)
-                && Strings.isNullOrEmpty(bean.getFormaIngresso())) {
+        if (isFirstCycle(registration) && isFirstTimeOnDegree(registration, executionYear) && Strings.isNullOrEmpty(
+                bean.getFormaIngresso())) {
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("error.Raides.validation.missing.ingressionType"),
                     i18n("error.Raides.validation.missing.ingressionType.action"));
@@ -267,8 +268,8 @@ public class InscritoService extends RaidesService {
                     i18n("error.Raides.validation.degree.change.or.transfer.requires.information.action"));
             bean.markAsInvalid();
 
-        } else if (Raides.Estabelecimentos.OUTRO.equals(bean.getEstabInscricaoAnt())
-                && Strings.isNullOrEmpty(bean.getOutroEstabInscAnt())) {
+        } else if (Raides.Estabelecimentos.OUTRO.equals(bean.getEstabInscricaoAnt()) && Strings.isNullOrEmpty(
+                bean.getOutroEstabInscAnt())) {
 
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
                     i18n("error.Raides.validation.degree.change.or.transfer.requires.other.information"),
@@ -287,8 +288,15 @@ public class InscritoService extends RaidesService {
 
     private void validaEctsInscricao(TblInscrito bean, ExecutionYear executionYear, Registration registration) {
         if (bean.getEctsInscricao() != null && bean.getEctsInscricao().compareTo(BigDecimal.ZERO) == 0) {
+
+            final String resumeEnrolments =
+                    registration.getEnrolments(executionYear).isEmpty() ? "---" : registration.getEnrolments(executionYear)
+                            .stream().map(e -> e.getCode() + " - " + e.getName().getContent())
+                            .sorted()
+                            .collect(Collectors.joining("; "));
+
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
-                    i18n("error.Raides.validation.enroled.ects.cannot.be.zero"),
+                    i18n("error.Raides.validation.enroled.ects.cannot.be.zero", resumeEnrolments),
                     i18n("error.Raides.validation.enroled.ects.cannot.be.zero.action"));
             bean.markAsInvalid();
         }
@@ -307,9 +315,7 @@ public class InscritoService extends RaidesService {
 
             final Set<StatuteType> grantOwnerStatutes =
                     registration.getStudentStatutesSet().stream().filter(s -> s.isValidOnAnyExecutionPeriodFor(executionYear))
-                            .filter(withGrantOwnerMapping)
-                            .map(StudentStatute::getType)
-                            .collect(Collectors.toSet());
+                            .filter(withGrantOwnerMapping).map(StudentStatute::getType).collect(Collectors.toSet());
 
             if (grantOwnerStatutes.isEmpty()) {
                 return Bolseiro.NO_GRANT_OWNER;
@@ -333,7 +339,8 @@ public class InscritoService extends RaidesService {
         // to be deleteted...
 
         final PersonalIngressionData pid = registration.getStudent().getPersonalIngressionDataByExecutionYear(executionYear);
-        if (pid == null || pid.getGrantOwnerType() == null || pid.getGrantOwnerType() == GrantOwnerType.STUDENT_WITHOUT_SCHOLARSHIP) {
+        if (pid == null || pid.getGrantOwnerType() == null
+                || pid.getGrantOwnerType() == GrantOwnerType.STUDENT_WITHOUT_SCHOLARSHIP) {
             return LegalMapping.find(report, LegalMappingType.GRANT_OWNER_TYPE).translate(Bolseiro.NAO_BOLSEIRO);
         }
 
@@ -365,8 +372,9 @@ public class InscritoService extends RaidesService {
 
     //TODO: replace with scholarship module
     private boolean hasGrantOwnerStatute(Registration registration, ExecutionYear executionYear) {
-        return registration.getStudentStatutesSet().stream().anyMatch(s -> s.isValidOn(executionYear)
-                && RaidesInstance.getInstance().getGrantOwnerStatuteTypesSet().contains(s.getType()));
+        return registration.getStudentStatutesSet().stream().anyMatch(
+                s -> s.isValidOn(executionYear) && RaidesInstance.getInstance().getGrantOwnerStatuteTypesSet()
+                        .contains(s.getType()));
     }
 
     //TODO: replace with scholarship module
@@ -388,13 +396,13 @@ public class InscritoService extends RaidesService {
 
     protected boolean isDegreeChangeOrTransfer(final RaidesRequestParameter raidesRequestParameter,
             final Registration registration) {
-        return Raides.isDegreeChange(raidesRequestParameter, registration.getIngressionType())
-                || Raides.isDegreeTransfer(raidesRequestParameter, registration.getIngressionType());
+        return Raides.isDegreeChange(raidesRequestParameter, registration.getIngressionType()) || Raides.isDegreeTransfer(
+                raidesRequestParameter, registration.getIngressionType());
     }
 
     protected Integer numberOfYearsEnrolled(final ExecutionYear executionYear, final Registration registration) {
-        return RegistrationServices
-                .getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear.getPreviousExecutionYear()).size();
+        return RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration,
+                executionYear.getPreviousExecutionYear()).size();
     }
 
     protected boolean deliveredDissertation(final ExecutionYear executionYear, final Registration registration) {
