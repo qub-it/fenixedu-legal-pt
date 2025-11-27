@@ -1,9 +1,5 @@
 package org.fenixedu.legalpt.services.raides.process;
 
-import static org.fenixedu.academic.domain.CompetenceCourseType.DISSERTATION;
-import static org.fenixedu.academic.domain.CompetenceCourseType.INTERNSHIP;
-import static org.fenixedu.academic.domain.CompetenceCourseType.PROJECT_WORK;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fenixedu.academic.domain.CompetenceCourseType;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseType;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Degree;
@@ -68,6 +64,12 @@ public class RaidesService {
     private static final int MAX_OTHER_SCHOOL_LEVEL_LENGTH = 80;
     private static final String TECHNICAL_SPECIALIZATION = "TECHNICAL_SPECIALIZATION";
     protected LegalReport report;
+    private static final CompetenceCourseType dissertationCompetenceCourseType =
+            CompetenceCourseType.findByCode(CompetenceCourseType.DISSERTATION).orElseThrow();
+    private static final CompetenceCourseType internshipCompetenceCourseType =
+            CompetenceCourseType.findByCode(CompetenceCourseType.INTERNSHIP).orElseThrow();
+    private static final CompetenceCourseType projectWorkCompetenceCourseType =
+            CompetenceCourseType.findByCode(CompetenceCourseType.PROJECT_WORK).orElseThrow();
 
     public RaidesService(final LegalReport report) {
         this.report = report;
@@ -78,12 +80,11 @@ public class RaidesService {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.NAO_APLICAVEL_CODE);
         }
 
-        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.DISSERTATION)) {
+        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, dissertationCompetenceCourseType)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.DISSERTACAO_CODE);
-        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, CompetenceCourseType.INTERNSHIP)) {
+        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, internshipCompetenceCourseType)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR).translate(Raides.AnoCurricular.ESTAGIO_FINAL_CODE);
-        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility,
-                CompetenceCourseType.PROJECT_WORK)) {
+        } else if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, mobility, projectWorkCompetenceCourseType)) {
             return LegalMapping.find(report, LegalMappingType.CURRICULAR_YEAR)
                     .translate(Raides.AnoCurricular.TRABALHO_PROJECTO_CODE);
         }
@@ -94,6 +95,8 @@ public class RaidesService {
 
     public static boolean isOnlyEnrolledOnCompetenceCourseType(final Registration registration, final ExecutionYear executionYear,
             final boolean mobility, final CompetenceCourseType competenceCourseType) {
+        CompetenceCourseType regular = CompetenceCourseType.findByCode(CompetenceCourseType.REGULAR).orElseThrow();
+
         final Collection<Enrolment> enrolments = registration.getEnrolments(executionYear);
 
         final Set<CompetenceCourseType> typesSet = Sets.newHashSet();
@@ -105,7 +108,7 @@ public class RaidesService {
 
             final CurricularCourse curricularCourse = enrolment.getCurricularCourse();
             final CompetenceCourseType type =
-                    curricularCourse != null ? curricularCourse.getCompetenceCourse().getType() : CompetenceCourseType.REGULAR;
+                    curricularCourse != null ? curricularCourse.getCompetenceCourse().getCompetenceCourseType() : regular;
 
             typesSet.add(type);
         }
@@ -913,9 +916,11 @@ public class RaidesService {
     }
 
     private static AttendanceRegimeProvider ATTENDANCE_REGIME_PROVIDER = (rpt, r, ey, mob) -> {
-        final boolean onlyEnrolledOnDissertation = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, DISSERTATION);
-        final boolean onlyEnrolledOnInternship = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, INTERNSHIP);
-        final boolean onlyEnrolledOnProjectWork = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, PROJECT_WORK);
+        final boolean onlyEnrolledOnDissertation =
+                isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, dissertationCompetenceCourseType);
+        final boolean onlyEnrolledOnInternship = isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, internshipCompetenceCourseType);
+        final boolean onlyEnrolledOnProjectWork =
+                isOnlyEnrolledOnCompetenceCourseType(r, ey, mob, projectWorkCompetenceCourseType);
 
         if (onlyEnrolledOnDissertation || onlyEnrolledOnInternship || onlyEnrolledOnProjectWork) {
             return LegalMapping.find(rpt, LegalMappingType.REGIME_FREQUENCIA).translate(Raides.RegimeFrequencia.ETD_CODE);
@@ -983,7 +988,7 @@ public class RaidesService {
 
     protected BigDecimal doctoralEnrolledEcts(final ExecutionYear executionYear, final Registration registration,
             final DateTime maximumAnnulmentDate) {
-        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, false, CompetenceCourseType.DISSERTATION)) {
+        if (isOnlyEnrolledOnCompetenceCourseType(registration, executionYear, false, dissertationCompetenceCourseType)) {
             return null;
         }
 
