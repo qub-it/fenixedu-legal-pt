@@ -234,10 +234,6 @@ public class IdentificacaoService extends RaidesService {
             return registration.getPerson().getCountryHighSchool().getCode();
         }
 
-        if (registration.getPerson().getCountryHighSchool() != null) {
-            return registration.getPerson().getCountryHighSchool().getCode();
-        }
-
         if (pid.getCountryHighSchool() != null) {
             return pid.getCountryHighSchool().getCode();
         }
