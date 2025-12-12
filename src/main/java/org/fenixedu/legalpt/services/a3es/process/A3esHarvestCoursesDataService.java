@@ -9,7 +9,6 @@ import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._1000
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._3000;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService._UNSUPPORTED;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.calculateTeachingHours;
-import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.createMLS;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getApaFormat;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.getShiftTypeAcronym;
 import static org.fenixedu.legalpt.services.a3es.process.A3esExportService.label;
@@ -230,8 +229,7 @@ public class A3esHarvestCoursesDataService {
     }
 
     private void fillTeachingMethodology(final A3esCourseBean data, final CompetenceCourse course) {
-        final LocalizedString source =
-                createMLS(course.getEvaluationMethod(this.semester), course.getEvaluationMethodEn(this.semester));
+        final LocalizedString source = course.getEvaluationMethodI18N(this.semester);
         data.addField("7", "evaluationMethod", PT, source, _1000);
         data.addField("7", "evaluationMethod", EN, source, _1000);
     }
