@@ -1,3 +1,5 @@
+- Refactor: Replaces CompetenceCourseType enum references [#qubIT-Fenix-3048]
+
 2.26.4 (22-10-2025)
 - Improvement: RAIDES - List the competence courses without credits at log file [#qubIT-Fenix-7656]
 
