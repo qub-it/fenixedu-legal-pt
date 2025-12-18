@@ -71,9 +71,7 @@ public class InscritoService extends RaidesService {
             bean.setEctsInscricao(enrolledEcts(executionYear, registration, maximumAnnulmentDate, false));
         }
 
-        if (!isFirstTimeOnDegree(registration, executionYear)) {
-            bean.setEctsAcumulados(ectsAcumulados(registration, executionYear));
-        }
+        bean.setEctsAcumulados(ectsAcumulados(registration, executionYear));
 
         bean.setTempoParcial(
                 LegalMapping.find(report, LegalMappingType.BOOLEAN).translate(isInPartialRegime(executionYear, registration)));
@@ -291,8 +289,7 @@ public class InscritoService extends RaidesService {
 
             final String resumeEnrolments =
                     registration.getEnrolments(executionYear).isEmpty() ? "---" : registration.getEnrolments(executionYear)
-                            .stream().map(e -> e.getCode() + " - " + e.getName().getContent())
-                            .sorted()
+                            .stream().map(e -> e.getCode() + " - " + e.getName().getContent()).sorted()
                             .collect(Collectors.joining("; "));
 
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),

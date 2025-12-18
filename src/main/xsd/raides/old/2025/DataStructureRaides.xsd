@@ -94,10 +94,7 @@
                           <xs:sequence>
                             <xs:choice minOccurs="0" maxOccurs="3">
                              <!--
-                             2º momento
                               <xs:choice maxOccurs="0">
-                              1º momento                          
-                              <xs:choice maxOccurs="3">
                               -->
                               <xs:element name="Diploma" nillable="true">
                                 <xs:complexType>
