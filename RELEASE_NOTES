@@ -1,3 +1,5 @@
+- Bug fix: RAIDES: validate that students are enrolled in at least 1 ECTS [#UCP-FENIXEDU-613]
+
 2.26.8 (18-12-2025)
 - Refactor: Update XSD to RAIDES24 (phase 1) [#UL-REIT-4706]
 

@@ -285,7 +285,7 @@ public class InscritoService extends RaidesService {
     }
 
     private void validaEctsInscricao(TblInscrito bean, ExecutionYear executionYear, Registration registration) {
-        if (bean.getEctsInscricao() != null && bean.getEctsInscricao().compareTo(BigDecimal.ZERO) == 0) {
+        if (bean.getEctsInscricao() != null && bean.getEctsInscricao().compareTo(BigDecimal.ONE) < 0) {
 
             final String resumeEnrolments =
                     registration.getEnrolments(executionYear).isEmpty() ? "---" : registration.getEnrolments(executionYear)
@@ -293,8 +293,8 @@ public class InscritoService extends RaidesService {
                             .collect(Collectors.joining("; "));
 
             LegalReportContext.addError(RaidesReportEntryTarget.of(registration, executionYear),
-                    i18n("error.Raides.validation.enroled.ects.cannot.be.zero", resumeEnrolments),
-                    i18n("error.Raides.validation.enroled.ects.cannot.be.zero.action"));
+                    i18n("error.Raides.validation.enroled.ects.cannot.be.less.than.one", resumeEnrolments),
+                    i18n("error.Raides.validation.enroled.ects.cannot.be.less.than.one.action"));
             bean.markAsInvalid();
         }
     }
