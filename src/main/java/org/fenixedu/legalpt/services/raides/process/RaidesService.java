@@ -38,6 +38,7 @@ import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationCo
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
+import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.academic.domain.studentCurriculum.CycleCurriculumGroup;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
@@ -230,7 +231,16 @@ public class RaidesService {
             break;
         }
 
-        for (final CurriculumGroup curriculumGroup : conclusionInfoToUse.getCurriculumGroup().getAllCurriculumGroups()) {
+        if (conclusionInfoToUse == null) {
+            return result;
+        }
+
+        final Set<CurriculumGroup> conclusionGroups =
+                conclusionInfoToUse.getRegistrationConclusionBean().getCurriculumForConclusion().getCurricularYearEntries()
+                        .stream().filter(CurriculumLine.class::isInstance).map(CurriculumLine.class::cast)
+                        .flatMap(l -> l.getCurriculumGroup().getAllCurriculumGroups().stream()).collect(Collectors.toSet());
+
+        for (final CurriculumGroup curriculumGroup : conclusionGroups) {
             if (curriculumGroup.getDegreeModule() == null) {
                 continue;
             }
