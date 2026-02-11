@@ -1,3 +1,5 @@
+- Improvement: Allow to map ministry degree codes on SAS integration [#UL-REIT-4612]
+
 2.26.10 (11-02-2026)
 - Improvement: Check access control by degree on SAS [#qubIT-Fenix-3081]
 - Improvement: Allow to map ministry degree codes on SAS integration [#UL-REIT-4612]
