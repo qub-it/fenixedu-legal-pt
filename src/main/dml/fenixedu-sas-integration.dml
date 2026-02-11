@@ -151,6 +151,11 @@ class SasIngressionRegimeMapping {
 	String regimeCodeWithDescription;
 }
 
+class SasDegreeMapping {
+	String sourceDegreeCode;
+	String targetDegreeCode;
+}
+
 relation BennuSocialServicesConfiguration{
 	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
 		multiplicity 1..1;
@@ -273,6 +278,16 @@ relation SasIngressionRegimeMappingBennu {
 	}
 	
 	SasIngressionRegimeMapping playsRole sasIngressionRegimeMappings {
+		multiplicity *;
+	}
+}
+
+relation SasDegreeMappingBennu {
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+
+	SasDegreeMapping playsRole sasDegreeMappings {
 		multiplicity *;
 	}
 }
