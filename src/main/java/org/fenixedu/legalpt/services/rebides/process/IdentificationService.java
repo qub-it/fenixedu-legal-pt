@@ -34,7 +34,7 @@ public class IdentificationService {
         final IdentificationBean bean = new IdentificationBean();
         fillTeacherName(bean); // required
         fillTeacherDocumentIdNumber(bean); // required
-        fillTeacherDocumentIdType(bean); // required
+        //fillTeacherDocumentIdType(bean); // required
         fillTeacherOtherIdDocumentType(bean); // required
         fillTeacherDateOfBirth(bean); // required
         fillTeacherGender(bean); // required
@@ -57,7 +57,7 @@ public class IdentificationService {
     }
 
     private void fillTeacherDocumentIdNumber(IdentificationBean bean) {
-        String documentIdNumber = teacher.getPerson().getDocumentIdNumber();
+        String documentIdNumber = teacher.getPerson().getDefaultIdentificationDocument().getValue();
         if (StringUtils.isNotEmpty(documentIdNumber)) {
             if (RebidesService.validateMaxFieldSize(teacher, "Person.documentIdNumber", documentIdNumber,
                     RebidesService.LIMIT_20CHARS)) {
@@ -69,25 +69,29 @@ public class IdentificationService {
         }
     }
 
-    private void fillTeacherDocumentIdType(IdentificationBean bean) {
-        if (teacher.getPerson().getIdDocumentType() != null) {
-            if (LegalMapping.find(report, RebidesMappingType.ID_DOCUMENT_TYPE)
-                    .translate(teacher.getPerson().getIdDocumentType()) != null) {
-                bean.setDocumentIdType(LegalMapping.find(report, RebidesMappingType.ID_DOCUMENT_TYPE)
-                        .translate(teacher.getPerson().getIdDocumentType()));
-            } else {
-                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService.createMissingMappingMessage(
-                        "Person.idDocumentType", teacher.getPerson().getIdDocumentType().getLocalizedName()));
-            }
-        } else {
-            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
-                    RebidesService.createMissingFieldMessage("Person.idDocumentType"));
-        }
-    }
+    //    private void fillTeacherDocumentIdType(IdentificationBean bean) {
+    //        if (teacher.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType() != null) {
+    //            String value = LegalMapping.find(report, RebidesMappingType.ID_DOCUMENT_TYPE)
+    //                    .translate(teacher.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType());
+    //            if (value != null) {
+    //                bean.setDocumentIdType(value);
+    //            } else {
+    //                LegalReportContext.addError(RebidesReportEntryTarget.of(teacher), RebidesService.createMissingMappingMessage(
+    //                        "Person.idDocumentType",
+    //                        teacher.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
+    //                                .getContent()));
+    //            }
+    //        } else {
+    //            LegalReportContext.addError(RebidesReportEntryTarget.of(teacher),
+    //                    RebidesService.createMissingFieldMessage("Person.idDocumentType"));
+    //        }
+    //    }
 
     private void fillTeacherOtherIdDocumentType(IdentificationBean bean) {
-        if (IdDocument.OTHER.equals(teacher.getPerson().getIdDocumentType().name())) {
-            String otherIdDocumentType = teacher.getPerson().getIdDocumentType().getLocalizedName();
+        if (IdDocument.OTHER.equals(
+                teacher.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode())) {
+            String otherIdDocumentType =
+                    teacher.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName().getContent();
             if (RebidesService.validateMaxFieldSize(teacher, "Person.otherIdDocumentType", otherIdDocumentType,
                     RebidesService.LIMIT_60CHARS)) {
                 bean.setOtherIdDocumentType(otherIdDocumentType);

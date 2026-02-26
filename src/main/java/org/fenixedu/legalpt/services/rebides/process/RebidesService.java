@@ -148,10 +148,10 @@ public class RebidesService {
             throw new DomainException("rebides.message.error.mapping.is.empty",
                     i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.CONTRACT_WAGE_LEVEL.name"));
         }
-        if (LegalMapping.find(report, RebidesMappingType.ID_DOCUMENT_TYPE) == null) {
-            throw new DomainException("rebides.message.error.mapping.is.empty",
-                    i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.ID_DOCUMENT_TYPE.name"));
-        }
+        //        if (LegalMapping.find(report, RebidesMappingType.ID_DOCUMENT_TYPE) == null) {
+        //            throw new DomainException("rebides.message.error.mapping.is.empty",
+        //                    i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.ID_DOCUMENT_TYPE.name"));
+        //        }
         if (LegalMapping.find(report, RebidesMappingType.BOOLEAN) == null) {
             throw new DomainException("rebides.message.error.mapping.is.empty",
                     i18n("com.qubit.qubEdu.module.legal.domain.rebides.mapping.RebidesMappingType.BOOLEAN.name"));

@@ -3,10 +3,7 @@ package org.fenixedu.legalpt.domain.rebides;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Teacher;
-import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.ReportEntryTarget;
 
 public class RebidesReportEntryTarget implements ReportEntryTarget {
@@ -25,7 +22,7 @@ public class RebidesReportEntryTarget implements ReportEntryTarget {
     public Map<String, String> asMap() {
         final Map<String, String> result = new LinkedHashMap<>();
         result.put("Nome", teacher.getPerson().getName());
-        result.put("Nº Doc", teacher.getPerson().getDocumentIdNumber());
+        result.put("Nº Doc", teacher.getPerson().getDefaultIdentificationDocument().getValue());
         result.put("Username", teacher.getPerson().getUsername());
 
         return result;

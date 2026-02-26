@@ -3,12 +3,13 @@ package org.fenixedu.legalpt.services.raides.process;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.person.IDDocumentType;
+import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocumentType;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.Student;
@@ -44,19 +45,22 @@ public class IdentificacaoService extends RaidesService {
         bean.setIdAluno(registration.getStudent().getNumber());
         bean.setNome(student.getName());
 
-        bean.setNumId(student.getPerson().getDocumentIdNumber());
+        bean.setNumId(student.getPerson().getDefaultIdentificationDocument().getValue());
 
-        if (student.getPerson().getIdDocumentType() != null) {
+        if (student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType() != null) {
 
-            String value = LegalMapping.find(report, LegalMappingType.ID_DOCUMENT_TYPE)
-                    .translate(student.getPerson().getIdDocumentType());
+            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.IDENTIFICATION_DOCUMENT_TYPE),
+                            LegalMapping.find(report, LegalMappingType.ID_DOCUMENT_TYPE))
+                    .translate(student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType());
 
             if (StringUtils.isBlank(value)) {
 
-                LegalReportContext.addError(target,
-                        i18n("error.Raides.validation.idDocumentType.missing.translate", student.getPerson().getIdDocumentType().getLocalizedName()),
+                LegalReportContext.addError(target, i18n("error.Raides.validation.idDocumentType.missing.translate",
+                                student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
+                                        .getContent()),
                         i18n("error.Raides.validation.idDocumentType.missing.translate.action",
-                                student.getPerson().getIdDocumentType().getLocalizedName()));
+                                student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
+                                        .getContent()));
 
                 bean.markAsInvalid();
 
@@ -66,18 +70,22 @@ public class IdentificacaoService extends RaidesService {
         }
 
         if (Raides.DocumentoIdentificacao.OUTRO.equals(bean.getTipoId())) {
-            bean.setTipoIdDescr(student.getPerson().getIdDocumentType().getLocalizedName(Locale.getDefault()));
+            bean.setTipoIdDescr(student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
+                    .getContent(Locale.getDefault()));
         }
 
-        if (student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD) {
+        if (Objects.equals(student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode(),
+                IdentificationDocumentType.IDENTITY_CARD_CODE)) {
             String digitControlPerson = student.getPerson().getIdentificationDocumentSeriesNumber();
             bean.setCheckDigitId(digitControlPerson);
 
-            if (Strings.isNullOrEmpty(bean.getCheckDigitId())
-                    && student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD) {
+            if (Strings.isNullOrEmpty(bean.getCheckDigitId()) && Objects.equals(
+                    student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode(),
+                    IdentificationDocumentType.IDENTITY_CARD_CODE)) {
                 // Try to generate digitControl from identity card
                 try {
-                    int digitControl = generatePortugueseIdentityCardControlDigit(student.getPerson().getDocumentIdNumber());
+                    int digitControl = generatePortugueseIdentityCardControlDigit(
+                            student.getPerson().getDefaultIdentificationDocument().getValue());
                     bean.setCheckDigitId(String.valueOf(digitControl));
 
                     LegalReportContext.addWarn(target, i18n("warn.Raides.identity.card.digit.control.generated"));
@@ -292,8 +300,10 @@ public class IdentificacaoService extends RaidesService {
             LegalReportContext.addError(target, i18n("error.Raides.validation.document.id.contains.spaces"),
                     i18n("error.Raides.validation.document.id.contains.spaces.action"));
             bean.markAsInvalid();
-        } else if (IDDocumentType.IDENTITY_CARD == registration.getPerson().getIdDocumentType()
-                || IDDocumentType.CITIZEN_CARD == registration.getPerson().getIdDocumentType()) {
+        } else if (IdentificationDocumentType.IDENTITY_CARD_CODE.equals(
+                registration.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode())
+                || IdentificationDocumentType.CITIZEN_CARD_CODE.equals(
+                registration.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode())) {
             if (!bean.getNumId().matches("\\d+")) {
                 LegalReportContext.addError(target,
                         i18n("error.Raides.validation.national.document.id.contains.other.than.spaces"),
@@ -301,8 +311,9 @@ public class IdentificacaoService extends RaidesService {
                 bean.markAsInvalid();
             }
 
-            if (student.getPerson().getIdDocumentType() == IDDocumentType.IDENTITY_CARD
-                    && student.getPerson().getDocumentIdNumber().length() != 8) {
+            if (IdentificationDocumentType.IDENTITY_CARD_CODE.equals(
+                    student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode())
+                    && student.getPerson().getDefaultIdentificationDocument().getValue().length() != 8) {
 
                 LegalReportContext.addError(target, i18n("error.Raides.validation.document.id.invalid"),
                         i18n("error.Raides.validation.document.id.invalid.action"));
@@ -312,8 +323,9 @@ public class IdentificacaoService extends RaidesService {
             }
         }
 
-        if (!Strings.isNullOrEmpty(bean.getTipoIdDescr())
-                && bean.getTipoIdDescr().equalsIgnoreCase(IDDocumentType.OTHER.getLocalizedName(Locale.getDefault()))) {
+        if (!Strings.isNullOrEmpty(bean.getTipoIdDescr()) && bean.getTipoIdDescr().equalsIgnoreCase(
+                Objects.requireNonNull(IdentificationDocumentType.findByCode(IdentificationDocumentType.OTHER_CODE).orElse(null))
+                        .getName().getContent(Locale.getDefault()))) {
 
             LegalReportContext.addError(target, i18n("error.Raides.validation.document.id.invalid.other"),
                     i18n("error.Raides.validation.document.id.invalid.other.action"));
