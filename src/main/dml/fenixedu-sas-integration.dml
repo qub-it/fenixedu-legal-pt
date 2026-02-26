@@ -2,7 +2,6 @@ package org.fenixedu.ulisboa.integration.sas.domain;
 
 external class .org.fenixedu.academic.domain.ExecutionYear;
 external class .org.fenixedu.academic.domain.student.Registration;
-external class .org.fenixedu.academic.domain.person.IDDocumentType;
 external class .org.fenixedu.academic.domain.candidacy.IngressionType;
 external class .org.fenixedu.academic.domain.student.personaldata;
 
