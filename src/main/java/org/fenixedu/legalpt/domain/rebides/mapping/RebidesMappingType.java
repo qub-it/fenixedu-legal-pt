@@ -8,7 +8,6 @@ import java.util.Set;
 import org.fenixedu.academic.domain.organizationalStructure.PartyTypeEnum;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.person.Gender;
-import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.commons.i18n.I18N;
@@ -35,8 +34,8 @@ public enum RebidesMappingType implements ILegalMappingType {
 
     public Set<?> getValues() {
         switch (this) {
-        case ID_DOCUMENT_TYPE:
-            return Sets.newHashSet(IDDocumentType.values());
+        //        case ID_DOCUMENT_TYPE:
+        //            return Sets.newHashSet(IDDocumentType.values());
         case CONTRACT_CATEGORY:
 //            return RootDomainObject.getInstance().getContractCategoriesSet();
             return Collections.emptySet();
@@ -109,10 +108,10 @@ public enum RebidesMappingType implements ILegalMappingType {
             mls = mls.with(I18N.getLocale(), gender.toLocalizedString(I18N.getLocale()));
             return mls;
 
-        case ID_DOCUMENT_TYPE:
-            final IDDocumentType idDocumentType = IDDocumentType.valueOf(key);
-            mls = mls.with(I18N.getLocale(), idDocumentType.getLocalizedName(I18N.getLocale()));
-            return mls;
+        //        case ID_DOCUMENT_TYPE:
+        //            final IDDocumentType idDocumentType = IDDocumentType.valueOf(key);
+        //            mls = mls.with(I18N.getLocale(), idDocumentType.getLocalizedName(I18N.getLocale()));
+        //            return mls;
 
         case CONTRACT_CATEGORY:
             return new LocalizedString(I18N.getLocale(), "TODO_CONTRACT_CATEGORY");// ((ContractCategory) FenixFramework.getDomainObject(key)).getName();
