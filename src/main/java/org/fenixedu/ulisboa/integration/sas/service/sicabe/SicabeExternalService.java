@@ -19,7 +19,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.exceptions.DomainException;
-import org.fenixedu.academic.domain.person.IDDocumentType;
+import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocumentType;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
@@ -255,8 +255,8 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         tempBean.setStudentName(c.getCandidacyName());
         tempBean.setDegreeCode(c.getDegreeCode() != null ? c.getDegreeCode().trim() : null);
         tempBean.setDocumentNumber(c.getDocIdNumber());
-        IDDocumentType candidacyDocumentType = convertCandidacyDocumentType(c.getDocIdType());
-        tempBean.setDocumentTypeName(candidacyDocumentType != null ? candidacyDocumentType.name() : null);
+        String candidacyDocumentTypeCode = convertCandidacyDocumentType(c.getDocIdType());
+        tempBean.setDocumentTypeName(candidacyDocumentTypeCode);
 
         try {
             final Registration registration =
@@ -305,17 +305,17 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         return null;
     }
 
-    protected IDDocumentType convertCandidacyDocumentType(String idDocumentType) {
+    protected String convertCandidacyDocumentType(String idDocumentType) {
         if (idDocumentType.equalsIgnoreCase(TipoDocumentoIdentificacao.BI.name())) {
-            return IDDocumentType.IDENTITY_CARD;
+            return IdentificationDocumentType.IDENTITY_CARD_CODE;
         } else if (idDocumentType.equalsIgnoreCase(TipoDocumentoIdentificacao.PASSAPORTE.name())) {
-            return IDDocumentType.PASSPORT;
+            return IdentificationDocumentType.PASSPORT_CODE;
         } else if (idDocumentType.equalsIgnoreCase(TipoDocumentoIdentificacao.AUTORIZACAO_RESIDENCIA.name())) {
-            return IDDocumentType.RESIDENCE_AUTHORIZATION;
+            return IdentificationDocumentType.RESIDENCE_AUTHORIZATION_CODE;
         } else if (idDocumentType.equalsIgnoreCase(TipoDocumentoIdentificacao.BI_NAO_NACIONAL.name())) {
-            return IDDocumentType.NATIVE_COUNTRY_IDENTITY_CARD;
+            return IdentificationDocumentType.NATIVE_COUNTRY_IDENTITY_CARD_CODE;
         } else if (idDocumentType.equalsIgnoreCase(TipoDocumentoIdentificacao.OUTROS.name())) {
-            return IDDocumentType.OTHER;
+            return IdentificationDocumentType.OTHER_CODE;
         }
 
         return null;
@@ -391,8 +391,8 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         bean.setDegreeCode(c.getDegreeCode());
         bean.setDegreeName(c.getDegreeName());
         bean.setDocumentNumber(c.getDocIdNumber());
-        IDDocumentType candidacyDocumentType = convertCandidacyDocumentType(c.getDocIdType());
-        bean.setDocumentTypeName(candidacyDocumentType != null ? candidacyDocumentType.name() : null);
+        String candidacyDocumentTypeCode = convertCandidacyDocumentType(c.getDocIdType());
+        bean.setDocumentTypeName(candidacyDocumentTypeCode);
 
         service.fillBeanWithAcademicInfos(bean, c.getRegistration(), c.getExecutionYear(), c.getFirstYear());
 
