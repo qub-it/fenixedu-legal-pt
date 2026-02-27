@@ -1,3 +1,5 @@
+- Refactor: Creates RAIDES domain object legal mappings and replaces references [#qubIT-Fenix-6491]
+
 2.26.11 (11-02-2026)
 - Improvement: Allow to map ministry degree codes on SAS integration [#UL-REIT-4612]
 
