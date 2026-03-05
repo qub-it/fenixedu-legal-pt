@@ -9,6 +9,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.ExecutionYear;
+import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocument;
 import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocumentType;
 import org.fenixedu.academic.domain.student.PrecedentDegreeInformation;
 import org.fenixedu.academic.domain.student.Registration;
@@ -29,8 +30,9 @@ import com.google.common.base.Strings;
 
 public class IdentificacaoService extends RaidesService {
 
-    private static List<String> COUNTRIES_EU = Arrays.asList("AT", "BE", "BG", "CY", "HR", "DK", "SK", "SI", "ES", "EE", "FI",
-            "FR", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "CZ", "RO", "SE", "DE");
+    private static List<String> COUNTRIES_EU =
+            Arrays.asList("AT", "BE", "BG", "CY", "HR", "DK", "SK", "SI", "ES", "EE", "FI", "FR", "GR", "HU", "IE", "IT", "LV",
+                    "LT", "LU", "MT", "NL", "PL", "PT", "CZ", "RO", "SE", "DE");
 
     public IdentificacaoService(final LegalReport report) {
         super(report);
@@ -45,22 +47,21 @@ public class IdentificacaoService extends RaidesService {
         bean.setIdAluno(registration.getStudent().getNumber());
         bean.setNome(student.getName());
 
-        bean.setNumId(student.getPerson().getDefaultIdentificationDocument().getValue());
+        IdentificationDocument identificationDocument = student.getPerson().getDefaultIdentificationDocument();
+        bean.setNumId(identificationDocument.getValue());
 
-        if (student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType() != null) {
+        if (identificationDocument.getIdentificationDocumentType() != null) {
 
             String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.IDENTIFICATION_DOCUMENT_TYPE),
                             LegalMapping.find(report, LegalMappingType.ID_DOCUMENT_TYPE))
-                    .translate(student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType());
+                    .translate(identificationDocument.getIdentificationDocumentType());
 
             if (StringUtils.isBlank(value)) {
 
                 LegalReportContext.addError(target, i18n("error.Raides.validation.idDocumentType.missing.translate",
-                                student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
-                                        .getContent()),
+                                identificationDocument.getIdentificationDocumentType().getName().getContent()),
                         i18n("error.Raides.validation.idDocumentType.missing.translate.action",
-                                student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
-                                        .getContent()));
+                                identificationDocument.getIdentificationDocumentType().getName().getContent()));
 
                 bean.markAsInvalid();
 
@@ -70,22 +71,20 @@ public class IdentificacaoService extends RaidesService {
         }
 
         if (Raides.DocumentoIdentificacao.OUTRO.equals(bean.getTipoId())) {
-            bean.setTipoIdDescr(student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getName()
-                    .getContent(Locale.getDefault()));
+            bean.setTipoIdDescr(identificationDocument.getIdentificationDocumentType().getName().getContent(Locale.getDefault()));
         }
 
-        if (Objects.equals(student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode(),
+        if (Objects.equals(identificationDocument.getIdentificationDocumentType().getCode(),
                 IdentificationDocumentType.IDENTITY_CARD_CODE)) {
             String digitControlPerson = student.getPerson().getIdentificationDocumentSeriesNumber();
             bean.setCheckDigitId(digitControlPerson);
 
             if (Strings.isNullOrEmpty(bean.getCheckDigitId()) && Objects.equals(
-                    student.getPerson().getDefaultIdentificationDocument().getIdentificationDocumentType().getCode(),
+                    identificationDocument.getIdentificationDocumentType().getCode(),
                     IdentificationDocumentType.IDENTITY_CARD_CODE)) {
                 // Try to generate digitControl from identity card
                 try {
-                    int digitControl = generatePortugueseIdentityCardControlDigit(
-                            student.getPerson().getDefaultIdentificationDocument().getValue());
+                    int digitControl = generatePortugueseIdentityCardControlDigit(identificationDocument.getValue());
                     bean.setCheckDigitId(String.valueOf(digitControl));
 
                     LegalReportContext.addWarn(target, i18n("warn.Raides.identity.card.digit.control.generated"));
@@ -108,8 +107,8 @@ public class IdentificacaoService extends RaidesService {
 
             if (StringUtils.isBlank(value)) {
 
-                LegalReportContext.addError(target,
-                        i18n("error.Raides.validation.gender.missing.translate", student.getPerson().getGender().getLocalizedName()),
+                LegalReportContext.addError(target, i18n("error.Raides.validation.gender.missing.translate",
+                                student.getPerson().getGender().getLocalizedName()),
                         i18n("error.Raides.validation.gender.missing.translate.action",
                                 student.getPerson().getGender().getLocalizedName()));
 
@@ -120,8 +119,7 @@ public class IdentificacaoService extends RaidesService {
             }
         } else {
 
-            LegalReportContext.addError(target,
-                    i18n("error.Raides.validation.gender.missing"),
+            LegalReportContext.addError(target, i18n("error.Raides.validation.gender.missing"),
                     i18n("error.Raides.validation.gender.missing.action"));
 
             bean.markAsInvalid();
