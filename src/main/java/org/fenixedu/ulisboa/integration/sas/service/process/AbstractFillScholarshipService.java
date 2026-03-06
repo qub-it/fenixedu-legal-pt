@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.fenixedu.academic.FenixEduAcademicConfiguration;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -19,7 +18,7 @@ import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.organizationalStructure.Party;
-import org.fenixedu.academic.domain.person.IDDocumentType;
+import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocumentType;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationRegimeType;
 import org.fenixedu.academic.domain.student.RegistrationServices;
@@ -85,7 +84,7 @@ public class AbstractFillScholarshipService {
 
     private final Multimap<AbstractScholarshipStudentBean, MessageEntry> messages = ArrayListMultimap.create();
 
-    protected static final Map<String, IDDocumentType> ID_DOCUMENT_TYPE_MAPPING = Maps.newHashMap();
+    protected static final Map<String, String> IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING = Maps.newHashMap();
 
     public static final String REGIME_FULL_TIME = "Tempo integral";
 
@@ -104,12 +103,13 @@ public class AbstractFillScholarshipService {
     static {
 
         // id document types mapping
-        ID_DOCUMENT_TYPE_MAPPING.put("BI / N.º ID CIVIL", IDDocumentType.IDENTITY_CARD);
+        IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING.put("BI / N.º ID CIVIL", IdentificationDocumentType.IDENTITY_CARD_CODE);
         //ID_DOCUMENT_TYPE_MAPPING.put("BiNaoNacional", IDDocumentType.FOREIGNER_IDENTITY_CARD);
-        ID_DOCUMENT_TYPE_MAPPING.put("Autorização de residência", IDDocumentType.RESIDENCE_AUTHORIZATION);
-        ID_DOCUMENT_TYPE_MAPPING.put("Passaporte", IDDocumentType.PASSPORT);
-        ID_DOCUMENT_TYPE_MAPPING.put("NIF", IDDocumentType.OTHER);
-        ID_DOCUMENT_TYPE_MAPPING.put("Outros", IDDocumentType.OTHER);
+        IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING.put("Autorização de residência",
+                IdentificationDocumentType.RESIDENCE_AUTHORIZATION_CODE);
+        IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING.put("Passaporte", IdentificationDocumentType.PASSPORT_CODE);
+        IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING.put("NIF", IdentificationDocumentType.OTHER_CODE);
+        IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING.put("Outros", IdentificationDocumentType.OTHER_CODE);
 
     }
 
@@ -244,7 +244,8 @@ public class AbstractFillScholarshipService {
 
     protected Person findPerson(AbstractScholarshipStudentBean bean, ExecutionYear requestYear) {
 
-        final Collection<Person> withDocumentId = Person.readByDocumentIdNumber(bean.getDocumentNumber());
+        final Collection<Person> withDocumentId =
+                Person.findByDocumentIdentification(bean.getDocumentNumber()).collect(Collectors.toSet());
 
         if (withDocumentId.size() == 1) {
             return ensureDocumentIdType(withDocumentId.iterator().next(), bean);
@@ -261,7 +262,8 @@ public class AbstractFillScholarshipService {
                 final String documentIdWithoutCheckDigit =
                         bean.getDocumentNumber().substring(0, bean.getDocumentNumber().length() - 1);
 
-                final Collection<Person> withPartialDocumentId = Person.readByDocumentIdNumber(documentIdWithoutCheckDigit);
+                final Collection<Person> withPartialDocumentId =
+                        Person.findByDocumentIdentification(documentIdWithoutCheckDigit).collect(Collectors.toSet());
 
                 if (withPartialDocumentId.size() == 1) {
                     if ((bean.getDocumentBINumber() == null || !bean.getDocumentBINumber().equals(documentIdWithoutCheckDigit))
@@ -287,7 +289,7 @@ public class AbstractFillScholarshipService {
                         bean.getDocumentNumber().substring(0, bean.getDocumentNumber().length() - 4);
 
                 final Collection<Person> withPartialDocumentIdWithoutCCSerial =
-                        Person.readByDocumentIdNumber(documentIdWithoutCitizenCardSerial);
+                        Person.findByDocumentIdentification(documentIdWithoutCitizenCardSerial).collect(Collectors.toSet());
 
                 if (withPartialDocumentIdWithoutCCSerial.size() == 1) {
                     if (bean.getDocumentBINumber() == null || !bean.getDocumentBINumber()
@@ -365,8 +367,10 @@ public class AbstractFillScholarshipService {
 
     private Person ensureDocumentIdType(final Person person, final AbstractScholarshipStudentBean bean) {
 
-        if (person.getIdDocumentType() != ID_DOCUMENT_TYPE_MAPPING.get(bean.getDocumentTypeName()) && !person.getIdDocumentType()
-                .name().equalsIgnoreCase(bean.getDocumentTypeName())) {
+        if (!person.getDefaultIdentificationDocument().getIdentificationDocumentType().getCode()
+                .equals(IDENTIFICATION_DOCUMENT_TYPE_CODE_MAPPING.get(bean.getDocumentTypeName()))
+                && !person.getDefaultIdentificationDocument().getIdentificationDocumentType().getCode()
+                .equalsIgnoreCase(bean.getDocumentTypeName())) {
             addError(bean, false, "message.error.identity.document.type");
             throw new FillScholarshipException("message.error.identity.document.type");
         }
