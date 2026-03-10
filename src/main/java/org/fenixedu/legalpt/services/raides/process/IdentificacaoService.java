@@ -52,8 +52,7 @@ public class IdentificacaoService extends RaidesService {
 
         if (identificationDocument.getIdentificationDocumentType() != null) {
 
-            String value = Objects.requireNonNullElse(LegalMapping.find(report, LegalMappingType.IDENTIFICATION_DOCUMENT_TYPE),
-                            LegalMapping.find(report, LegalMappingType.ID_DOCUMENT_TYPE))
+            String value = LegalMapping.find(report, LegalMappingType.IDENTIFICATION_DOCUMENT_TYPE)
                     .translate(identificationDocument.getIdentificationDocumentType());
 
             if (StringUtils.isBlank(value)) {
