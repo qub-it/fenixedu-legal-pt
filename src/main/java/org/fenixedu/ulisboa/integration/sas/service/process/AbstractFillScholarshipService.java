@@ -136,15 +136,18 @@ public class AbstractFillScholarshipService {
 
     private Registration findRegistration(Student student, AbstractScholarshipStudentBean bean, ExecutionYear requestYear) {
 
-        final Collection<Degree> degrees = findDegree(bean);
+        final Collection<Degree> degrees = findDegrees(bean);
 
-        final Predicate<Registration> isEnroled = r -> !getEnroledCurriculumLines(r, requestYear).isEmpty();
+        final Predicate<Registration> isEnrolled = r -> !getEnroledCurriculumLines(r, requestYear).isEmpty();
 
         final Set<Registration> registrations = Sets.newHashSet();
 
-        for (final Degree degree : degrees) {
-            registrations.addAll(student.getRegistrationsFor(degree).stream().filter(isEnroled).collect(Collectors.toSet()));
-        }
+        degrees.forEach(d -> student.getRegistrationsFor(d).stream().filter(isEnrolled).forEach(registrations::add));
+
+
+        /*for (final Degree degree : degrees) {
+            registrations.addAll(student.getRegistrationsFor(degree).stream().filter(isEnrolled).collect(Collectors.toSet()));
+        }*/
 
         if (registrations.size() == 1) {
 
@@ -163,16 +166,17 @@ public class AbstractFillScholarshipService {
 
             final Predicate<Registration> degreeTypePredicate = r -> possibleDegreeTypes.contains(r.getDegreeType());
 
-            final Predicate<Registration> precedentDegreePredicate = r -> r.getDegree().getPrecedentDegreesSet().stream()
-                    .anyMatch(pd -> Objects.equal(pd.getMinistryCode(), bean.getDegreeCode()));
+            final Predicate<Registration> precedentDegreePredicate =
+                    r -> java.util.Objects.requireNonNull(r.getDegree()).getPrecedentDegreesSet().stream()
+                            .anyMatch(pd -> Objects.equal(pd.getMinistryCode(), bean.getDegreeCode()));
 
             final Collection<Registration> registrationsWithActiveEnrolments = student.getRegistrationsSet().stream()
-                    .filter(isEnroled.and(degreeTypePredicate).and(precedentDegreePredicate)).collect(Collectors.toSet());
+                    .filter(isEnrolled.and(degreeTypePredicate).and(precedentDegreePredicate)).collect(Collectors.toSet());
 
             if (registrationsWithActiveEnrolments.size() == 1) {
                 final Registration registration = registrationsWithActiveEnrolments.iterator().next();
                 addWarning(bean, true, "message.warning.input.degree.code.not.equals.to.active.degree.code",
-                        registration.getDegree().getCode());
+                        java.util.Objects.requireNonNull(registration.getDegree()).getMinistryCode());
                 bean.setObservations(formatObservations(bean));
                 return registration;
             } else if (registrationsWithActiveEnrolments.size() > 1) {
@@ -190,16 +194,11 @@ public class AbstractFillScholarshipService {
 
     }
 
-    private Collection<Degree> findDegree(AbstractScholarshipStudentBean bean) {
+    private Collection<Degree> findDegrees(AbstractScholarshipStudentBean bean) {
         final Collection<Degree> degrees = getDegrees(bean.getDegreeCode());
 
-        if (!degrees.isEmpty()) {
-            return degrees;
-        }
-
         // check sas degree code mappings
-        getMappingsForDegreeCode(bean.getDegreeCode()).stream().map(this::getDegrees)
-                .forEach(degrees::addAll);
+        getMappingsForDegreeCode(bean.getDegreeCode()).stream().map(this::getDegrees).forEach(degrees::addAll);
 
         if (!degrees.isEmpty()) {
             return degrees;
@@ -212,7 +211,10 @@ public class AbstractFillScholarshipService {
     }
 
     private Set<Degree> getDegrees(final String inputDegreeCode) {
-        return Bennu.getInstance().getDegreesSet().stream().filter(d -> Objects.equal(d.getMinistryCode(), inputDegreeCode))
+        return Bennu.getInstance().getDegreesSet().stream()
+
+                .filter(d -> Objects.equal(d.getMinistryCode(), inputDegreeCode))
+
                 .collect(Collectors.toSet());
     }
 
