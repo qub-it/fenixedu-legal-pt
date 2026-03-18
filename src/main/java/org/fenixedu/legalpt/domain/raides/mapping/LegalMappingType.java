@@ -14,6 +14,7 @@ import org.fenixedu.academic.domain.curriculum.grade.GradeScale;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.organizationalStructure.AcademicalInstitutionType;
 import org.fenixedu.academic.domain.person.Gender;
+import org.fenixedu.academic.domain.person.IDDocumentType;
 import org.fenixedu.academic.domain.person.MaritalStatus;
 import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocumentType;
 import org.fenixedu.academic.domain.student.RegistrationProtocol;
@@ -43,7 +44,7 @@ import pt.ist.fenixframework.FenixFramework;
 
 public enum LegalMappingType implements ILegalMappingType {
 
-    BOOLEAN, GENDER, IDENTIFICATION_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE,
+    BOOLEAN, GENDER, ID_DOCUMENT_TYPE, IDENTIFICATION_DOCUMENT_TYPE, CYCLE_TYPE, REGIME_TYPE, GRANT_OWNER_TYPE,
     GRANT_OWNER_BY_STATUTE_TYPE,
     REGISTRATION_INGRESSION_TYPE, MARITAL_STATUS, EDUCATION_LEVEL, PROFESSIONAL_STATUS, PROFESSION_CATEGORY,
     HIGH_SCHOOL_TYPE, SCHOOL_PERIOD_DURATION, INTERNATIONAL_MOBILITY_PROGRAM, INTERNATIONAL_MOBILITY_ACTIVITY, CURRICULAR_YEAR,
@@ -59,6 +60,8 @@ public enum LegalMappingType implements ILegalMappingType {
             return Sets.newHashSet(Boolean.TRUE, Boolean.FALSE);
         case GENDER:
             return Sets.newHashSet(Gender.values());
+        case ID_DOCUMENT_TYPE:
+            return Sets.newHashSet(IDDocumentType.values());
         case IDENTIFICATION_DOCUMENT_TYPE:
             return IdentificationDocumentType.findAll().collect(Collectors.toSet());
         case CYCLE_TYPE:
@@ -163,6 +166,11 @@ public enum LegalMappingType implements ILegalMappingType {
             final Gender gender = Gender.valueOf(key);
             mls = mls.with(I18N.getLocale(), gender.toLocalizedString(I18N.getLocale()));
             return mls;
+        case ID_DOCUMENT_TYPE:
+            IdentificationDocumentType identificationDocumentType = IdentificationDocumentType.findByCode(key).orElseThrow(
+                    () -> new IllegalArgumentException(
+                            LegalPTUtil.bundleI18N("error.identificationDocumentType.doesnt.exist", key).getContent()));
+            return identificationDocumentType.getName();
         case IDENTIFICATION_DOCUMENT_TYPE:
             return ((IdentificationDocumentType) FenixFramework.getDomainObject(key)).getName();
         case CYCLE_TYPE:
