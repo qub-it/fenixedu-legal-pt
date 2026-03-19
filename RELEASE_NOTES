@@ -1,3 +1,5 @@
+- Refactor: Delete IDDocumentType legal mapping [#qubIT-Fenix-6491]
+
 2.27.1 (17-03-2026)
 - Bug fix: SAS: Collect all ministry degrees to get the active registration (including the existing degrees mapped) [#UL-REIT-4612]
 - Refactor: Clean up legal mapping for id document types [#qubIT-Fenix-6491]
