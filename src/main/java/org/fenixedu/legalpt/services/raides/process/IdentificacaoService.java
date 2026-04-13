@@ -75,7 +75,7 @@ public class IdentificacaoService extends RaidesService {
 
         if (Objects.equals(identificationDocument.getIdentificationDocumentType().getCode(),
                 IdentificationDocumentType.IDENTITY_CARD_CODE)) {
-            String digitControlPerson = student.getPerson().getIdentificationDocumentSeriesNumber();
+            String digitControlPerson = student.getPerson().getDefaultIdentificationDocument().getExtraInfo();
             bean.setCheckDigitId(digitControlPerson);
 
             if (Strings.isNullOrEmpty(bean.getCheckDigitId()) && Objects.equals(
