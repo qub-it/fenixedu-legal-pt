@@ -348,9 +348,9 @@ public class AbstractFillScholarshipService {
     private boolean hasSameCheckDigitValue(String candidacyIdDocumentNumber, Person person) {
         final String inputDocumentIdCheckDigit = candidacyIdDocumentNumber.substring(candidacyIdDocumentNumber.length() - 1);
 
-        final String personDocumentIdCheckDigit = (person.getIdentificationDocumentSeriesNumber() != null
-                && person.getIdentificationDocumentSeriesNumber().length() > 0) ? person.getIdentificationDocumentSeriesNumber()
-                .substring(0, 1) : "";
+        final String personDocumentIdCheckDigit = StringUtils.isNotBlank(
+                person.getDefaultIdentificationDocument().getExtraInfo()) ? person.getDefaultIdentificationDocument()
+                .getExtraInfo().substring(0, 1) : "";
 
         return inputDocumentIdCheckDigit.equals(personDocumentIdCheckDigit);
     }
