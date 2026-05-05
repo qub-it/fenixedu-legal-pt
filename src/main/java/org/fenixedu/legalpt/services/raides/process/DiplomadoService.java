@@ -178,7 +178,7 @@ public class DiplomadoService extends RaidesService {
         return false;
     }
 
-    public TblDiplomado createIntegratedCycleFirstCyle(final RaidesRequestParameter raidesRequestParameter,
+    public TblDiplomado createIntegratedCycleFirstCycle(final RaidesRequestParameter raidesRequestParameter,
             final RaidesRequestPeriodParameter graduatedPeriod, final ExecutionYear executionYear,
             final Registration registration) {
 

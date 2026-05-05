@@ -610,7 +610,7 @@ public class Raides {
         }
 
         if (diplomadoService.isToReportIntegratedCycleFirstCycle(graduatedPeriod, executionYear, registration)) {
-            diplomados.put(registration.getStudent(), diplomadoService.createIntegratedCycleFirstCyle(raidesRequestParameter,
+            diplomados.put(registration.getStudent(), diplomadoService.createIntegratedCycleFirstCycle(raidesRequestParameter,
                     graduatedPeriod, executionYear, registration));
             registrationList.add(registration);
         }
