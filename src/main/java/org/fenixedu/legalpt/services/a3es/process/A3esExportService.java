@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -170,7 +171,9 @@ abstract public class A3esExportService {
     }
 
     protected WebTarget getClientTarget() {
-        final Client client = ClientBuilder.newClient();
+        // 2026-07-14 (#qubIT-Fenix-8984)
+        // Apply read timeout
+        final Client client = ClientBuilder.newBuilder().readTimeout(10, TimeUnit.SECONDS).build();
         return client.target(A3esInstance.getInstance().getA3esUrl());
     }
 
