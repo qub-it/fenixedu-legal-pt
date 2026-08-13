@@ -41,7 +41,7 @@ public class A3esHarvestDegreeDataService {
         this.year = bean.getExecutionYear();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
         this.degree = this.degreeCurricularPlan.getDegree();
-        this.info = this.degree.getMostRecentDegreeInfo(this.year.getAcademicInterval());
+        this.info = this.degree.getMostRecentDegreeInfo(this.year);
 
         final A3esDegreeBean data = bean.getDegreeData();
 
