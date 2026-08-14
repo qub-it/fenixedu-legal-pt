@@ -222,7 +222,7 @@ public class A3esHarvestDegreeDataService {
     private void fillCoordinators(final A3esDegreeBean data) {
         String source = null;
 
-        final ExecutionDegree executionDegree = this.degreeCurricularPlan.getExecutionDegreeByYear(this.year);
+        final ExecutionDegree executionDegree = this.degreeCurricularPlan.findExecutionDegree(this.year).orElse(null);
         if (executionDegree != null) {
             source = executionDegree.getCoordinatorsListSet().stream()
                     .map(coordinator -> coordinator.getPerson().getName()
