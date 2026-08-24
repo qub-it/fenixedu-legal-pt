@@ -41,7 +41,7 @@ public class A3esHarvestDegreeDataService {
         this.year = bean.getExecutionYear();
         this.degreeCurricularPlan = bean.getDegreeCurricularPlan();
         this.degree = this.degreeCurricularPlan.getDegree();
-        this.info = this.degree.getMostRecentDegreeInfo(this.year.getAcademicInterval());
+        this.info = this.degree.getMostRecentDegreeInfo(this.year);
 
         final A3esDegreeBean data = bean.getDegreeData();
 
@@ -222,7 +222,7 @@ public class A3esHarvestDegreeDataService {
     private void fillCoordinators(final A3esDegreeBean data) {
         String source = null;
 
-        final ExecutionDegree executionDegree = this.degreeCurricularPlan.getExecutionDegreeByYear(this.year);
+        final ExecutionDegree executionDegree = this.degreeCurricularPlan.findExecutionDegree(this.year).orElse(null);
         if (executionDegree != null) {
             source = executionDegree.getCoordinatorsListSet().stream()
                     .map(coordinator -> coordinator.getPerson().getName()
