@@ -1,3 +1,4 @@
+2.27.5 (25-08-2026)
 - Refactor: Apply read timeout in A3ES communication [#qubIT-Fenix-8984]
 - Refactor: Replaces deprecated AcademicInterval method references with ExecutionInterval [#qubIT-Fenix-9217]
 - Bug fix: Misspelling of the createIntegratedCycleFirstCycle method [#qubIT-Fenix-8348]
