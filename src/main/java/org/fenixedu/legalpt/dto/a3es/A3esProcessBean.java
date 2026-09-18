@@ -224,7 +224,7 @@ public class A3esProcessBean extends A3esPeriodBean implements IBean {
     private void updateDegreeCurricularPlanDataSource() {
         if (getDegreeCurricularPlanDataSource().isEmpty() && getExecutionYear() != null) {
 
-            Degree.readBolonhaDegrees().stream().flatMap(d -> d.getDegreeCurricularPlansForYear(getExecutionYear()).stream())
+            Degree.findAll().flatMap(d -> d.getDegreeCurricularPlansForYear(getExecutionYear()).stream())
                     .sorted(DegreeCurricularPlan.COMPARATOR_BY_PRESENTATION_NAME).map(x -> {
 
                         final TupleDataSourceBean tuple = new TupleDataSourceBean();
