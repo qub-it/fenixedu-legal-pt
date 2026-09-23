@@ -36,9 +36,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
-				<version>1.6</version>
+				<version>3.3.0</version>
+
 				<executions>
-					
+
 					<execution>
 						<id>process-salarybonus-xsd</id>
 						<goals>
@@ -47,14 +48,23 @@
 						<configuration>
 							<forceRegenerate>true</forceRegenerate>
 							<extension>true</extension>
-							<packageName>org.fenixedu.legalpt.jaxb.salarybonus</packageName>
-							<outputDirectory>${basedir}/target/generated-sources/xsd/salarybonus</outputDirectory>
-							<schemaDirectory>${basedir}/src/main/xsd/salarybonus/</schemaDirectory>
-							<schemaFiles>Diplomados134.xsd</schemaFiles>
-							<bindingDirectory>${basedir}/src/main/xsd/salarybonus/</bindingDirectory>
+
+							<packageName>
+								org.fenixedu.legalpt.jaxb.salarybonus
+							</packageName>
+
+							<sources>
+								<source>
+									${project.basedir}/src/main/xsd/salarybonus/Diplomados134.xsd
+								</source>
+							</sources>
+
+							<outputDirectory>
+								${project.build.directory}/generated-sources/xsd/salarybonus
+							</outputDirectory>
 						</configuration>
 					</execution>
-					
+
 					<execution>
 						<id>process-raides-xsd</id>
 						<goals>
@@ -63,11 +73,26 @@
 						<configuration>
 							<forceRegenerate>true</forceRegenerate>
 							<extension>true</extension>
-							<packageName>org.fenixedu.legalpt.jaxb.raides</packageName>
-							<outputDirectory>${basedir}/target/generated-sources/xsd/raides</outputDirectory>
-							<schemaDirectory>${basedir}/src/main/xsd/raides/</schemaDirectory>
-							<schemaFiles>DataStructureRaides.xsd</schemaFiles>
-							<bindingDirectory>${basedir}/src/main/xsd/raides/</bindingDirectory>
+
+							<packageName>
+								org.fenixedu.legalpt.jaxb.raides
+							</packageName>
+
+							<sources>
+								<source>
+									${project.basedir}/src/main/xsd/raides/DataStructureRaides.xsd
+								</source>
+							</sources>
+
+							<xjbSources>
+								<xjbSource>
+									${project.basedir}/src/main/xsd/raides/bindings.xjb
+								</xjbSource>
+							</xjbSources>
+
+							<outputDirectory>
+								${project.build.directory}/generated-sources/xsd/raides
+							</outputDirectory>
 						</configuration>
 					</execution>
 
@@ -79,23 +104,36 @@
 						<configuration>
 							<forceRegenerate>true</forceRegenerate>
 							<extension>true</extension>
-							<packageName>org.fenixedu.legalpt.jaxb.rebides</packageName>
-							<outputDirectory>${basedir}/target/generated-sources/xsd/rebides</outputDirectory>
-							<schemaDirectory>${basedir}/src/main/xsd/rebides/</schemaDirectory>
-							<schemaFiles>DataStructureRebides.xsd</schemaFiles>
+
+							<packageName>
+								org.fenixedu.legalpt.jaxb.rebides
+							</packageName>
+
+							<sources>
+								<source>
+									${project.basedir}/src/main/xsd/rebides/DataStructureRebides.xsd
+								</source>
+							</sources>
+
+							<outputDirectory>
+								${project.build.directory}/generated-sources/xsd/rebides
+							</outputDirectory>
 						</configuration>
 					</execution>
+
 				</executions>
+
 				<dependencies>
 					<dependency>
 						<groupId>org.glassfish.jaxb</groupId>
 						<artifactId>jaxb-xjc</artifactId>
-						<version>2.3.2</version>
+						<version>4.0.5</version>
 					</dependency>
+
 					<dependency>
 						<groupId>com.sun.activation</groupId>
 						<artifactId>jakarta.activation</artifactId>
-						<version>1.2.1</version>
+						<version>2.0.1</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -155,10 +193,10 @@
     		<plugin>
 				<!-- <groupId>org.jvnet.jax-ws-commons</groupId> <artifactId>jaxws-maven-plugin</artifactId> 
 				<version>2.3</version> -->
-				<groupId>org.codehaus.mojo</groupId>
-					<artifactId>jaxws-maven-plugin</artifactId>
-					<version>2.6</version>
-					<executions>
+				<groupId>com.sun.xml.ws</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>4.0.3</version>
+				<executions>
 						<execution>
 							<id>SICABEWS</id>
 							<phase>generate-sources</phase>
@@ -222,9 +260,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.1.1</version>
+			<groupId>jakarta.ws.rs</groupId>
+			<artifactId>jakarta.ws.rs-api</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 	</dependencies>
 </project>
