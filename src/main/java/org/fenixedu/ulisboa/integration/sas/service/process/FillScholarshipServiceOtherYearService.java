@@ -54,7 +54,7 @@ public class FillScholarshipServiceOtherYearService extends AbstractFillScholars
     }
 
     private Boolean hasMadeDegreeChange(Registration registration, ExecutionYear requestYear) {
-        return registration.getStartExecutionYear() == requestYear && SocialServicesConfiguration.getInstance()
+        return registration.getRegistrationYear() == requestYear && SocialServicesConfiguration.getInstance()
                 .getIngressionTypeWhichAreDegreeTransferSet().contains(registration.getIngressionType());
     }
 
