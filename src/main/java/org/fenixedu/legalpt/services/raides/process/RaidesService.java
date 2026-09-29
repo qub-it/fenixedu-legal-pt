@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseType;
 import org.fenixedu.academic.domain.Country;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Degree;
@@ -22,10 +21,11 @@ import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseType;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.degreeStructure.RootCourseGroup;
 import org.fenixedu.academic.domain.organizationalStructure.AcademicalInstitutionType;
-import org.fenixedu.academic.domain.organizationalStructure.UnitUtils;
+import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.raides.DegreeClassification;
 import org.fenixedu.academic.domain.raides.DegreeDesignation;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
@@ -337,7 +337,7 @@ public class RaidesService {
                 lastCompletedQualification.getDegreeDesignation())) {
 
             if (lastCompletedQualification.getInstitution() != null && (lastCompletedQualification.getInstitution().isOfficial()
-                    || UnitUtils.readInstitutionUnit() == lastCompletedQualification.getInstitution())) {
+                    || Unit.findInstitutionUnit() == lastCompletedQualification.getInstitution())) {
                 bean.setEstabEscolaridadeAnt(lastCompletedQualification.getInstitution().getCode());
             } else if (lastCompletedQualification.getInstitution() != null) {
                 bean.setEstabEscolaridadeAnt(Raides.Estabelecimentos.OUTRO);
