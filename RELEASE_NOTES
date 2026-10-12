@@ -1,3 +1,4 @@
+- Refactor: Replaces deprecated GradeScale#getOrderedGradeScaleEntriesSet reference [#qubIT-Fenix-9508]
 - Refactor: Replace deprecated UnitUtils references [#qubIT-Fenix-9003]
 
 2.27.7 (18-09-2026)
