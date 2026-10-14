@@ -1,5 +1,6 @@
 - Refactor: Migrate from javaee to jakarta [#qubIT-Omnis-10960]
 - Refactor: Replace deprecated UnitUtils references [#qubIT-Fenix-9003]
+- Refactor: Replaces Registration deprecated methods references [#qubIT-Fenix-9383]
 
 2.27.8 (15-10-2026)
 - Refactor: Replace deprecated UnitUtils references [#qubIT-Fenix-9003]
