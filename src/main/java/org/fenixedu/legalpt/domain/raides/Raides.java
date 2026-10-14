@@ -410,7 +410,7 @@ public class Raides {
             return true;
         }
 
-        final int enrolledYears = registration.getEnrolmentsExecutionYears().size();
+        final int enrolledYears = (int) registration.getEnrolmentsExecutionYearStream().count();
 
         if (enroledPeriod.getMinEnrolmentYears() != null && enroledPeriod.getMinEnrolmentYears().compareTo(enrolledYears) > 0) {
             return false;
@@ -529,7 +529,7 @@ public class Raides {
 
     protected boolean isActiveAtPeriod(final RaidesRequestPeriodParameter enroledPeriod, final Registration registration,
             final ExecutionYear academicPeriod) {
-        final RegistrationState stateInDate = registration.getStateInDate(enroledPeriod.getEnd());
+        final RegistrationState stateInDate = registration.getStateInDate(enroledPeriod.getEnd().toDateTimeAtStartOfDay());
         return stateInDate != null && (stateInDate.isActive() || stateInDate.getType().isConcluded());
     }
 

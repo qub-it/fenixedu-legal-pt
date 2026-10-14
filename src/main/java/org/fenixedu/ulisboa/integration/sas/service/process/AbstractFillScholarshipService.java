@@ -618,7 +618,7 @@ public class AbstractFillScholarshipService {
     public Integer getCycleIngressionYear(AbstractScholarshipStudentBean bean, Registration registration) {
 
         final Registration cycleFirstRegistration = getCycleRegistrations(registration).iterator().next();
-        final Integer cycleIngressionYear = cycleFirstRegistration.getStartExecutionYear().getBeginDateYearMonthDay().getYear();
+        final Integer cycleIngressionYear = cycleFirstRegistration.getRegistrationYear().getBeginDateYearMonthDay().getYear();
 
         if (bean.getCycleIngressionYear() != null && !bean.getCycleIngressionYear().equals(cycleIngressionYear)) {
             addWarning(bean, false, "message.warning.input.ingression.date.does.not.match.with.fenix",
@@ -640,8 +640,7 @@ public class AbstractFillScholarshipService {
                 .collect(Collectors.toSet());
         final Collection<Registration> degreesToProcess = registration.getStudent().getRegistrationsSet().stream()
                 .filter(r -> degreeTypesToCheck.contains(r.getDegreeType())).collect(Collectors.toSet());
-        return degreesToProcess.stream()
-                .filter(r -> r.getStartExecutionYear().isBeforeOrEquals(registration.getStartExecutionYear()))
+        return degreesToProcess.stream().filter(r -> r.getRegistrationYear().isBeforeOrEquals(registration.getRegistrationYear()))
                 .flatMap(r -> Stream.concat(Stream.of(r), Stream.of(RegistrationServices.getRootRegistration(r)))).distinct()
                 .sorted(Registration.COMPARATOR_BY_START_DATE).collect(Collectors.toList());
     }
