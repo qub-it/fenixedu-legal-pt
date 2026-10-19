@@ -109,7 +109,7 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
             DadosAcademicosObterCandidaturasSubmetidasSicabeErrorMessageFaultFaultMessage,
             DadosAcademicosObterCandidaturasSubmetidasSicabeValidationMessageFaultFaultMessage, ServerSOAPFaultException {
         final ObterCandidaturasSubmetidasRequest parameters = new ObterCandidaturasSubmetidasRequest();
-        parameters.setAnoLectivo(executionYear.getAcademicInterval().getStart().getYear());
+        parameters.setAnoLectivo(executionYear.getAcademicCalendarEntry().getBegin().getYear());
 
         final ObterCandidaturasSubmetidasResponse obterCandidaturasSubmetidas =
                 getClient().obterCandidaturasSubmetidas(parameters);
@@ -663,7 +663,7 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         request.setDataInscricaoAnoLectivo(createXMLGregorianCalendar(data.getEnrolmentDate()));
 
         IdentificadorCandidatura idCandidatura =
-                createIdentificadorCandidaturaData(candidacy.getExecutionYear().getAcademicInterval().getStart().getYear(),
+                createIdentificadorCandidaturaData(candidacy.getExecutionYear().getAcademicCalendarEntry().getBegin().getYear(),
                         candidacy.getDocIdNumber(), candidacy.getDocIdType(), candidacy.getFiscalNumber());
         request.setIdentificadorCandidatura(idCandidatura);
 
@@ -748,7 +748,7 @@ public class SicabeExternalService extends BennuWebServiceClient<DadosAcademicos
         request.setDataInscricaoAnoLectivo(createXMLGregorianCalendar(data.getEnrolmentDate()));
 
         IdentificadorCandidatura idCandidatura =
-                createIdentificadorCandidaturaData(candidacy.getExecutionYear().getAcademicInterval().getStart().getYear(),
+                createIdentificadorCandidaturaData(candidacy.getExecutionYear().getAcademicCalendarEntry().getBegin().getYear(),
                         candidacy.getDocIdNumber(), candidacy.getDocIdType(), candidacy.getFiscalNumber());
         request.setIdentificadorCandidatura(idCandidatura);
         request.setIInscritoAnoLectivoActual(data.getEnroled());
