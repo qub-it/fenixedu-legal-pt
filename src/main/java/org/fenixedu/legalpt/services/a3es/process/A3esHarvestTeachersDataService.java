@@ -173,8 +173,7 @@ public class A3esHarvestTeachersDataService {
 
     private TeacherAuthorization getTeacherAuthorization(final Person person) {
         final Teacher teacher = person == null ? null : person.getTeacher();
-        return teacher == null ? null : teacher
-                .getLatestTeacherAuthorizationInInterval(this.year.getAcademicInterval().toInterval()).orElse(null);
+        return teacher == null ? null : teacher.getLatestTeacherAuthorizationInInterval(this.year.toInterval()).orElse(null);
     }
 
     static private void fillSpecialty(final A3esTeacherBean data, final Person person) {
