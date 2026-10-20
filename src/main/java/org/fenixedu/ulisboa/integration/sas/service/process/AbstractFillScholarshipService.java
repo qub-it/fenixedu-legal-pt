@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -629,7 +630,7 @@ public class AbstractFillScholarshipService {
     }
 
     static protected List<ExecutionYear> getCycleEnrolmentYears(Registration registration, ExecutionYear requestYear) {
-        return getCycleRegistrations(registration).stream().flatMap(r -> RegistrationServices.getEnrolmentYears(r).stream())
+        return getCycleRegistrations(registration).stream().flatMap(r -> r.findActiveRegistrationExecutionYears())
                 .distinct().filter(ey -> ey.isBeforeOrEquals(requestYear)).sorted(ExecutionYear.COMPARATOR_BY_BEGIN_DATE)
                 .collect(Collectors.toList());
     }
@@ -641,8 +642,13 @@ public class AbstractFillScholarshipService {
         final Collection<Registration> degreesToProcess = registration.getStudent().getRegistrationsSet().stream()
                 .filter(r -> degreeTypesToCheck.contains(r.getDegreeType())).collect(Collectors.toSet());
         return degreesToProcess.stream().filter(r -> r.getRegistrationYear().isBeforeOrEquals(registration.getRegistrationYear()))
-                .flatMap(r -> Stream.concat(Stream.of(r), Stream.of(RegistrationServices.getRootRegistration(r)))).distinct()
+                .flatMap(r -> Stream.concat(Stream.of(r), findRootRegistration(r).stream())).distinct()
                 .sorted(Registration.COMPARATOR_BY_START_DATE).collect(Collectors.toList());
+    }
+
+    private static Optional<Registration> findRootRegistration(Registration registration) {
+        return Stream.concat(Stream.of(registration), registration.findPrecedentDegreeRegistrations())
+                .min(Registration.COMPARATOR_BY_START_DATE);
     }
 
     public String getMessages(final AbstractScholarshipStudentBean bean, boolean publicMessage) {
