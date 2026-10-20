@@ -124,9 +124,8 @@ public class RaidesService {
 
     protected boolean isFirstTimeOnDegree(final Registration registration, final ExecutionYear executionYear) {
         // todo refactor
-        if (!RegistrationServices.getPrecedentDegreeRegistrations(registration).isEmpty()
-                && RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration, executionYear).size()
-                > 1) {
+        if (registration.findPrecedentDegreeRegistrations().findAny().isPresent()
+                && registration.findActiveRegistrationExecutionYearsIncludingPrecedentRegistrations(executionYear).count() > 1) {
             return false;
         }
 
