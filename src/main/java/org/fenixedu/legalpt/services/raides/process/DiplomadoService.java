@@ -7,7 +7,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionInformation;
 import org.fenixedu.academic.domain.student.curriculum.conclusion.RegistrationConclusionServices;
 import org.fenixedu.academic.domain.student.mobility.MobilityRegistrationInformation;
@@ -58,7 +57,7 @@ public class DiplomadoService extends RaidesService {
                     .getGraduatedExecutionYear()
                     .getQualifiedName() : terminalConclusionInfo.getConclusionYear().getQualifiedName());
             bean.setNumInscConclusao(
-                    String.valueOf(RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration).size()));
+                    String.valueOf(registration.findActiveRegistrationExecutionYearsIncludingPrecedentRegistrations().count()));
 
             if (Raides.isDoctoralDegree(registration) && !registrationConclusionBean.isConclusionProcessed()) {
                 LegalReportContext.addError(target, i18n("error.Raides.validation.doctoral.degree.without.conclusion.process"),
@@ -197,9 +196,9 @@ public class DiplomadoService extends RaidesService {
         bean.setAnoLectivo(
                 raidesRequestParameter.getGraduatedExecutionYear() != null ? raidesRequestParameter.getGraduatedExecutionYear()
                         .getQualifiedName() : scholarPartConclusionBean.getConclusionYear().getQualifiedName());
-        bean.setNumInscConclusao(String.valueOf(RegistrationServices
-                .getEnrolmentYearsIncludingPrecedentRegistrations(registration, scholarPartConclusionBean.getConclusionYear())
-                .size()));
+        bean.setNumInscConclusao(String.valueOf(
+                (int) registration.findActiveRegistrationExecutionYearsIncludingPrecedentRegistrations(
+                        scholarPartConclusionBean.getConclusionYear()).count()));
 
         bean.setClassificacaoFinal(LegalMapping.find(report, LegalMappingType.GRADE)
                 .translate(finalGrade(scholarPartConclusionBean.getFinalGrade().getValue())));
