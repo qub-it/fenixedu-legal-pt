@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -12,14 +13,17 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.academic.FenixEduAcademicConfiguration;
 import org.fenixedu.academic.domain.Degree;
+import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
+import org.fenixedu.academic.domain.degreeStructure.DegreeModule;
 import org.fenixedu.academic.domain.organizationalStructure.Party;
 import org.fenixedu.academic.domain.person.identificationDocument.IdentificationDocumentType;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationDataByExecutionYear;
 import org.fenixedu.academic.domain.student.RegistrationRegimeType;
 import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
@@ -28,6 +32,7 @@ import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
 import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
+import org.fenixedu.academic.domain.studentCurriculum.Dismissal;
 import org.fenixedu.academictreasury.domain.event.AcademicTreasuryEvent;
 import org.fenixedu.academictreasury.services.TuitionServices;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -469,7 +474,9 @@ public class AbstractFillScholarshipService {
 
         bean.setEnroled(isEnroled(registration, requestYear));
 
-        final LocalDate enrolmentDate = RegistrationServices.getEnrolmentDate(registration, requestYear);
+        final LocalDate enrolmentDate =
+                registration.getDataByExecutionYear(requestYear).map(RegistrationDataByExecutionYear::getEnrolmentDate)
+                        .orElse(null);
         bean.setEnrolmentDate(enrolmentDate != null ? enrolmentDate : requestYear.getBeginLocalDate());
 
         bean.setNumberOfEnrolledECTS(getEnroledCredits(registration, requestYear));
@@ -574,7 +581,9 @@ public class AbstractFillScholarshipService {
 
     private Integer getFirstMonthOfExecutionYear(Registration registration, ExecutionYear requestYear) {
 
-        final LocalDate enrolmentDate = RegistrationServices.getEnrolmentDate(registration, requestYear);
+        final LocalDate enrolmentDate =
+                registration.getDataByExecutionYear(requestYear).map(RegistrationDataByExecutionYear::getEnrolmentDate)
+                        .orElse(null);
 
         if (enrolmentDate == null || requestYear.getBeginLocalDate().compareTo(enrolmentDate) > 0) {
             return requestYear.getBeginLocalDate().getMonthOfYear();
@@ -629,7 +638,7 @@ public class AbstractFillScholarshipService {
     }
 
     static protected List<ExecutionYear> getCycleEnrolmentYears(Registration registration, ExecutionYear requestYear) {
-        return getCycleRegistrations(registration).stream().flatMap(r -> RegistrationServices.getEnrolmentYears(r).stream())
+        return getCycleRegistrations(registration).stream().flatMap(r -> r.findActiveRegistrationExecutionYears())
                 .distinct().filter(ey -> ey.isBeforeOrEquals(requestYear)).sorted(ExecutionYear.COMPARATOR_BY_BEGIN_DATE)
                 .collect(Collectors.toList());
     }
@@ -641,8 +650,13 @@ public class AbstractFillScholarshipService {
         final Collection<Registration> degreesToProcess = registration.getStudent().getRegistrationsSet().stream()
                 .filter(r -> degreeTypesToCheck.contains(r.getDegreeType())).collect(Collectors.toSet());
         return degreesToProcess.stream().filter(r -> r.getRegistrationYear().isBeforeOrEquals(registration.getRegistrationYear()))
-                .flatMap(r -> Stream.concat(Stream.of(r), Stream.of(RegistrationServices.getRootRegistration(r)))).distinct()
+                .flatMap(r -> Stream.concat(Stream.of(r), findRootRegistration(r).stream())).distinct()
                 .sorted(Registration.COMPARATOR_BY_START_DATE).collect(Collectors.toList());
+    }
+
+    private static Optional<Registration> findRootRegistration(Registration registration) {
+        return Stream.concat(Stream.of(registration), registration.findPrecedentDegreeRegistrations())
+                .min(Registration.COMPARATOR_BY_START_DATE);
     }
 
     public String getMessages(final AbstractScholarshipStudentBean bean, boolean publicMessage) {
@@ -687,8 +701,41 @@ public class AbstractFillScholarshipService {
     }
 
     private Set<CurriculumLine> getEnroledCurriculumLines(Registration registration, ExecutionYear executionYear) {
-        return RegistrationServices.getNormalEnroledCurriculumLines(registration, executionYear, true,
-                getDismissalTypesToConsider());
+        final Set<CreditsReasonType> reasonsToInclude = getDismissalTypesToConsider();
+
+        final Predicate<CurriculumLine> isForYear = line -> line.getExecutionYear() == executionYear;
+
+        final Predicate<CurriculumLine> isValid = line -> {
+            if (line.isDismissal()) {
+                final Dismissal dismissal = (Dismissal) line;
+
+                //dismissals candidate to be considered as enroled (e.g. Erasmus and similar)
+                final boolean canBeAccountedAsEnroled =
+                        dismissal.getCredits().getIEnrolments().isEmpty() || dismissal.getCredits().getIEnrolments().stream()
+                                .allMatch(e -> e.getExecutionYear() == executionYear);
+
+                if (!canBeAccountedAsEnroled) {
+                    return false;
+                }
+
+                return dismissal.getCredits().getReason() != null && reasonsToInclude.contains(
+                        dismissal.getCredits().getReason());
+            }
+
+            return !((Enrolment) line).isAnnulled();
+        };
+
+        final Set<CurriculumLine> candidateLines =
+                getStudentCurricularPlan(registration, executionYear).getAllCurriculumLines().stream()
+                        .filter(isForYear.and(CurriculumLine::isNormal).and(isValid)).collect(Collectors.toSet());
+
+        final Set<DegreeModule> dismissalDegreeModules =
+                candidateLines.stream().filter(line -> line.isDismissal() && line.getDegreeModule() != null)
+                        .map(CurriculumLine::getDegreeModule).collect(Collectors.toSet());
+
+        return candidateLines.stream()
+                .filter(line -> line.isDismissal() || (line.isEnrolment() && !dismissalDegreeModules.contains(
+                        line.getDegreeModule()))).collect(Collectors.toSet());
     }
 
     private Set<CreditsReasonType> getDismissalTypesToConsider() {

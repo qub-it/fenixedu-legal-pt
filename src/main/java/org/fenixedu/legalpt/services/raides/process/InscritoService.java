@@ -36,7 +36,6 @@ import org.joda.time.DateTime;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 public class InscritoService extends RaidesService {
 
@@ -126,9 +125,8 @@ public class InscritoService extends RaidesService {
 
         if (!isFirstTimeOnDegree(registration, executionYear)) {
 
-            final List<ExecutionYear> enrolmentsExecutionYears = Lists.newArrayList(
-                    RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration,
-                            executionYear.getPreviousExecutionYear()));
+            final List<ExecutionYear> enrolmentsExecutionYears = registration.findActiveRegistrationExecutionYearsIncludingPrecedentRegistrations(
+                    executionYear.getPreviousExecutionYear()).collect(Collectors.toList());
 
             if (enrolmentsExecutionYears.size() >= 1) {
                 bean.setAnoUltimaInscricao(
@@ -364,7 +362,7 @@ public class InscritoService extends RaidesService {
     private boolean hasOtherActiveRegistrationWhichRequiresStatuteToReportGrantOwner(final Registration registration,
             final ExecutionYear executionYear) {
         return registration.getStudent().getRegistrationsSet().stream()
-                .anyMatch(r -> r != registration && RegistrationServices.getEnrolmentYears(r).contains(executionYear));
+                .anyMatch(r -> r != registration && r.findActiveRegistrationExecutionYears().anyMatch(ey -> ey == executionYear));
     }
 
     //TODO: replace with scholarship module
@@ -398,8 +396,8 @@ public class InscritoService extends RaidesService {
     }
 
     protected Integer numberOfYearsEnrolled(final ExecutionYear executionYear, final Registration registration) {
-        return RegistrationServices.getEnrolmentYearsIncludingPrecedentRegistrations(registration,
-                executionYear.getPreviousExecutionYear()).size();
+        return (int) registration.findActiveRegistrationExecutionYearsIncludingPrecedentRegistrations(
+                executionYear.getPreviousExecutionYear()).count();
     }
 
     protected boolean deliveredDissertation(final ExecutionYear executionYear, final Registration registration) {

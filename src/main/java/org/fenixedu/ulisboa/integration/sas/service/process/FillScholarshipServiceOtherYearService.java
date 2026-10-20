@@ -68,7 +68,7 @@ public class FillScholarshipServiceOtherYearService extends AbstractFillScholars
             return null;
         }
         return getCycleRegistrations(registration).stream()
-                .filter(r -> RegistrationServices.getEnrolmentYears(r).contains(lastEnrolmentYear))
+                .filter(r -> r.findActiveRegistrationExecutionYears().anyMatch(ey -> ey == lastEnrolmentYear))
                 .sorted(Registration.COMPARATOR_BY_START_DATE.reversed()).findFirst().orElse(null);
     }
 
