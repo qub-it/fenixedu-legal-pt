@@ -37,9 +37,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
 				<version>3.3.0</version>
-
 				<executions>
-
 					<execution>
 						<id>process-salarybonus-xsd</id>
 						<goals>
@@ -48,20 +46,11 @@
 						<configuration>
 							<forceRegenerate>true</forceRegenerate>
 							<extension>true</extension>
-
-							<packageName>
-								org.fenixedu.legalpt.jaxb.salarybonus
-							</packageName>
-
+							<packageName>org.fenixedu.legalpt.jaxb.salarybonus</packageName>
+							<outputDirectory>${project.build.directory}/generated-sources/xsd/salarybonus</outputDirectory>
 							<sources>
-								<source>
-									${project.basedir}/src/main/xsd/salarybonus/Diplomados134.xsd
-								</source>
+								<source>${project.basedir}/src/main/xsd/salarybonus/Diplomados134.xsd</source>
 							</sources>
-
-							<outputDirectory>
-								${project.build.directory}/generated-sources/xsd/salarybonus
-							</outputDirectory>
 						</configuration>
 					</execution>
 
@@ -73,26 +62,15 @@
 						<configuration>
 							<forceRegenerate>true</forceRegenerate>
 							<extension>true</extension>
-
-							<packageName>
-								org.fenixedu.legalpt.jaxb.raides
-							</packageName>
-
+							<packageName>org.fenixedu.legalpt.jaxb.raides</packageName>
+							<outputDirectory>${project.build.directory}/generated-sources/xsd/raides</outputDirectory>
 							<sources>
-								<source>
-									${project.basedir}/src/main/xsd/raides/DataStructureRaides.xsd
-								</source>
+								<source>${project.basedir}/src/main/xsd/raides/DataStructureRaides.xsd</source>
 							</sources>
 
 							<xjbSources>
-								<xjbSource>
-									${project.basedir}/src/main/xsd/raides/bindings.xjb
-								</xjbSource>
+								<xjbSource>${project.basedir}/src/main/xsd/raides/bindings.xjb</xjbSource>
 							</xjbSources>
-
-							<outputDirectory>
-								${project.build.directory}/generated-sources/xsd/raides
-							</outputDirectory>
 						</configuration>
 					</execution>
 
@@ -104,20 +82,13 @@
 						<configuration>
 							<forceRegenerate>true</forceRegenerate>
 							<extension>true</extension>
-
-							<packageName>
-								org.fenixedu.legalpt.jaxb.rebides
-							</packageName>
+							<packageName>org.fenixedu.legalpt.jaxb.rebides</packageName>
+							<outputDirectory>${project.build.directory}/generated-sources/xsd/rebides</outputDirectory>
 
 							<sources>
-								<source>
-									${project.basedir}/src/main/xsd/rebides/DataStructureRebides.xsd
-								</source>
+								<source>${project.basedir}/src/main/xsd/rebides/DataStructureRebides.xsd</source>
 							</sources>
 
-							<outputDirectory>
-								${project.build.directory}/generated-sources/xsd/rebides
-							</outputDirectory>
 						</configuration>
 					</execution>
 
@@ -129,7 +100,6 @@
 						<artifactId>jaxb-xjc</artifactId>
 						<version>4.0.5</version>
 					</dependency>
-
 					<dependency>
 						<groupId>com.sun.activation</groupId>
 						<artifactId>jakarta.activation</artifactId>
