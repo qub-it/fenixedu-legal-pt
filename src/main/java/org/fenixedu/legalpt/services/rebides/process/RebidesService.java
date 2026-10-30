@@ -59,7 +59,7 @@ public class RebidesService {
         checkAllMappings();
 
         final YearMonthDay lastDayOfTheYear =
-                new YearMonthDay(executionYear.getAcademicInterval().getStart().getYear(), DateTimeConstants.DECEMBER, 31);
+                new YearMonthDay(executionYear.getAcademicCalendarEntry().getBegin().getYear(), DateTimeConstants.DECEMBER, 31);
 
         Bennu.getInstance().getTeachersSet().forEach(t -> {
             //TODO: add teacher authorization filters (isValid on 31 Dec?)
