@@ -95,7 +95,7 @@ public enum LegalMappingType implements ILegalMappingType {
         case INTERNATIONAL_MOBILITY_PROGRAM_AGREEMENT:
             return Sets.newHashSet(Bennu.getInstance().getRegistrationProtocolsSet());
         case GRADE:
-            return GradeScale.findActive(true).flatMap(gs -> gs.getOrderedGradeScaleEntriesSet().stream()).map(e -> e.getValue())
+            return GradeScale.findActive(true).flatMap(gs -> gs.getOrderedGradeScaleEntriesStream()).map(e -> e.getValue())
                     .collect(Collectors.toSet());
         case INTEGRATED_MASTER_FIRST_CYCLE_CODES:
             return Sets.newHashSet(Bennu.getInstance().getDegreesSet().stream()
