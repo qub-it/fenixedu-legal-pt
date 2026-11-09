@@ -15,7 +15,6 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.person.Gender;
 import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.academic.domain.student.RegistrationDataServices;
 import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.legalpt.domain.a3es.A3esInstance;
 import org.fenixedu.legalpt.dto.a3es.A3esProcessBean;
@@ -59,7 +58,7 @@ public class A3esHarvestStudentsDataService {
                         .map(enrolment -> enrolment.getRegistration())
                         .filter(registration -> registration.getDegree() == this.degreeCurricularPlan.getDegree())
                         .filter(registration -> !isAgreementPartOfMobilityReport(registration))
-                        .filter(registration -> RegistrationDataServices.getRegistrationData(registration, this.year) != null))
+                        .filter(registration -> registration.findDataByExecutionYear(this.year).isPresent()))
                 .collect(Collectors.toSet());
     }
 
