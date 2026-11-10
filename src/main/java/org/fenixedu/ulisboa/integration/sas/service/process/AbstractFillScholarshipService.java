@@ -22,11 +22,11 @@ import org.fenixedu.academic.domain.person.identificationDocument.Identification
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.RegistrationRegimeType;
 import org.fenixedu.academic.domain.student.RegistrationServices;
+import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.CreditsReasonType;
 import org.fenixedu.academic.domain.student.personaldata.EducationLevelType;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.academictreasury.domain.event.AcademicTreasuryEvent;
 import org.fenixedu.academictreasury.services.TuitionServices;
@@ -589,7 +589,7 @@ public class AbstractFillScholarshipService {
         final boolean partialRegime = registration.getRegimeType(requestYear) == RegistrationRegimeType.PARTIAL_TIME;
 
         final boolean workingStudent =
-                StatuteServices.findStatuteTypes(registration, requestYear).stream().anyMatch(s -> s.isWorkingStudentStatute());
+                StatuteType.findforRegistration(registration, requestYear).anyMatch(StatuteType::isWorkingStudentStatute);
 
         //TODO: not supported
         final boolean professionalInternship = false;
