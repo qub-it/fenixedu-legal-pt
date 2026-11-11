@@ -21,7 +21,6 @@ import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.StatuteType;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.StudentStatute;
-import org.fenixedu.academic.domain.student.services.StatuteServices;
 import org.fenixedu.legalpt.domain.LegalReportContext;
 import org.fenixedu.legalpt.domain.mapping.LegalMapping;
 import org.fenixedu.legalpt.domain.raides.Raides;
@@ -380,7 +379,7 @@ public class InscritoService extends RaidesService {
     }
 
     protected boolean isWorkingStudent(final Registration registration, final ExecutionYear executionYear) {
-        return StatuteServices.findStatuteTypes(registration, executionYear).stream().anyMatch(s -> s.isWorkingStudentStatute());
+        return StatuteType.findforRegistration(registration, executionYear).anyMatch(StatuteType::isWorkingStudentStatute);
     }
 
     protected boolean isInPartialRegime(final ExecutionYear executionYear, final Registration registration) {
